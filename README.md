@@ -118,15 +118,15 @@ Modern social networks are complex systems with users, posts, friendships, and i
 
 ## Data Structures & Algorithm Mapping
 
-| Module | File | DSA Concepts |
-|--------|------|--------------|
-| Graph | Graph.h/.cpp, Node.h, Edge.h | Graphs, adjacency list/matrix, node/edge metadata |
-| Traversal | BFS.h/.cpp, DFS.h/.cpp | BFS, DFS, connected components, path finding |
-| Shortest Paths | ShortestPath.cpp | Dijkstra, Bellman-Ford |
-| User Management | User.h, UserManager.cpp | Trees, Trie, recursive search, CRUD |
-| Containers | LinkedList, Stack, Queue, HashMap, DynamicArray | Linked lists, stacks, queues, heaps, hash tables |
-| Algorithms | MutualFriends.cpp, FriendSuggestion.cpp | Graph-based analytics, hash sets, priority queues |
-| Utilities | Pair.h, Vector2.h, Errors.h | Custom structures, graph layout, error handling |
+| Module            | Files                                    | DSA Concepts                                      |
+|------------------|-----------------------------------------|-------------------------------------------------|
+| Graph             | Graph.h/.cpp, Node.h, Edge.h            | Graphs, adjacency list/matrix, node/edge metadata |
+| Traversal         | BFS.h/.cpp, DFS.h/.cpp                   | BFS, DFS, connected components, path finding   |
+| Shortest Paths    | ShortestPath.cpp                         | Dijkstra, Bellman-Ford                           |
+| User Management   | User.h, UserManager.cpp                  | Trees, Trie, recursive search, CRUD            |
+| Containers        | LinkedList, Stack, Queue, HashMap, DynamicArray | Linked lists, stacks, queues, heaps, hash tables |
+| Algorithms        | MutualFriends.cpp, FriendSuggestion.cpp  | Graph-based analytics, hash sets, priority queues |
+| Utilities         | Pair.h, Vector2.h, Errors.h              | Custom structures, graph layout, error handling |
 
 ---
 
@@ -143,15 +143,17 @@ Modern social networks are complex systems with users, posts, friendships, and i
        |
        v
  [ main.cpp ] <----> [ JSONLoader / JSONWriter ] <- persistent storage
+```
 ---
-Integration occurs in main.cpp which coordinates all modules.
+>Integration occurs in main.cpp which coordinates all modules.
 
 Containers serve as shared structures for storing nodes, posts, feeds, and rankings.
 
 Algorithms consume graph and container data for analytics and friend suggestions.
 ---
 
-#Project Structure
+## **Project Structure**
+```
 SocialGraphExplorer/
 ├── backend/
 │   ├── dsa/
@@ -164,12 +166,13 @@ SocialGraphExplorer/
 │   └── main.cpp
 ├── frontend/ (React)
 └── tests/ (unit, integration, performance)
+```
 
-## *Team Responsibilities**
+## **Team Responsibilities**
+
 | Team Member | Files                                                         | Focus                                                   |
 | ----------- | ------------------------------------------------------------- | ------------------------------------------------------- |
 | 1           | Graph, Node, Edge, BFS, DFS, ShortestPath                     | Graph structures, traversal, shortest paths             |
 | 2           | User, UserManager, Trie                                       | User management, search, hierarchy                      |
 | 3           | LinkedList, Stack, Queue, HashMap, DynamicArray               | Containers for posts, feeds, undo/redo                  |
 | 4           | MutualFriends, FriendSuggestion, utils/*.h, Sorting/Searching | Graph analytics, friend suggestions, utility structures |
-
