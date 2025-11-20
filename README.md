@@ -1,194 +1,175 @@
-# SocialGraphExplorer – Team Task & DSA Assignment
+# SocialGraphExplorer
 
-This document defines **file/module ownership** for each team member and **what DSA concepts** are implemented in each part of the project. It ensures fair workload distribution and maximizes the use of **custom data structures and algorithms**.
+**SocialGraphExplorer** is a modular backend framework for exploring and interacting with a social graph, designed as a **mini Instagram-like social network**. The system emphasizes **Data Structures and Algorithms (DSA)** while providing a fully functional prototype for managing users, friendships, posts, and analytics.
+
+This project is both a **learning-focused DSA implementation** and a **practical social network backend prototype**.
 
 ---
 
-## **Project Structure Reference**
+## Table of Contents
 
-```
+1. [Problem Statement](#problem-statement)  
+2. [Objectives](#objectives)  
+3. [System Requirements](#system-requirements)  
+4. [Design Considerations](#design-considerations)  
+5. [Key Features & Abstract Implementation](#key-features--abstract-implementation)  
+6. [Data Structures & Algorithm Mapping](#data-structures--algorithm-mapping)  
+7. [Module Interaction & Flow](#module-interaction--flow)  
+8. [Project Structure](#project-structure)  
+9. [Team Responsibilities](#team-responsibilities)  
+10. [Future Work / Extensions](#future-work--extensions)  
+11. [Testing & Validation](#testing--validation)
+
+---
+
+## Problem Statement
+
+Modern social networks are complex systems with users, posts, friendships, and interactions. Navigating and analyzing such networks efficiently requires robust **graph representations and supporting data structures**.  
+
+**Challenges addressed by SocialGraphExplorer:**
+- Efficient representation of a **dynamic social graph** with users and friendships.
+- Fast search for users and friend suggestions.
+- Efficient storage and retrieval of posts.
+- Analysis of relationships: mutual friends, shortest paths, recommendation ranking.
+- Implementing all functionality using **custom DSA implementations** (no STL or built-ins).
+
+---
+
+## Objectives
+
+1. **Educational Objective**: Demonstrate mastery of advanced **DSA concepts** in a practical project.  
+2. **Functional Objective**: Provide a working prototype backend for social graph exploration.  
+3. **Performance Objective**: Implement efficient algorithms for traversal, search, and ranking.  
+4. **Modular Objective**: Ensure each component is modular, testable, and reusable.
+
+---
+
+## System Requirements
+
+**Hardware Requirements:**
+- 8 GB RAM minimum
+- 50 GB free storage for dataset and posts
+- CPU supporting multi-threading (optional for future scaling)
+
+**Software Requirements:**
+- C++ compiler supporting C++17 or higher
+- Python/Node.js (optional for frontend API integration)
+- React.js for frontend visualization
+- JSON parsing library for data persistence
+
+---
+
+## Design Considerations
+
+1. **Modular Design:** Each DSA concept has its own module (Graph, Containers, Algorithms, Users, Utilities).  
+2. **Custom Implementations:** All structures (linked lists, stacks, queues, graphs, hash maps) are implemented manually.  
+3. **Data Persistence:** JSON files store users and friendships; loader/writer modules abstract file I/O.  
+4. **Scalability:** Graph traversal and ranking algorithms are optimized for **time and space complexity**.  
+5. **Extensibility:** New algorithms, post types, and analytics features can be integrated easily.
+
+---
+
+## Key Features & Abstract Implementation
+
+### 1. User Management
+- **Description:** Create, update, delete users; store profiles and posts.  
+- **Implementation:**
+  - `User.h`: Stores ID, name, bio, posts, friends list.
+  - `UserManager.cpp`: In-memory user storage + Trie for username search.
+- **DSA Concepts:** Trees, Trie, recursive search.
+
+### 2. Social Graph
+- **Description:** Manage user friendships as a graph.  
+- **Implementation:**
+  - `Graph.h/.cpp`: Adjacency list + matrix for friendships.
+  - `Node.h`, `Edge.h`: Store user and edge metadata.
+- **Algorithms:**
+  - BFS / DFS for traversal and connected component detection.
+  - Dijkstra / Bellman-Ford for shortest paths.
+- **DSA Concepts:** Graph representation, traversal, shortest path.
+
+### 3. Friend Analysis
+- **Description:** Compute mutual friends and suggest new connections.  
+- **Implementation:**
+  - `MutualFriends.cpp`: Hash-set based mutual friends calculation.
+  - `FriendSuggestion.cpp`: BFS + priority queue ranking for suggestions.
+- **DSA Concepts:** Graph traversal, hash sets, priority queues.
+
+### 4. Posts & Feeds
+- **Description:** Manage user posts and feed generation.  
+- **Implementation:**
+  - `DynamicArray.h/.cpp` and `LinkedList.h/.cpp` store posts.
+  - Queues manage feed ordering; priority queues rank trending posts.
+- **DSA Concepts:** Linked lists, dynamic arrays, queues, heaps.
+
+### 5. Utilities
+- **Description:** Provide helper structures and error handling.  
+- **Implementation:**
+  - `Pair.h`: Generic pair for returning two values.
+  - `Vector2.h`: Coordinates for graph layout visualization.
+  - `Errors.h`: Custom exception classes.
+- **DSA Concepts:** Utility structures for graphs and algorithms.
+
+### 6. Data Persistence
+- **Description:** Save/load users and friendships to/from JSON.  
+- **Implementation:** `JSONLoader.cpp` and `JSONWriter.cpp`.
+
+---
+
+## Data Structures & Algorithm Mapping
+
+| Module | File | DSA Concepts |
+|--------|------|--------------|
+| Graph | Graph.h/.cpp, Node.h, Edge.h | Graphs, adjacency list/matrix, node/edge metadata |
+| Traversal | BFS.h/.cpp, DFS.h/.cpp | BFS, DFS, connected components, path finding |
+| Shortest Paths | ShortestPath.cpp | Dijkstra, Bellman-Ford |
+| User Management | User.h, UserManager.cpp | Trees, Trie, recursive search, CRUD |
+| Containers | LinkedList, Stack, Queue, HashMap, DynamicArray | Linked lists, stacks, queues, heaps, hash tables |
+| Algorithms | MutualFriends.cpp, FriendSuggestion.cpp | Graph-based analytics, hash sets, priority queues |
+| Utilities | Pair.h, Vector2.h, Errors.h | Custom structures, graph layout, error handling |
+
+---
+
+## Module Interaction & Flow
+
+```text
+[ UserManager ] <----> [ Graph ] <----> [ BFS/DFS/ShortestPath ]
+       |                          |
+       v                          v
+ [ Containers: LinkedList/Stack/Queue/DynamicArray/HashMap ]
+       |
+       v
+ [ MutualFriends / FriendSuggestion ] <- consumes graph + container structures
+       |
+       v
+ [ main.cpp ] <----> [ JSONLoader / JSONWriter ] <- persistent storage
+---
+Integration occurs in main.cpp which coordinates all modules.
+
+Containers serve as shared structures for storing nodes, posts, feeds, and rankings.
+
+Algorithms consume graph and container data for analytics and friend suggestions.
+---
+
+#Project Structure
 SocialGraphExplorer/
-│
 ├── backend/
-│   ├── dsa/                         # All custom data structures (NO STL, NO built-ins)
+│   ├── dsa/
 │   │   ├── graph/
-│   │   │   ├── Graph.h
-│   │   │   ├── Graph.cpp
-│   │   │   ├── Node.h
-│   │   │   └── Edge.h
 │   │   ├── containers/
-│   │   │   ├── LinkedList.h
-│   │   │   ├── LinkedList.cpp
-│   │   │   ├── Queue.h
-│   │   │   ├── Queue.cpp
-│   │   │   ├── Stack.h
-│   │   │   ├── Stack.cpp
-│   │   │   ├── HashMap.h
-│   │   │   ├── HashMap.cpp
-│   │   │   └── DynamicArray.h / .cpp
 │   │   ├── user/
-│   │   │   ├── User.h
-│   │   │   └── UserManager.cpp
 │   │   └── utils/
-│   │       ├── Pair.h
-│   │       ├── Vector2.h (for graph layout)
-│   │       └── Errors.h
-│   │
 │   ├── algorithms/
-│   │   ├── BFS.h
-│   │   ├── BFS.cpp
-│   │   ├── DFS.h
-│   │   ├── DFS.cpp
-│   │   ├── ShortestPath.cpp
-│   │   ├── MutualFriends.cpp
-│   │   └── FriendSuggestion.cpp
-│   │
 │   ├── storage/
-│   │   ├── JSONLoader.cpp
-│   │   ├── JSONWriter.cpp
-│   │   └── local_db/
-│   │       ├── users.json
-│   │       └── friendships.json
-│   │
-│   ├── api/
-│   │   ├── server.cpp (if C++)
-│   │   └── routes/
-│   │       ├── userRoutes.cpp
-│   │       ├── graphRoutes.cpp
-│   │       ├── algoRoutes.cpp
-│   │       └── messageRoutes.cpp
-│   │
 │   └── main.cpp
-│
 ├── frontend/ (React)
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── graph/
-│   │   │   ├── GraphVisualizer.jsx
-│   │   │   └── GraphStyles.css
-│   │   ├── api/
-│   │   └── App.jsx
-│
-├── tests/
-│   ├── unit/
-│   ├── integration/
-│   └── performance/
-│
-└── README.md
-```
----
+└── tests/ (unit, integration, performance)
 
-## **Team Member Assignments**
-
-### **1️⃣ Team Member 1 – Graph & Traversals**
-
-**Responsibilities:**
-- Implement the core **Graph structure**.
-- Implement graph **traversal and shortest path algorithms**.
-
-**Files:**
-- `Graph.h / Graph.cpp`: Graph class (adjacency list + matrix), add/remove nodes/edges, graph properties.
-- `Node.h / Edge.h`: Node (user) and edge structures with metadata.
-- `BFS.h / BFS.cpp`: Breadth-First Search, level tracking, path retrieval.
-- `DFS.h / DFS.cpp`: Depth-First Search (recursive + iterative), cycle detection, connected components.
-- `ShortestPath.cpp`: Dijkstra’s algorithm, Bellman-Ford, optional Floyd-Warshall.
-
-**DSA Concepts:**
-- Graph representation (adjacency list & matrix)
-- BFS / DFS traversal
-- Shortest path algorithms
-- Connected components & cycles
-
----
-
-### **2️⃣ Team Member 2 – Trees & User Hierarchy**
-
-**Responsibilities:**
-- Implement **user management** with tree/trie support.
-- Handle **user search and hierarchical structures**.
-
-**Files:**
-- `User.h`: User profile (ID, name, bio, posts, friends list), CRUD methods.
-- `UserManager.cpp`: In-memory user management, load/save JSON, trie for fast username search/autocomplete.
-
-**Optional Enhancements:**
-- Prefix-based friend suggestions using Trie.
-
-**DSA Concepts:**
-- Binary search tree / Trie
-- Recursive search & traversal
-- Hierarchical data structures
-
----
-
-### **3️⃣ Team Member 3 – Containers: Lists, Stacks, Queues, Heaps**
-
-**Responsibilities:**
-- Implement **core container data structures** used across the project.
-
-**Files:**
-- `LinkedList.h / LinkedList.cpp`: Singly, doubly, circular lists with insert/delete/search/reverse.
-- `Stack.h / Stack.cpp`: LIFO stack, undo/redo stack functionality.
-- `Queue.h / Queue.cpp`: FIFO queue, circular queue, optional priority queue for ranking.
-- `HashMap.h / HashMap.cpp`: Hash table (chaining/open addressing) for fast lookups.
-- `DynamicArray.h / DynamicArray.cpp`: Resizable arrays for feeds/posts.
-
-**DSA Concepts:**
-- Linked lists (all variants)
-- Stack & queue implementations
-- Priority queues / heaps
-- Hashing & dynamic arrays
-
----
-
-### **4️⃣ Team Member 4 – Algorithms & Utilities**
-
-**Responsibilities:**
-- Implement **supporting algorithms** and utility functions.
-- Handle **sorting, searching, and analytics**.
-
-**Files:**
-- `MutualFriends.cpp`: Compute mutual friends, hash/set-based optimization.
-- `FriendSuggestion.cpp`: Suggest friends based on graph traversal & ranking.
-- `utils/Pair.h`: Simple pair class for function returns.
-- `utils/Vector2.h`: Graph layout, coordinates, and distance calculations.
-- `utils/Errors.h`: Custom error handling (InvalidNode, DuplicateEdge, etc.).
-- Sorting & Searching algorithms (add to `algorithms/` as needed): bubble, selection, insertion, merge, quick, heap sort; linear, binary search.
-
-**DSA Concepts:**
-- Sorting & searching algorithms
-- Set/hash-based computations
-- Utility structures & functions
-- Graph analytics & ranking algorithms
-
----
-
-## **Shared / Integration Responsibilities**
-
-- `storage/JSONLoader.cpp` / `JSONWriter.cpp`: Shared by all for loading/saving users, friendships, posts.
-- `main.cpp`: Integrates all modules for testing, demo, and API exposure.
-
----
-
-## **DSA Coverage Summary**
-
-| Team Member | Files | DSA Concepts Covered |
-|------------|-------|--------------------|
-| 1 | Graph.h/.cpp, Node.h, Edge.h, BFS, DFS, ShortestPath | Graphs, BFS/DFS, shortest paths, connected components |
-| 2 | User.h, UserManager.cpp, Trie (optional) | Trees, Trie, recursive search, hierarchical user management |
-| 3 | LinkedList, Stack, Queue, HashMap, DynamicArray | Linked lists, stacks, queues, heaps, hash maps, dynamic arrays |
-| 4 | MutualFriends, FriendSuggestion, utils/*.h, Sorting/Searching | Sorting, searching, hash/set operations, graph analytics, utility structures |
-
----
-
-### **Usage Notes**
-- Each member should **implement and test their module independently**.
-- Modules should be **integrated through `main.cpp` and API routes**.
-- Encourage **code reusability**, e.g., utilities, iterators, hashing functions.
-- Add **unit tests** in `tests/unit/` for all DSA components.
-
----
-
-**This roadmap ensures fair workload, maximum DSA coverage, and a modular, maintainable project structure.**
+## *Team Responsibilities**
+| Team Member | Files                                                         | Focus                                                   |
+| ----------- | ------------------------------------------------------------- | ------------------------------------------------------- |
+| 1           | Graph, Node, Edge, BFS, DFS, ShortestPath                     | Graph structures, traversal, shortest paths             |
+| 2           | User, UserManager, Trie                                       | User management, search, hierarchy                      |
+| 3           | LinkedList, Stack, Queue, HashMap, DynamicArray               | Containers for posts, feeds, undo/redo                  |
+| 4           | MutualFriends, FriendSuggestion, utils/*.h, Sorting/Searching | Graph analytics, friend suggestions, utility structures |
 
