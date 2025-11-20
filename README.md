@@ -176,3 +176,74 @@ SocialGraphExplorer/
 | 2           | User, UserManager, Trie                                       | User management, search, hierarchy                      |
 | 3           | LinkedList, Stack, Queue, HashMap, DynamicArray               | Containers for posts, feeds, undo/redo                  |
 | 4           | MutualFriends, FriendSuggestion, utils/*.h, Sorting/Searching | Graph analytics, friend suggestions, utility structures |
+
+
+## Future Work / Extensions
+
+While SocialGraphExplorer currently provides a robust backend framework and demonstrates a wide variety of DSA concepts, several **extensions and enhancements** can be implemented in future versions:
+
+1. **Advanced Post Features**
+   - Support for **images, videos, and multimedia posts**.  
+   - Comments, likes, and shares for posts.  
+   - Ranking of posts using **priority queues** or **timestamp-based sorting**.  
+
+2. **Graph Visualization**
+   - Interactive **frontend visualization** of the social network using **React + D3.js**.  
+   - Dynamic layout with **Vector2 coordinates** to display user nodes and friendships.  
+
+3. **Community Detection & Clustering**
+   - Identify **communities** within the social graph using algorithms like **Louvain** or **modularity maximization**.  
+   - Suggest groups or communities to users for enhanced engagement.  
+
+4. **Recommendation Systems**
+   - Advanced friend suggestion using **machine learning** or **graph embedding techniques** (Node2Vec, GraphSAGE).  
+   - Personalized post recommendations based on user interactions and mutual friends.  
+
+5. **Scalability & Performance**
+   - Transition from **JSON storage to SQL or NoSQL databases** for large-scale social graphs.  
+   - Optimize traversal and ranking algorithms for **high-volume datasets**.  
+
+6. **Security & Access Control**
+   - Implement **authentication and authorization** for users.  
+   - Secure sensitive data with encryption and safe storage practices.  
+
+7. **Analytics & Reporting**
+   - User engagement metrics: top influencers, activity trends.  
+   - Graph analytics: average shortest path, clustering coefficients, centrality measures.  
+
+---
+
+## Testing & Validation
+
+A rigorous testing framework is essential to ensure **functionality, correctness, and performance** of SocialGraphExplorer. Recommended strategies include:
+
+1. **Unit Testing**
+   - Test each module independently.  
+   - Examples:
+     - **Graph module:** verify adding/removing nodes and edges, BFS/DFS correctness.  
+     - **UserManager:** test CRUD operations and Trie-based search.  
+     - **Containers:** check push/pop, enqueue/dequeue, insert/remove correctness.  
+
+2. **Integration Testing**
+   - Verify **interactions between modules**.  
+   - Examples:
+     - Ensure `UserManager` correctly interacts with `Graph` for friendship operations.  
+     - Friend suggestion algorithm correctly uses BFS traversal and containers.  
+     - JSONLoader/Writer properly saves and loads all modules’ data.  
+
+3. **Performance Testing**
+   - Measure time and memory complexity for:
+     - Graph traversals on large networks.  
+     - Mutual friends and friend suggestion algorithms.  
+     - Feed generation and post ranking.  
+
+4. **Validation**
+   - Check correctness of DSA implementations:
+     - BFS/DFS visit orders match expected results.  
+     - Shortest paths are optimal (Dijkstra/Bellman-Ford).  
+     - Containers (LinkedList, Stack, Queue, HashMap, DynamicArray) maintain correct states.  
+
+5. **Automated Testing Framework**
+   - Implement a **unit and integration test suite** that can be run via **C++ testing frameworks** (e.g., Google Test).  
+   - Ensure **continuous validation** after every code change.  
+
