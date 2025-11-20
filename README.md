@@ -6,7 +6,7 @@ This document defines **file/module ownership** for each team member and **what 
 
 ## **Project Structure Reference**
 
-
+```
 SocialGraphExplorer/
 │
 ├── backend/
@@ -76,7 +76,7 @@ SocialGraphExplorer/
 │   └── performance/
 │
 └── README.md
-
+```
 ---
 
 ## **Team Member Assignments**
