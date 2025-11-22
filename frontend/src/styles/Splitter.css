@@ -1,0 +1,14 @@
+.splitter {
+  background-color: var(--border-color);
+  cursor: col-resize;
+  transition: background-color 0.2s;
+  flex-shrink: 0;
+}
+
+.splitter:hover {
+  background-color: var(--accent-purple);
+}
+
+.splitter-active {
+  background-color: var(--accent-purple);
+}

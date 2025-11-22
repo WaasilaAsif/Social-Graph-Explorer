@@ -1,12 +1,15 @@
 import { X } from 'lucide-react';
 import { getUserById } from '../data/dummyUsers';
 import { getNodeConnections } from '../data/dummyGraph';
+import '../styles/RightInfoPane.css';
 
 export default function RightInfoPane({ selectedNode, onClose, onUserClick }) {
   if (!selectedNode) {
     return (
-      <div className="h-full bg-[#1e1e1e] border-l border-[#2b2b2b] flex items-center justify-center">
-        <p className="text-gray-500 text-sm">Select a node to view details</p>
+      <div className="right-info-pane" style={{ alignItems: 'center', justifyContent: 'center' }}>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
+          Select a node to view details
+        </p>
       </div>
     );
   }
@@ -15,100 +18,128 @@ export default function RightInfoPane({ selectedNode, onClose, onUserClick }) {
   const connections = getNodeConnections(selectedNode.id);
 
   return (
-    <div className="h-full bg-[#1e1e1e] border-l border-[#2b2b2b] flex flex-col">
-      <div className="flex items-center justify-between p-4 border-b border-[#2b2b2b]">
-        <h3 className="text-sm font-semibold text-gray-200">Node Details</h3>
-        <button
-          onClick={onClose}
-          className="p-1 hover:bg-[#2b2b2b] rounded transition-colors"
-        >
-          <X size={16} className="text-gray-400" />
+    <div className="right-info-pane">
+      <div className="info-pane-header">
+        <h3 className="info-pane-title">Node Details</h3>
+        <button onClick={onClose}>
+          <X size={16} />
         </button>
       </div>
 
-      <div className="flex-1 overflow-auto p-4">
+      <div className="info-pane-content">
         {user && (
           <>
-            <div className="flex flex-col items-center text-center mb-6">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-xl font-bold text-white mb-3">
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>
+              <div style={{
+                width: '64px',
+                height: '64px',
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '1.25rem',
+                fontWeight: '600',
+                color: 'white',
+                marginBottom: '0.75rem'
+              }}>
                 {user.avatar}
               </div>
-              <h4 className="text-lg font-semibold text-gray-200">{user.name}</h4>
-              <p className="text-xs text-gray-500 mt-1">Node ID: {user.id}</p>
+              <h4 style={{ fontSize: '1.125rem', fontWeight: '600' }}>{user.name}</h4>
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
+                Node ID: {user.id}
+              </p>
             </div>
 
-            <div className="space-y-4">
-              <div>
-                <p className="text-xs text-gray-500 uppercase mb-2">Bio</p>
-                <p className="text-sm text-gray-300">{user.bio}</p>
-              </div>
-
-              <div>
-                <p className="text-xs text-gray-500 uppercase mb-2">Statistics</p>
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-400">Followers</span>
-                    <span className="text-gray-200 font-medium">{user.followers}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-400">Following</span>
-                    <span className="text-gray-200 font-medium">{user.following}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-400">Posts</span>
-                    <span className="text-gray-200 font-medium">{user.posts}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-400">Connections</span>
-                    <span className="text-gray-200 font-medium">{connections.length}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <p className="text-xs text-gray-500 uppercase mb-2">Connected Nodes</p>
-                <div className="space-y-2">
-                  {connections.map((connId) => {
-                    const connUser = getUserById(connId);
-                    return (
-                      <button
-                        key={connId}
-                        onClick={() => onUserClick(connUser)}
-                        className="w-full flex items-center gap-2 p-2 bg-[#2b2b2b] hover:bg-[#3a3a3a] rounded transition-colors"
-                      >
-                        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-xs font-semibold text-white">
-                          {connUser?.avatar}
-                        </div>
-                        <span className="text-sm text-gray-300 truncate">
-                          {connUser?.name}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div>
-                <p className="text-xs text-gray-500 uppercase mb-2">Graph Properties</p>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Degree</span>
-                    <span className="text-gray-200">{connections.length}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Group</span>
-                    <span className="text-gray-200">{selectedNode.group}</span>
-                  </div>
-                </div>
-              </div>
-
-              <button
-                onClick={() => onUserClick(user)}
-                className="w-full mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded transition-colors"
-              >
-                View Full Profile
-              </button>
+            <div className="info-section">
+              <div className="info-section-title">Bio</div>
+              <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>{user.bio}</p>
             </div>
+
+            <div className="info-section">
+              <div className="info-section-title">Statistics</div>
+              <div className="info-item">
+                <span className="info-label">Followers</span>
+                <span className="info-value">{user.followers}</span>
+              </div>
+              <div className="info-item">
+                <span className="info-label">Following</span>
+                <span className="info-value">{user.following}</span>
+              </div>
+              <div className="info-item">
+                <span className="info-label">Posts</span>
+                <span className="info-value">{user.posts}</span>
+              </div>
+              <div className="info-item">
+                <span className="info-label">Connections</span>
+                <span className="info-value">{connections.length}</span>
+              </div>
+            </div>
+
+            <div className="info-section">
+              <div className="info-section-title">Connected Nodes</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                {connections.map((connId) => {
+                  const connUser = getUserById(connId);
+                  return (
+                    <button
+                      key={connId}
+                      onClick={() => onUserClick(connUser)}
+                      className="quick-action-button"
+                    >
+                      <div style={{
+                        width: '24px',
+                        height: '24px',
+                        borderRadius: '50%',
+                        background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '0.75rem',
+                        fontWeight: '600',
+                        color: 'white'
+                      }}>
+                        {connUser?.avatar}
+                      </div>
+                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {connUser?.name}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="info-section">
+              <div className="info-section-title">Graph Properties</div>
+              <div className="info-item">
+                <span className="info-label">Degree</span>
+                <span className="info-value">{connections.length}</span>
+              </div>
+              <div className="info-item">
+                <span className="info-label">Group</span>
+                <span className="info-value">{selectedNode.group}</span>
+              </div>
+            </div>
+
+            <button
+              onClick={() => onUserClick(user)}
+              style={{
+                width: '100%',
+                marginTop: '1rem',
+                padding: '0.75rem',
+                backgroundColor: '#3b82f6',
+                color: 'white',
+                fontWeight: '500',
+                borderRadius: '4px',
+                fontSize: '0.875rem',
+                transition: 'background-color 0.2s'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#2563eb'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#3b82f6'}
+            >
+              View Full Profile
+            </button>
           </>
         )}
       </div>

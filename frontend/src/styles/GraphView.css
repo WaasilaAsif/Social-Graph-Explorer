@@ -1,0 +1,117 @@
+.graph-view {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-primary);
+}
+
+.graph-header {
+  padding: 1rem;
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.graph-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.graph-controls {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.mode-selector {
+  display: flex;
+  background-color: var(--bg-tertiary);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.mode-button {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  border-radius: 0;
+  transition: background-color 0.2s;
+}
+
+.mode-button-active {
+  background-color: var(--accent-purple);
+}
+
+.zoom-controls {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.graph-canvas {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.graph-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.graph-node {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.graph-node:hover circle {
+  stroke: var(--accent-purple);
+  stroke-width: 3;
+}
+
+.graph-node-selected circle {
+  stroke: var(--accent-blue);
+  stroke-width: 3;
+}
+
+.graph-edge {
+  stroke: var(--text-muted);
+  stroke-width: 1.5;
+  opacity: 0.6;
+}
+
+.graph-node-label {
+  fill: var(--text-primary);
+  font-size: 12px;
+  pointer-events: none;
+  user-select: none;
+}
+
+.graph-stats {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background-color: rgba(43, 43, 43, 0.9);
+  padding: 0.75rem;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  font-size: 0.875rem;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.stat-label {
+  color: var(--text-secondary);
+}
+
+.stat-value {
+  font-weight: 600;
+  color: var(--accent-purple);
+}

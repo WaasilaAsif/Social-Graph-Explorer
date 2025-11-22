@@ -1,0 +1,31 @@
+.pane {
+  height: 100%;
+  background-color: var(--bg-primary);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.pane-content {
+  flex: 1;
+  overflow: auto;
+  padding: 1rem;
+}
+
+.pane-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-muted);
+  gap: 1rem;
+}
+
+.pane-empty-icon {
+  opacity: 0.3;
+}
+
+.pane-empty-text {
+  font-size: 1.125rem;
+}

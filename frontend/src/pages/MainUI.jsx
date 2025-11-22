@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import TabBar from '../components/TabBar';
 import Pane from '../components/Pane';
@@ -9,6 +9,7 @@ import PostView from '../components/PostView';
 import RightInfoPane from '../components/RightInfoPane';
 import { getRecentPosts } from '../data/dummyPosts';
 import { Network, User, FileText, Home } from 'lucide-react';
+import '../styles/MainUI.css';
 
 export default function MainUI() {
   const [tabs, setTabs] = useState([
@@ -131,26 +132,26 @@ export default function MainUI() {
           />
         );
       default:
-        return <div className="p-6 text-gray-400">Unknown view type</div>;
+        return <div style={{ padding: '1.5rem', color: 'var(--text-secondary)' }}>Unknown view type</div>;
     }
   };
 
   return (
-    <div className="h-screen flex bg-[#1e1e1e] text-gray-200">
-      <div style={{ width: leftWidth, minWidth: 200 }}>
+    <div className="main-ui">
+      <div className="layout-section" style={{ width: leftWidth, minWidth: 200 }}>
         <Sidebar onUserClick={handleUserClick} onNavigate={handleNavigate} />
       </div>
 
       <Splitter onDrag={handleLeftDrag} />
 
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="layout-section" style={{ flex: 1, minWidth: 0 }}>
         <TabBar
           tabs={tabs}
           activeTab={activeTab}
           onTabChange={setActiveTab}
           onTabClose={closeTab}
         />
-        <Pane className="flex-1">
+        <Pane>
           {renderTabContent()}
         </Pane>
       </div>
@@ -158,7 +159,7 @@ export default function MainUI() {
       {showRightPane && (
         <>
           <Splitter onDrag={handleRightDrag} />
-          <div style={{ width: rightWidth, minWidth: 250 }}>
+          <div className="layout-section" style={{ width: rightWidth, minWidth: 250 }}>
             <RightInfoPane
               selectedNode={selectedNode}
               onClose={() => setShowRightPane(false)}
@@ -175,77 +176,109 @@ function HomeView({ onPostClick, onUserClick }) {
   const recentPosts = getRecentPosts(10);
 
   return (
-    <div className="h-full overflow-auto">
-      <div className="max-w-4xl mx-auto p-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-200 mb-2">Social Graph Explorer</h1>
-          <p className="text-gray-400">
+    <div style={{ height: '100%', overflow: 'auto' }}>
+      <div style={{ maxWidth: '64rem', margin: '0 auto', padding: '2rem' }}>
+        <div style={{ marginBottom: '2rem' }}>
+          <h1 style={{ fontSize: '1.875rem', fontWeight: '700', marginBottom: '0.5rem' }}>
+            Social Graph Explorer
+          </h1>
+          <p style={{ color: 'var(--text-secondary)' }}>
             Explore social networks through data structures and algorithms
           </p>
         </div>
 
-        <div className="grid grid-cols-3 gap-4 mb-8">
-          <div className="bg-[#2b2b2b] rounded-lg p-6">
-            <div className="flex items-center gap-3 mb-2">
-              <Network size={20} className="text-blue-400" />
-              <h3 className="text-sm font-semibold text-gray-300">Network</h3>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginBottom: '2rem' }}>
+          <div style={{ backgroundColor: 'var(--bg-secondary)', borderRadius: '8px', padding: '1.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+              <Network size={20} style={{ color: '#3b82f6' }} />
+              <h3 style={{ fontSize: '0.875rem', fontWeight: '600' }}>Network</h3>
             </div>
-            <p className="text-2xl font-bold text-gray-200">10</p>
-            <p className="text-xs text-gray-500 mt-1">Active nodes</p>
+            <p style={{ fontSize: '1.5rem', fontWeight: '700' }}>10</p>
+            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>Active nodes</p>
           </div>
 
-          <div className="bg-[#2b2b2b] rounded-lg p-6">
-            <div className="flex items-center gap-3 mb-2">
-              <User size={20} className="text-purple-400" />
-              <h3 className="text-sm font-semibold text-gray-300">Users</h3>
+          <div style={{ backgroundColor: 'var(--bg-secondary)', borderRadius: '8px', padding: '1.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+              <User size={20} style={{ color: '#8b5cf6' }} />
+              <h3 style={{ fontSize: '0.875rem', fontWeight: '600' }}>Users</h3>
             </div>
-            <p className="text-2xl font-bold text-gray-200">10</p>
-            <p className="text-xs text-gray-500 mt-1">Total users</p>
+            <p style={{ fontSize: '1.5rem', fontWeight: '700' }}>10</p>
+            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>Total users</p>
           </div>
 
-          <div className="bg-[#2b2b2b] rounded-lg p-6">
-            <div className="flex items-center gap-3 mb-2">
-              <FileText size={20} className="text-emerald-400" />
-              <h3 className="text-sm font-semibold text-gray-300">Posts</h3>
+          <div style={{ backgroundColor: 'var(--bg-secondary)', borderRadius: '8px', padding: '1.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+              <FileText size={20} style={{ color: '#10b981' }} />
+              <h3 style={{ fontSize: '0.875rem', fontWeight: '600' }}>Posts</h3>
             </div>
-            <p className="text-2xl font-bold text-gray-200">15</p>
-            <p className="text-xs text-gray-500 mt-1">Total posts</p>
+            <p style={{ fontSize: '1.5rem', fontWeight: '700' }}>15</p>
+            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>Total posts</p>
           </div>
         </div>
 
-        <h2 className="text-xl font-semibold text-gray-200 mb-4">Recent Activity</h2>
-        <div className="space-y-4">
+        <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem' }}>Recent Activity</h2>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {recentPosts.map((post) => {
             const author = { id: post.userId, name: `User ${post.userId}`, avatar: `U${post.userId}` };
             return (
-              <button
+              <div
                 key={post.id}
                 onClick={() => onPostClick(post)}
-                className="w-full text-left bg-[#2b2b2b] hover:bg-[#3a3a3a] rounded-lg p-4 transition-colors"
+                style={{
+                  backgroundColor: 'var(--bg-secondary)',
+                  borderRadius: '8px',
+                  padding: '1rem',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.2s'
+                }}
+                onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-tertiary)'}
+                onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-secondary)'}
               >
-                <div className="flex items-center gap-3 mb-3">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
                   <div
                     onClick={(e) => {
                       e.stopPropagation();
                       onUserClick(author);
                     }}
-                    className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-sm font-semibold text-white cursor-pointer"
+                    style={{
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '50%',
+                      background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '0.875rem',
+                      fontWeight: '600',
+                      color: 'white',
+                      cursor: 'pointer'
+                    }}
                   >
                     {author.avatar}
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-200">{author.name}</p>
-                    <p className="text-xs text-gray-500">
+                    <p style={{ fontSize: '0.875rem', fontWeight: '500' }}>{author.name}</p>
+                    <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                       {new Date(post.timestamp).toLocaleString()}
                     </p>
                   </div>
                 </div>
-                <p className="text-sm text-gray-300 line-clamp-2">{post.content}</p>
-                <div className="flex items-center gap-4 mt-3 text-xs text-gray-500">
+                <p style={{
+                  fontSize: '0.875rem',
+                  color: 'var(--text-secondary)',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical'
+                }}>
+                  {post.content}
+                </p>
+                <div style={{ display: 'flex', gap: '1rem', marginTop: '0.75rem', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                   <span>{post.likes} likes</span>
                   <span>{post.comments} comments</span>
                 </div>
-              </button>
+              </div>
             );
           })}
         </div>
