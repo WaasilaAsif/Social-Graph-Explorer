@@ -1,10 +1,11 @@
 #include "UserManager.h"
-#include "../dsa/containers/Queue.h"
-#include "../dsa/containers/Queue.cpp"
-#include "../dsa/containers/HashMap.h"
-#include "../dsa/containers/HashMap.cpp"
+#include "../containers/Queue.h"
+#include "../containers/Queue.cpp"
+#include "../containers/HashMap.h"
+#include "../containers/HashMap.cpp"
 #include <algorithm>
 #include <iostream>
+#include "../containers/HashMap.h"
 UserManager::UserManager() {}
 
 // Helper: get index of user in DynamicArray
@@ -41,6 +42,19 @@ User* UserManager::getUserById(int id) {
 DynamicArray<std::string> UserManager::searchUsersByPrefix(const std::string& prefix) {
     return usernameTrie.startsWith(prefix);
 }
+User* UserManager::login(const std::string& username, const std::string& password) {
+    std::string uname = toLower(username);
+    // Linear search over DynamicArray<User>
+    for (int i = 0; i < users.size(); i++) {
+        if (toLower(users.get(i).getName()) == uname &&
+            users.get(i).getPassword() == password) {
+            return &users.get(i); // login success
+        }
+    }
+    return nullptr; // not found or password wrong
+}
+
+
 
 //ADD MISSING FUNCTIONS HERE
 

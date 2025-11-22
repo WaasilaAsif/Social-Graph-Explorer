@@ -1,24 +1,28 @@
 #pragma once
 #include "DynamicArray.h"
-#include "../dsa/utils/Pair.h"
+#include "../utils/Pair.h"
 #include <string>
 
 template <typename K, typename V>
 class HashMap {
 private:
     int numBuckets;
-    //already defined in dsa containers and utils
     DynamicArray<Pair<K,V>>* buckets;  
+    
     int hash(const K& key) {
-        // simple example for int/string keys
-        if constexpr (std::is_same<K,int>::value)
-            return key % numBuckets;
-        else if constexpr (std::is_same<K,std::string>::value) {
-            int hash = 0;
-            for (char c : key) hash += c;
-            return hash % numBuckets;
-        }
-        return 0; // fallback
+        return hashHelper(key);
+    }
+    
+    // Helper for int keys
+    int hashHelper(const int& key) {
+        return key % numBuckets;
+    }
+    
+    // Helper for string keys
+    int hashHelper(const std::string& key) {
+        int hash = 0;
+        for (char c : key) hash += c;
+        return hash % numBuckets;
     }
 
 public:

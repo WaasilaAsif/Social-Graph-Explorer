@@ -8,7 +8,9 @@ User::User(const std::string& name, const std::string& password)
 {
     id = ++currentId;
 }
+User::User() : name(""), password(""), id(0) {
 
+}
 int User::getId() const { return id; }
 std::string User::getName() const { return name; }
 std::string User::getPassword() const { return password; }

@@ -1,11 +1,10 @@
 #pragma once
 #include <string>
-#include "../data_structures/DynamicArray.h"
+#include "../containers/DynamicArray.h"
 
 class User {
 private:
     static int currentId;  // shared auto-ID generator
-
     int id;
     std::string name;
     std::string password;
@@ -14,7 +13,7 @@ private:
 public:
     // Constructor automatically assigns a unique ID
     User(const std::string& name, const std::string& password);
-
+    User(); 
     // Getters
     int getId() const;
     std::string getName() const;

@@ -1,14 +1,14 @@
 #pragma once
 #include <string>
 #include "User.h"
-#include "../dsa/containers/DynamicArray.h"
-#include "../dsa/containers/Trie.h"
-#include "../dsa/containers/HashMap.h"
+#include "../containers/DynamicArray.h"
+#include "../containers/Trie.h"
+#include "../containers/HashMap.h"
 
 class UserManager {
 private:
     DynamicArray<User> users;
-    Hashmap<int,string>userPasswords;     
+    
     Trie usernameTrie;            // for searching by name
     int getUserIndexById(int id);
 

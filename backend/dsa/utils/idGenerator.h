@@ -14,4 +14,3 @@ public:
     }
 };
 
-int IDGenerator::currentId = 0;
