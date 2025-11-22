@@ -2,6 +2,7 @@
 #include<typeinfo>
 #include "dsa/containers/DynamicArray.h"
 #include "dsa/utils/Pair.h"
+#include "dsa/utils/idGenerator.h"
 #include<string>
 int main() {
     DynamicArray<int> arr;
@@ -12,6 +13,10 @@ int main() {
         std::cout << arr.get(i) << std::endl;
     Pair<std::string,int> p("Hey",7);
     p.printTypes();
-
+    IDGenerator ourGenerator;
+    std::cout<< ourGenerator.getNextId()<<std::endl;
+std::cout<< ourGenerator.getNextId()<<std::endl;
+std::cout<< ourGenerator.getNextId()<<std::endl;
+std::cout<< ourGenerator.getNextId()<<std::endl;
     return 0;
 }
