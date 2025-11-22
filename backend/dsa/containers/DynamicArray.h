@@ -1,18 +1,20 @@
 #pragma once
 #include <iostream>
-#include <stdexcept> 
-#include <typeinfo> 
+#include <stdexcept>
+#include <typeinfo>
 
 template <typename T>
-class DynamicArray {
+class DynamicArray
+{
 private:
-    T* arr;         
-    int capacity;   
-    int length;      
-    
-    void resize() {
+    T *arr;
+    int capacity;
+    int length;
+
+    void resize()
+    {
         capacity *= 2;
-        T* newArr = new T[capacity];
+        T *newArr = new T[capacity];
         for (int i = 0; i < length; i++)
             newArr[i] = arr[i];
         delete[] arr;
@@ -20,26 +22,28 @@ private:
     }
 
 public:
-    DynamicArray() {
+    DynamicArray()
+    {
         capacity = 10;
         length = 0;
         arr = new T[capacity];
     }
-    
 
-    DynamicArray(const DynamicArray& other) {
+    DynamicArray(const DynamicArray &other)
+    {
         capacity = other.capacity;
         length = other.length;
         arr = new T[capacity];
         for (int i = 0; i < length; i++)
             arr[i] = other.arr[i];
     }
-    
-    
-    DynamicArray& operator=(const DynamicArray& other) {
-        if (this != &other) {  
-            delete[] arr;  
-            
+
+    DynamicArray &operator=(const DynamicArray &other)
+    {
+        if (this != &other)
+        {
+            delete[] arr;
+
             capacity = other.capacity;
             length = other.length;
             arr = new T[capacity];
@@ -48,37 +52,65 @@ public:
         }
         return *this;
     }
-    
-    ~DynamicArray() {
+
+    ~DynamicArray()
+    {
         delete[] arr;
     }
-    
-    void printType() {
+
+    void printType()
+    {
         std::cout << "Datatypes stored: " << typeid(T).name() << std::endl;
     }
-    
-    void push_back(const T& element) {
-        if (length == capacity) resize();
+    void removeAt(int index)
+    {
+        if (index < 0 || index >= length)
+            throw std::out_of_range("Index out of range");
+
+        for (int i = index; i < length - 1; i++)
+            arr[i] = arr[i + 1];
+
+        length--;
+    }
+
+    T &at(int index)
+    {
+        return get(index);
+    }
+
+    const T &at(int index) const
+    {
+        return get(index);
+    }
+    void push_back(const T &element)
+    {
+        if (length == capacity)
+            resize();
         arr[length++] = element;
     }
-    
-    T& get(int index) {
+
+    T &get(int index)
+    {
         if (index < 0 || index >= length)
             throw std::out_of_range("Index out of range");
         return arr[index];
     }
-    
-    const T& get(int index) const {  
+
+    const T &get(int index) const
+    {
         if (index < 0 || index >= length)
             throw std::out_of_range("Index out of range");
         return arr[index];
     }
-    
-    int size() const { 
+
+    int size() const
+    {
         return length;
     }
-    
-    void pop_back() {
-        if (length > 0) length--;
+
+    void pop_back()
+    {
+        if (length > 0)
+            length--;
     }
 };

@@ -1,13 +1,17 @@
 #pragma once
+
 class IDGenerator {
 private:
-    int currentId; 
+    static int currentId; 
+
 public:
-    IDGenerator() : currentId(0) {}  
-    int getNextId() {
-        return ++currentId;  
+    static int getNextId() {
+        return ++currentId;
     }
-    void reset() {
+
+    static void reset() {
         currentId = 0;
     }
 };
+
+int IDGenerator::currentId = 0;

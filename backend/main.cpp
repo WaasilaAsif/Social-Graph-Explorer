@@ -1,37 +1,15 @@
 #include <iostream>
-#include "dsa/containers/trie.h" 
-#include "dsa/containers/DynamicArray.h" 
+#include "dsa/user/User.h"
+#include"dsa/user/user.cpp"
 
 int main() {
-    Trie trie;
+    User u1("Anum", "pass123");
+    User u2("Ali", "hello");
+    User u3("Sara", "xyz");
 
-    // Insert some usernames
-    trie.insert("anna");
-    trie.insert("anum");
-    trie.insert("Bob");
-    trie.insert("alice");
-    trie.insert("Alfred");
-
-    // Search exact names
-    std::cout << "Search Anna: " << trie.search("anna") << std::endl; // 1 = found
-    std::cout << "Search Bob: " << trie.search("Bob") << std::endl;   // 1 = found
-    std::cout << "Search John: " << trie.search("john") << std::endl; // 0 = not found
-
-    // Prefix search
-    DynamicArray<std::string> result = trie.startsWith("an");
-    std::cout << "Users starting with 'An':\n";
-    for (int i = 0; i < result.size(); i++)
-        std::cout << result.get(i) << std::endl;
-
-    result = trie.startsWith("Al");
-    std::cout << "Users starting with 'Al':\n";
-    for (int i = 0; i < result.size(); i++)
-        std::cout << result.get(i) << std::endl;
-
-    result = trie.startsWith("B");
-    std::cout << "Users starting with 'B':\n";
-    for (int i = 0; i < result.size(); i++)
-        std::cout << result.get(i) << std::endl;
+    std::cout << "User 1 -> ID: " << u1.getId() << ", Name: " << u1.getName() << "\n";
+    std::cout << "User 2 -> ID: " << u2.getId() << ", Name: " << u2.getName() << "\n";
+    std::cout << "User 3 -> ID: " << u3.getId() << ", Name: " << u3.getName() << "\n";
 
     return 0;
 }
