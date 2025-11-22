@@ -1,22 +1,37 @@
 #include <iostream>
-#include<typeinfo>
-#include "dsa/containers/DynamicArray.h"
-#include "dsa/utils/Pair.h"
-#include "dsa/utils/idGenerator.h"
-#include<string>
-int main() {
-    DynamicArray<int> arr;
-    arr.push_back(10);
-    arr.push_back(20);
+#include "dsa/containers/trie.h" 
+#include "dsa/containers/DynamicArray.h" 
 
-    for(int i = 0; i < arr.size(); i++)
-        std::cout << arr.get(i) << std::endl;
-    Pair<std::string,int> p("Hey",7);
-    p.printTypes();
-    IDGenerator ourGenerator;
-    std::cout<< ourGenerator.getNextId()<<std::endl;
-std::cout<< ourGenerator.getNextId()<<std::endl;
-std::cout<< ourGenerator.getNextId()<<std::endl;
-std::cout<< ourGenerator.getNextId()<<std::endl;
+int main() {
+    Trie trie;
+
+    // Insert some usernames
+    trie.insert("anna");
+    trie.insert("anum");
+    trie.insert("Bob");
+    trie.insert("alice");
+    trie.insert("Alfred");
+
+    // Search exact names
+    std::cout << "Search Anna: " << trie.search("anna") << std::endl; // 1 = found
+    std::cout << "Search Bob: " << trie.search("Bob") << std::endl;   // 1 = found
+    std::cout << "Search John: " << trie.search("john") << std::endl; // 0 = not found
+
+    // Prefix search
+    DynamicArray<std::string> result = trie.startsWith("an");
+    std::cout << "Users starting with 'An':\n";
+    for (int i = 0; i < result.size(); i++)
+        std::cout << result.get(i) << std::endl;
+
+    result = trie.startsWith("Al");
+    std::cout << "Users starting with 'Al':\n";
+    for (int i = 0; i < result.size(); i++)
+        std::cout << result.get(i) << std::endl;
+
+    result = trie.startsWith("B");
+    std::cout << "Users starting with 'B':\n";
+    for (int i = 0; i < result.size(); i++)
+        std::cout << result.get(i) << std::endl;
+
     return 0;
 }
