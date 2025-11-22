@@ -19,6 +19,7 @@ This project is both a **learning-focused DSA implementation** and a **practical
 9. [Team Responsibilities](#team-responsibilities)  
 10. [Future Work / Extensions](#future-work--extensions)  
 11. [Testing & Validation](#testing--validation)
+12. [Basic UI & Design](#ui-baseline)
 
 ---
 
@@ -247,3 +248,19 @@ A rigorous testing framework is essential to ensure **functionality, correctness
    - Implement a **unit and integration test suite** that can be run via **C++ testing frameworks** (e.g., Google Test).  
    - Ensure **continuous validation** after every code change.  
 
+## **UI Baseline**
+
+**Main page**
+---
+![Main Page](image.png)
+---
+
+**Posts Page**
+---
+![Posts Page](image-1.png)
+---
+ **Basic Graph Interface (Under work)**
+---
+![graph interface](image-2.png)
+---
+ 
