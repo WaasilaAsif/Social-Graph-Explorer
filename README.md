@@ -10,16 +10,17 @@ This project is both a **learning-focused DSA implementation** and a **practical
 
 1. [Problem Statement](#problem-statement)  
 2. [Objectives](#objectives)  
-3. [System Requirements](#system-requirements)  
-4. [Design Considerations](#design-considerations)  
-5. [Key Features & Abstract Implementation](#key-features--abstract-implementation)  
-6. [Data Structures & Algorithm Mapping](#data-structures--algorithm-mapping)  
-7. [Module Interaction & Flow](#module-interaction--flow)  
-8. [Project Structure](#project-structure)  
-9. [Team Responsibilities](#team-responsibilities)  
-10. [Future Work / Extensions](#future-work--extensions)  
-11. [Testing & Validation](#testing--validation)
-12. [Basic UI & Design](#ui-baseline)
+3. [Quick Start](#quick-start)
+4. [System Requirements](#system-requirements)  
+5. [Design Considerations](#design-considerations)  
+6. [Key Features & Abstract Implementation](#key-features--abstract-implementation)  
+7. [Data Structures & Algorithm Mapping](#data-structures--algorithm-mapping)  
+8. [Module Interaction & Flow](#module-interaction--flow)  
+9. [Project Structure](#project-structure)  
+10. [Team Responsibilities](#team-responsibilities)  
+11. [Future Work / Extensions](#future-work--extensions)  
+12. [Testing & Validation](#testing--validation)
+13. [Basic UI & Design](#ui-baseline)
 
 ---
 
@@ -45,6 +46,33 @@ Modern social networks are complex systems with users, posts, friendships, and i
 
 ---
 
+## Quick Start
+
+### Prerequisites
+- C++17 or higher compiler (GCC 9.0+, Clang 10.0+, MSVC 2019+)
+- Node.js v18.0.0 or higher
+- npm v9.0.0 or higher
+
+### Backend Setup
+```bash
+cd backend
+g++ -std=c++17 -o socialgraph main.cpp
+./socialgraph
+```
+
+### Frontend Setup
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Frontend will be available at `http://localhost:5173`
+
+For detailed dependency information, see [DEPENDENCIES.md](DEPENDENCIES.md)
+
+---
+
 ## System Requirements
 
 **Hardware Requirements:**
@@ -53,10 +81,26 @@ Modern social networks are complex systems with users, posts, friendships, and i
 - CPU supporting multi-threading (optional for future scaling)
 
 **Software Requirements:**
-- C++ compiler supporting C++17 or higher
-- Python/Node.js (optional for frontend API integration)
-- React.js for frontend visualization
-- JSON parsing library for data persistence
+
+**Backend:**
+- C++ compiler supporting C++17 or higher (GCC 9.0+, Clang 10.0+, MSVC 2019+)
+- CMake 3.15+ (optional, for build automation)
+- No external libraries required for core functionality
+
+**Frontend:**
+- Node.js v18.0.0 or higher
+- npm v9.0.0 or higher
+- Modern web browser (Chrome 90+, Firefox 88+, Safari 14+)
+
+**Key Dependencies:**
+- React 19.2.0 with TypeScript 5.9.3
+- Vite 7.2.5 (Rolldown) for fast builds
+- Lucide React for icons
+- React Router 7.9.6 for navigation
+- Zustand 5.0.8 for state management
+- Custom CSS (no CSS frameworks)
+
+For complete dependency list, see [DEPENDENCIES.md](DEPENDENCIES.md)
 
 ---
 
@@ -158,15 +202,30 @@ Algorithms consume graph and container data for analytics and friend suggestions
 SocialGraphExplorer/
 ├── backend/
 │   ├── dsa/
-│   │   ├── graph/
-│   │   ├── containers/
-│   │   ├── user/
-│   │   └── utils/
-│   ├── algorithms/
-│   ├── storage/
+│   │   ├── graph/          # Graph, Node, Edge
+│   │   ├── containers/     # LinkedList, Stack, Queue, HashMap, DynamicArray, Pair
+│   │   ├── user/           # User, UserManager
+│   │   └── utils/          # Vector2, Errors
+│   ├── algorithms/         # BFS, DFS, ShortestPath, MutualFriends, FriendSuggestion
+│   ├── analytics/          # GraphStats, PopularityRanker
+│   ├── storage/            # JSONLoader, JSONWriter
+│   ├── api/                # REST API routes and server
+│   │   ├── server/
+│   │   └── routes/
+│   ├── tests/              # Unit tests
 │   └── main.cpp
-├── frontend/ (React)
-└── tests/ (unit, integration, performance)
+├── frontend/
+│   ├── src/
+│   │   ├── components/     # React components (Sidebar, GraphView, etc.)
+│   │   ├── pages/          # Page components (MainUI)
+│   │   ├── layouts/        # Layout components (AppLayout)
+│   │   ├── data/           # Dummy data for development
+│   │   └── styles/         # Custom CSS files (Obsidian theme)
+│   ├── public/
+│   ├── package.json
+│   └── vite.config.ts
+├── DEPENDENCIES.md         # Detailed dependency information
+└── README.md
 ```
 
 ## **Team Responsibilities**
