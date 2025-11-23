@@ -106,3 +106,17 @@ template<typename Key, typename Value>
 bool HashMap<Key, Value>::isEmpty() const {
     return size == 0;
 }
+
+template<typename Key, typename Value>
+void HashMap<Key, Value>::clear() {
+    for (int i = 0; i < capacity; i++) {
+        Node* curr = buckets[i];
+        while (curr) {
+            Node* temp = curr;
+            curr = curr->next;
+            delete temp;
+        }
+        buckets[i] = nullptr;
+    }
+    size = 0;
+}

@@ -2,8 +2,8 @@
 #define HASHMAP_H
 
 #include <vector>
-#include "Pair.h"
 using namespace std;
+
 template<typename Key, typename Value>
 class HashMap {
 private:
@@ -14,9 +14,7 @@ private:
 
         Node(const Key& k, const Value& v) : key(k), value(v), next(nullptr) {}
     };
-    //should I use dynamic array here?
-     
-    Pair<Key, Value>* buckets;
+
     vector<Node*> buckets;
     int capacity;
     int size;
@@ -33,6 +31,27 @@ public:
     void remove(const Key& key);
     int getSize() const;
     bool isEmpty() const;
+    void clear();
+    
+    // Operator[] for convenient access (returns reference, creates if not exists)
+    Value& operator[](const Key& key) {
+        if (!contains(key)) {
+            put(key, Value());
+        }
+        return *get(key);
+    }
+    
+    // Iterator-like access for traversal (needed by Trie)
+    template<typename Func>
+    void forEach(Func func) const {
+        for (int i = 0; i < capacity; i++) {
+            Node* curr = buckets[i];
+            while (curr) {
+                func(curr->key, curr->value);
+                curr = curr->next;
+            }
+        }
+    }
 };
 
 #include "HashMap.cpp" // template implementation
