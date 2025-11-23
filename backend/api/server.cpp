@@ -1,41 +1,31 @@
 // server.cpp
 #include "routes/graphRoutes.h"
 #include "../dsa/graph/Graph.h"
-#include "../include/crow_all.h"  // ✅ FIXED: Correct relative path
+#include <crow.h>  // vcpkg Crow 1.3.0
 #include <iostream>
 
 int main() {
-    // Create the Crow app
     crow::SimpleApp app;
-    
-    // Create the graph instance (shared across all routes)
+
+    // Graph instance
     Graph graph;
-    
-    // Register all route modules
+
+    // Register graph routes
     GraphRoutes graphRoutes(graph);
     graphRoutes.registerRoutes(app);
-    
-    // Uncomment these as you implement them:
-    // UserRoutes userRoutes(graph);
-    // userRoutes.registerRoutes(app);
-    
-    // MessageRoutes messageRoutes(graph);
-    // messageRoutes.registerRoutes(app);
-    
-    // AlgoRoutes algoRoutes(graph);
-    // algoRoutes.registerRoutes(app);
-    
-    // Add a simple health check endpoint
+
+    // Health check
     CROW_ROUTE(app, "/health")
     ([]() {
         crow::json::wvalue response;
         response["status"] = "ok";
         response["message"] = "Server is running";
-        auto res = crow::response(crow::json::dump(response));
-        res.set_header("Content-Type", "application/json");
+        crow::response res(response);
+        res.add_header("Content-Type", "application/json");
+        res.add_header("Access-Control-Allow-Origin", "*");
         return res;
     });
-    
+
     // Root endpoint
     CROW_ROUTE(app, "/")
     ([]() {
@@ -100,44 +90,43 @@ int main() {
 </body>
 </html>
         )";
-        auto res = crow::response(html);
-        res.set_header("Content-Type", "text/html");
+        crow::response res(html);
+        res.add_header("Content-Type", "text/html");
+        res.add_header("Access-Control-Allow-Origin", "*");
         return res;
     });
-    
-    // Enable CORS for frontend testing
-    app.loglevel(crow::LogLevel::Warning);
-    
-    // CORS middleware
-    CROW_ROUTE(app, "/<.*>")
-    .methods("OPTIONS"_method)
+
+    // CORS preflight for specific endpoints
+    CROW_ROUTE(app, "/graph/addFriend").methods(crow::HTTPMethod::Options)
     ([]() {
-        auto res = crow::response(200);
-        res.set_header("Access-Control-Allow-Origin", "*");
-        res.set_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        res.set_header("Access-Control-Allow-Headers", "Content-Type");
+        crow::response res;
+        res.add_header("Access-Control-Allow-Origin", "*");
+        res.add_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        res.add_header("Access-Control-Allow-Headers", "Content-Type");
         return res;
     });
-    
-    // Add CORS headers to all responses
-    app.after_handle([](const crow::request& req, crow::response& res) {
-        res.set_header("Access-Control-Allow-Origin", "*");
-        res.set_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        res.set_header("Access-Control-Allow-Headers", "Content-Type");
+
+    CROW_ROUTE(app, "/graph/removeFriend").methods(crow::HTTPMethod::Options)
+    ([]() {
+        crow::response res;
+        res.add_header("Access-Control-Allow-Origin", "*");
+        res.add_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        res.add_header("Access-Control-Allow-Headers", "Content-Type");
+        return res;
     });
-    
-    // Start the server
+
+    // Logging
+    app.loglevel(crow::LogLevel::Warning);
+
+    // Start server
     std::cout << "========================================" << std::endl;
     std::cout << "🚀 Social Network Graph API Server" << std::endl;
-    std::cout << "========================================" << std::endl;
     std::cout << "📡 Listening on: http://localhost:8080" << std::endl;
     std::cout << "📊 Graph routes registered" << std::endl;
     std::cout << "🔥 Server ready!" << std::endl;
     std::cout << "========================================" << std::endl;
-    std::cout << "Press Ctrl+C to stop..." << std::endl;
-    std::cout << std::endl;
-    
+
     app.port(8080).multithreaded().run();
-    
+
     return 0;
 }
