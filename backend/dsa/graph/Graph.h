@@ -3,12 +3,13 @@
 
 #include "../containers/LinkedList.h"
 #include "../containers/HashMap.h"
+#include "../containers/DynamicArray.h"  // ✅ ADD THIS - Graph.h uses DynamicArray directly
 #include "Edge.h"
 #include "Node.h"
 #include <stdexcept>
 #include <iostream>
+#include <new>  // ✅ ADD THIS for std::nothrow
 
-// *** MODIFIED: Graph class now uses int IDs instead of string ***
 class Graph {
 private:
     // Map from node ID (int) to Node
@@ -29,7 +30,15 @@ public:
     void addNode(int id) {
         if (nodes.contains(id))
             throw std::runtime_error("Node already exists");
-        nodes.put(id, new Node(id));
+        
+        Node* newNode = new Node(id);  // Let it throw std::bad_alloc if it fails
+        
+        try {
+            nodes.put(id, newNode);
+        } catch (...) {
+            delete newNode;
+            throw;
+        }
     }
 
     // Remove a node and all its edges
@@ -37,21 +46,30 @@ public:
         if (!nodes.contains(id))
             throw std::runtime_error("Node does not exist");
 
+        // ✅ FIXED: Get the node pointer first before doing anything
+        Node* nodeToDelete = nodes.get(id);
+
         // Get all node IDs first
         LinkedList<int> allIds = getAllNodeIDs();
         
         // Remove this node from other nodes' adjacency lists
-        for (int i = 0; i < allIds.size(); ++i) {
-            if (allIds[i] == id) continue; // skip the node being removed
-            
-            Node* node = nodes.get(allIds[i]);
-            LinkedList<Edge>& edges = node->edges;
-            // Remove edges pointing to this node
-            removeEdgeFromList(edges, id);
+        // ✅ FIXED: Use try-catch to ensure node is deleted even if edge removal fails
+        try {
+            for (int i = 0; i < allIds.size(); ++i) {
+                if (allIds[i] == id) continue; // skip the node being removed
+                
+                Node* node = nodes.get(allIds[i]);
+                LinkedList<Edge>& edges = node->edges;
+                // Remove edges pointing to this node
+                removeEdgeFromList(edges, id);
+            }
+        } catch (...) {
+            // Even if edge removal fails, we still want to delete the node
+            // and remove it from the map
         }
 
         // Delete the node and remove from map
-        delete nodes.get(id);
+        delete nodeToDelete;
         nodes.remove(id);
     }
 
@@ -59,6 +77,11 @@ public:
     void addEdge(int from, int to, int weight = 1, bool undirected = true) {
         if (!nodes.contains(from) || !nodes.contains(to))
             throw std::runtime_error("One or both nodes do not exist");
+
+        // ✅ FIXED: Check if edge already exists to prevent duplicates
+        if (hasEdge(from, to)) {
+            return; // Edge already exists, silently return (or throw if you prefer)
+        }
 
         nodes.get(from)->edges.append(Edge(to, weight));
         if (undirected)
@@ -69,6 +92,11 @@ public:
     void removeEdge(int from, int to, bool undirected = true) {
         if (!nodes.contains(from) || !nodes.contains(to))
             throw std::runtime_error("One or both nodes do not exist");
+
+        // ✅ FIXED: Check if edge exists first
+        if (!hasEdge(from, to)) {
+            return; // Edge doesn't exist, silently return (or throw if you prefer)
+        }
 
         removeEdgeFromList(nodes.get(from)->edges, to);
 
@@ -129,8 +157,14 @@ public:
     // Clear all nodes and edges
     void clear() {
         LinkedList<int> allIds = getAllNodeIDs();
+        // ✅ FIXED: More robust cleanup - delete nodes even if some fail
         for (int i = 0; i < allIds.size(); ++i) {
-            delete nodes.get(allIds[i]);
+            try {
+                Node* node = nodes.get(allIds[i]);
+                delete node;
+            } catch (...) {
+                // Continue deleting other nodes even if one fails
+            }
         }
         nodes.clear();
     }
@@ -155,12 +189,13 @@ public:
 
 private:
     // Helper function to remove an edge from an adjacency list
+    // ✅ FIXED: Remove ALL matching edges, not just the first
     void removeEdgeFromList(LinkedList<Edge>& edges, int targetNode) {
-        for (int i = 0; i < edges.size(); ++i) {
+        // Remove all edges pointing to targetNode
+        for (int i = edges.size() - 1; i >= 0; --i) {
             if (edges[i].to == targetNode) {
                 Edge toRemove(targetNode, edges[i].weight);
                 edges.remove(toRemove);
-                break;
             }
         }
     }

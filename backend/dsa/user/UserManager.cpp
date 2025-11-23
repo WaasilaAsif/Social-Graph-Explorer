@@ -3,7 +3,7 @@
 #include "../containers/HashMap.h"
 #include "../../algorithms/BFS.h"
 #include "../../algorithms/DFS.h"
-#include "../../algorithms/GraphStats.h"
+#include "../../algorithms/Graphstats.h"  // ✅ FIXED: Changed GraphStats.h to Graphstats.h
 #include <iostream>
 
 UserManager::UserManager() {}
