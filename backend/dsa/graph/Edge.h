@@ -12,8 +12,7 @@ public:
     bool operator==(const Edge& other) const {
         return to == other.to && weight == other.weight;
     }
-
-    // *** ADD THIS: Inequality operator ***
+    // Inequality operator
     bool operator!=(const Edge& other) const {
         return !(*this == other);
     }

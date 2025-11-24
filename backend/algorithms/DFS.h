@@ -7,7 +7,6 @@
 #include <stdexcept>
 #include <iostream>
 
-// DFS traversal class
 class DFS {
 public:
     // Perform DFS starting from a given node ID (iterative approach using Stack)
@@ -212,7 +211,6 @@ public:
         return components;
     }
 
-    // Print DFS traversal
     static void printTraversal(const Graph& graph, int startID) {
         LinkedList<int> order = traverse(graph, startID);  
         std::cout << "DFS from " << startID << ": ";
@@ -264,4 +262,4 @@ private:
     }
 };
 
-#endif // DFS_H
+#endif
