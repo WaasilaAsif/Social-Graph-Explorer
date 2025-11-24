@@ -9,7 +9,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <new>  
-using namespace std;
+
 class Graph {
 private:
     // Map from node ID to Node

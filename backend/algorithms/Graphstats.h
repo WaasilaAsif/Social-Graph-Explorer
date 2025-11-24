@@ -5,13 +5,13 @@
 #include "../dsa/containers/HashMap.h"
 #include "../dsa/containers/Queue.h"
 #include "DFS.h"
-using namespace std;
+#include <stdexcept>
 class GraphStats {
 public:
     // Get degree of a node (number of edges)
     static int getDegree(const Graph& graph, int nodeID) {
         if (!graph.hasNode(nodeID))
-            throw runtime_error("Node does not exist");
+            throw std::runtime_error("Node does not exist");
         
         return graph.getNeighbors(nodeID).size();
     }
@@ -109,7 +109,7 @@ public:
     // Get clustering coefficient for a node
     static float getClusteringCoefficient(const Graph& graph, int nodeID) {
         if (!graph.hasNode(nodeID))
-            throw runtime_error("Node does not exist");
+            throw std::runtime_error("Node does not exist");
         
         const LinkedList<Edge>& neighbors = graph.getNeighbors(nodeID);
         int degree = neighbors.size();
@@ -151,7 +151,7 @@ public:
         LinkedList<int> allNodes = graph.getAllNodeIDs();
         
         if (allNodes.isEmpty())
-            throw runtime_error("Graph is empty");
+            throw std::runtime_error("Graph is empty");
         
         int maxNode = allNodes[0];
         int maxDegree = getDegree(graph, maxNode);
@@ -169,20 +169,20 @@ public:
     
     // Print statistics summary
     static void printStats(const Graph& graph) {
-        cout << "=== Graph Statistics ===" << std::endl;
-        cout << "Nodes: " << graph.nodeCount() << std::endl;
-        cout << "Edges: " << countEdges(graph, true) << std::endl;
-        cout << "Average Degree: " << getAverageDegree(graph) << std::endl;
-        cout << "Density: " << getDensity(graph) << std::endl;
-        cout << "Connected: " << (isConnected(graph) ? "Yes" : "No") << std::endl;
-        cout << "Components: " << countComponents(graph) << std::endl;
+        std::cout << "=== Graph Statistics ===" << std::endl;
+        std::cout << "Nodes: " << graph.nodeCount() << std::endl;
+        std::cout << "Edges: " << countEdges(graph, true) << std::endl;
+        std::cout << "Average Degree: " << getAverageDegree(graph) << std::endl;
+        std::cout << "Density: " << getDensity(graph) << std::endl;
+        std::cout << "Connected: " << (isConnected(graph) ? "Yes" : "No") << std::endl;
+        std::cout << "Components: " << countComponents(graph) << std::endl;
         
         if (isConnected(graph)) {
-            cout << "Diameter: " << getDiameter(graph) << std::endl;
+            std::cout << "Diameter: " << getDiameter(graph) << std::endl;
         }
         
-        cout << "Average Clustering: " << getAverageClusteringCoefficient(graph) << std::endl;
-        cout << "========================" << std::endl;
+        std::cout << "Average Clustering: " << getAverageClusteringCoefficient(graph) << std::endl;
+        std::cout << "========================" << std::endl;
     }
 
 private:
