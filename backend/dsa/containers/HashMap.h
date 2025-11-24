@@ -84,4 +84,24 @@ public:
 
         throw std::out_of_range("Key not found");
     }
+
+    // Operator[] for convenient access (creates entry if doesn't exist)
+    V& operator[](const K& key) {
+        if (!contains(key)) {
+            put(key, V()); // Insert with default-constructed value
+        }
+        return get(key);
+    }
+
+    // forEach: iterate over all key-value pairs
+    // Callback signature: void callback(const K& key, V& value)
+    template<typename Func>
+    void forEach(Func callback) {
+        for (int i = 0; i < numBuckets; i++) {
+            DynamicArray<Pair<K,V>>& bucket = buckets[i];
+            for (int j = 0; j < bucket.size(); j++) {
+                callback(bucket.get(j).first, bucket.get(j).second);
+            }
+        }
+    }
 };
