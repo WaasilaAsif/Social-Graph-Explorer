@@ -1,13 +1,12 @@
 #ifndef MSGHEAP_H
 #define MSGHEAP_H
 
-#include <vector>
-#include <functional>
-using namespace std;
+#include "../containers/DynamicArray.h"
+
 class MsgHeap {
 private:
-    vector<int> heap;  
-    function<bool(int, int)> compare; 
+    DynamicArray<int> heap;  
+    bool isMinHeap; 
 
     void heapifyUp(int idx);
     void heapifyDown(int idx);
