@@ -13,3 +13,6 @@
 .bat
 # Ignore OS generated files
 .DS_Store
+
+#ignore all .exe files in unit tests folder
+/backend/tests/*.exe
