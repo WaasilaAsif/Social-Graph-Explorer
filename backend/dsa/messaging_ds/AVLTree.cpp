@@ -1,5 +1,5 @@
 #include "AVLTree.h"
-#include "../messaging_ds/Message.h"
+
 template <typename T>
 AVLTree<T>::AVLTree() : root(nullptr) {}
 
@@ -206,7 +206,7 @@ bool AVLTree<T>::search(const T& key) const {
 }
 
 template <typename T>
-void AVLTree<T>::inorderTraversal(AVLNode<T>* node, DynamicArray<T>& result) {
+void AVLTree<T>::inorderTraversal(AVLNode<T>* node, DynamicArray<T>& result) const {
     if (!node) return;
     
     inorderTraversal(node->left, result);
@@ -227,4 +227,3 @@ template class AVLTree<double>;
 template class AVLTree<float>;
 template class AVLTree<long>;
 template class AVLTree<char>;
-template class AVLTree<Message>;

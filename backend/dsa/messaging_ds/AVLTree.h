@@ -2,7 +2,7 @@
 #define AVLTREE_H
 
 #include <iostream>
-#include "DynamicArray.h"
+#include "../containers/DynamicArray.h"
 
 // Node structure for AVL Tree
 template <typename T>
@@ -27,7 +27,7 @@ private:
     AVLNode<T>* rotateRight(AVLNode<T>* node);
     int getHeight(AVLNode<T>* node);
     int getBalance(AVLNode<T>* node);
-    void inorderTraversal(AVLNode<T>* node, DynamicArray<T>& result);
+    void inorderTraversal(AVLNode<T>* node, DynamicArray<T>& result) const;
 
     void clear(AVLNode<T>* node);
 

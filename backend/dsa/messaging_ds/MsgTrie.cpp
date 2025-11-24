@@ -36,40 +36,40 @@ void MsgTrie::insert(const std::string& word, int messageId) {
 }
 
 // Search exact word
-std::vector<int> MsgTrie::search(const std::string& word) const {
+DynamicArray<int> MsgTrie::search(const std::string& word) const {
     TrieNode* curr = root;
     for (char c : word) {
         if (!curr->children.contains(c)) {
-            return {}; // word not found
+            return DynamicArray<int>(); // word not found
         }
         curr = curr->children[c];
     }
     if (curr->isEnd)
         return curr->messageIds;
-    return {};
+    return DynamicArray<int>();
 }
 
 // Search prefix
-std::vector<int> MsgTrie::startsWith(const std::string& prefix) const {
+DynamicArray<int> MsgTrie::startsWith(const std::string& prefix) const {
     TrieNode* curr = root;
     for (char c : prefix) {
         if (!curr->children.contains(c)) {
-            return {}; // prefix not found
+            return DynamicArray<int>(); // prefix not found
         }
         curr = curr->children[c];
     }
 
     // Collect all messageIds in this subtree
-    vector<int> result;
-    vector<TrieNode*> stack;
+    DynamicArray<int> result;
+    DynamicArray<TrieNode*> stack;
     stack.push_back(curr);
 
-    while (!stack.empty()) {
-        TrieNode* node = stack.back();
+    while (stack.size() > 0) {
+        TrieNode* node = stack.get(stack.size() - 1);
         stack.pop_back();
 
-        for (int id : node->messageIds)
-            result.push_back(id);
+        for (int i = 0; i < node->messageIds.size(); i++)
+            result.push_back(node->messageIds.get(i));
 
         // Use forEach to traverse children
         node->children.forEach([&stack](char key, TrieNode* childNode) {

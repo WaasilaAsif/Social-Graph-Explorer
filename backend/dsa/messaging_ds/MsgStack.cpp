@@ -1,5 +1,8 @@
 #include "MsgStack.h"
-#include "Message.h"
+#include "../../messaging_ds/Message.h"
+#include <iostream>
+
+using namespace std;
 //Ok so I did linked list implementation of message stack here
 //Me ne apna custom stack banaya hai that deals with the handling of all the messages
 //All its nodes have the Message struct defined in Message.h
