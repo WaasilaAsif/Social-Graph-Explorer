@@ -1,59 +1,87 @@
-#ifndef HASHMAP_H
-#define HASHMAP_H
+#pragma once
+#include "DynamicArray.h"
+#include "../utils/Pair.h"
+#include <string>
 
-#include <vector>
-using namespace std;
-
-template<typename Key, typename Value>
+template <typename K, typename V>
 class HashMap {
 private:
-    struct Node {
-        Key key;
-        Value value;
-        Node* next;
-
-        Node(const Key& k, const Value& v) : key(k), value(v), next(nullptr) {}
-    };
-
-    vector<Node*> buckets;
-    int capacity;
-    int size;
-
-    int hash(const Key& key) const;
+    int numBuckets;
+    DynamicArray<Pair<K,V>>* buckets;  
+    
+    int hash(const K& key) const {
+        return hashHelper(key);
+    }
+    
+    // Helper for int keys
+    int hashHelper(const int& key) const {
+        return key % numBuckets;
+    }
+    
+    // Helper for string keys
+    int hashHelper(const std::string& key) const {
+        int hash = 0;
+        for (char c : key) hash += c;
+        return hash % numBuckets;
+    }
 
 public:
-    HashMap(int cap = 101); // default prime number
-    ~HashMap();
-
-    void put(const Key& key, const Value& value);
-    bool contains(const Key& key) const;
-    Value* get(const Key& key);
-    void remove(const Key& key);
-    int getSize() const;
-    bool isEmpty() const;
-    void clear();
-    
-    // Operator[] for convenient access (returns reference, creates if not exists)
-    Value& operator[](const Key& key) {
-        if (!contains(key)) {
-            put(key, Value());
-        }
-        return *get(key);
+    HashMap(int bucketsCount = 10) {
+        numBuckets = bucketsCount;
+        buckets = new DynamicArray<Pair<K,V>>[numBuckets];
     }
-    
-    // Iterator-like access for traversal (needed by Trie)
-    template<typename Func>
-    void forEach(Func func) const {
-        for (int i = 0; i < capacity; i++) {
-            Node* curr = buckets[i];
-            while (curr) {
-                func(curr->key, curr->value);
-                curr = curr->next;
+
+    ~HashMap() {
+        delete[] buckets;
+    }
+
+    void put(const K& key, const V& value) {
+        int index = hash(key);
+        DynamicArray<Pair<K,V>>& bucket = buckets[index];
+
+        // update if key exists
+        for (int i=0; i<bucket.size(); i++) {
+            if (bucket.get(i).first == key) {
+                bucket.get(i).second = value;
+                return;
             }
         }
+
+        // otherwise insert new
+        bucket.push_back(Pair<K,V>(key,value));
+    }
+
+    bool contains(const K& key) const {
+        int index = hash(key);
+        const DynamicArray<Pair<K,V>>& bucket = buckets[index];
+
+        for (int i=0; i<bucket.size(); i++)
+            if (bucket.get(i).first == key)
+                return true;
+
+        return false;
+    }
+
+    V& get(const K& key) {
+        int index = hash(key);
+        DynamicArray<Pair<K,V>>& bucket = buckets[index];
+
+        for (int i=0; i<bucket.size(); i++)
+            if (bucket.get(i).first == key)
+                return bucket.get(i).second;
+
+        throw std::out_of_range("Key not found");
+    }
+
+    // Const overload of get()
+    const V& get(const K& key) const {
+        int index = hash(key);
+        const DynamicArray<Pair<K,V>>& bucket = buckets[index];
+
+        for (int i=0; i<bucket.size(); i++)
+            if (bucket.get(i).first == key)
+                return bucket.get(i).second;
+
+        throw std::out_of_range("Key not found");
     }
 };
-
-#include "HashMap.cpp" // template implementation
-
-#endif

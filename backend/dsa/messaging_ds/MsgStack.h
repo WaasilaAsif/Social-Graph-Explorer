@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include "Message.h"
+#include "../messaging_ds/Message.h"
 
 class MsgStack {
 private:
