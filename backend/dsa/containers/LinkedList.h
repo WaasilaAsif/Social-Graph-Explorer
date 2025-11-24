@@ -41,7 +41,9 @@ public:
     T removeTail();
     bool contains(const T& value) const;
     void clear();
-
+    // Remove nodes satisfying predicate
+    template <typename Predicate>
+    void removeIf(Predicate pred);
     // Access Operations
     T& at(int index);
     const T& at(int index) const;
@@ -53,7 +55,7 @@ public:
     bool isEmpty() const;
     ListNode<T>* getHead() const;
     ListNode<T>* getTail() const;
-
+    
     // Debug
     void print() const;
 };
@@ -338,5 +340,35 @@ void LinkedList<T>::print() const {
     }
     std::cout << std::endl;
 }
+
+// Remove nodes satisfying predicate,O(n)
+template <typename T>
+template <typename Predicate>
+void LinkedList<T>::removeIf(Predicate pred) {  
+    while (head && pred(head->data)) {
+        ListNode<T>* temp = head;
+        head = head->next;
+        delete temp;
+        length--;
+    }
+    if (!head) {
+        tail = nullptr;
+        return;
+    }
+    
+    ListNode<T>* curr = head;
+    while (curr->next) {
+        if (pred(curr->next->data)) {
+            ListNode<T>* temp = curr->next;
+            curr->next = temp->next;
+            if (temp == tail) tail = curr;
+            delete temp;
+            length--;
+        } else {
+            curr = curr->next;
+        }
+    }
+}
+
 
 #endif 

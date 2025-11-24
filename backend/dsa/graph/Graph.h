@@ -43,35 +43,24 @@ public:
 
     // Remove a node and all its edges
     void removeNode(int id) {
-        if (!nodes.contains(id))
-            throw std::runtime_error("Node does not exist");
-
-        // Get the node pointer first before doing anything
-        Node* nodeToDelete = nodes.get(id);
-
-        // Get all node IDs first
-        LinkedList<int> allIds = getAllNodeIDs();
-        
-        // Remove this node from other nodes' adjacency lists
-        // Use try-catch to ensure node is deleted even if edge removal fails
-        try {
-            for (int i = 0; i < allIds.size(); ++i) {
-                if (allIds[i] == id) continue; // skip the node being removed
-                
-                Node* node = nodes.get(allIds[i]);
-                LinkedList<Edge>& edges = node->edges;
-                // Remove edges pointing to this node
-                removeEdgeFromList(edges, id);
-            }
-        } catch (...) {
-            // Even if edge removal fails, we still want to delete the node
-            // and remove it from the map
-        }
-
-        // Delete the node and remove from map
-        delete nodeToDelete;
-        nodes.remove(id);
+    if (!nodes.contains(id))
+        throw std::runtime_error("Node does not exist");
+    
+    Node* nodeToDelete = nodes.get(id);
+    
+    // Remove from map FIRST
+    nodes.remove(id);
+    
+    // Clean up edges in other nodes
+    LinkedList<int> allIds = getAllNodeIDs();
+    for (int i = 0; i < allIds.size(); ++i) {
+        Node* node = nodes.get(allIds[i]);
+        removeEdgeFromList(node->edges, id);
     }
+    
+    // Delete last (can't throw)
+    delete nodeToDelete;
+}
 
     // Add an edge between two nodes (undirected by default)
     void addEdge(int from, int to, int weight = 1, bool undirected = true) {
@@ -189,15 +178,10 @@ public:
 private:
     // Helper function to remove an edge from an adjacency list
     // Remove ALL matching edges, not just the first
-    void removeEdgeFromList(LinkedList<Edge>& edges, int targetNode) {
-        // Remove all edges pointing to targetNode
-        for (int i = edges.size() - 1; i >= 0; --i) {
-            if (edges[i].to == targetNode) {
-                Edge toRemove(targetNode, edges[i].weight);
-                edges.remove(toRemove);
-            }
-        }
-    }
+void removeEdgeFromList(LinkedList<Edge>& edges, int targetNode) {
+    edges.removeIf([targetNode](const Edge& e) { return e.to == targetNode; });
+}
+   
 };
 
 #endif 
