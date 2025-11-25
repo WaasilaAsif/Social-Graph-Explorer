@@ -1,13 +1,16 @@
 #ifndef TOPKCONVERSATIONS_H
 #define TOPKCONVERSATIONS_H
 
-#include "MsgHeap.h"
+#include "../dsa/messaging_ds/MsgHeap.h"
 #include "../dsa/containers/DynamicArray.h"
+#include "../dsa/containers/HashMap.h"
 #include <string>
 
 class TopKConversations {
 private:
     MsgHeap maxHeap;
+    HashMap<int, std::string> idToUser;  // Map encoded value to userId
+    int nextId;
 
 public:
     TopKConversations();

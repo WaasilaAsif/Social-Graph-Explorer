@@ -4,15 +4,12 @@ using namespace std;
 #include "../dsa/messaging_ds/ConversationGraph.h"
 #include "../dsa/containers/DynamicArray.h"
 #include "../dsa/containers/HashMap.h"
-#include "../utils/Pair.h"
+#include "../dsa/utils/Pair.h"
 #include <string>
 
 class MessageAnalytics {
 private:
     ConversationGraph graph;
-    HashMap<string, int> userIdMap;  // Map string userIds to integer IDs
-    HashMap<int, string> reverseMap;  // Map integer IDs back to string userIds
-    int nextUserId;
     HashMap<string, int> userIdMap;  // Map string userIds to integer IDs
     HashMap<int, string> reverseMap;  // Map integer IDs back to string userIds
     int nextUserId;

@@ -1,8 +1,13 @@
 #pragma once
 #include <string>
+
+#ifdef USE_CROW_JSON
 #include <crow/json.h>
 using namespace crow;
+#endif
+
 using namespace std;
+
 struct Message {
     string id;
     string senderId;
@@ -12,7 +17,8 @@ struct Message {
     bool delivered = false;
     bool read = false;
 
-    // Convert Message → JSON
+#ifdef USE_CROW_JSON
+    // Convert Message → JSON (only available when Crow is included)
     json::wvalue toJson() const {
         json::wvalue x;
         x["id"] = id;
@@ -25,7 +31,7 @@ struct Message {
         return x;
     }
 
-    // Convert JSON → Message
+    // Convert JSON → Message (only available when Crow is included)
     static Message fromJson(const crow::json::rvalue& x) {
         Message m;
         m.id = x["id"].s();
@@ -37,4 +43,5 @@ struct Message {
         m.read = x["read"].b();
         return m;
     }
+#endif
 };

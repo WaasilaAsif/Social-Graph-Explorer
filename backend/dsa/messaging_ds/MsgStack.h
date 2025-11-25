@@ -2,9 +2,7 @@
 #define MSGSTACK_H
 
 #include <string>
-
-// Forward declaration to avoid dependency
-struct Message;
+#include "../../messaging/Message.h"
 
 class MsgStack {
 private:

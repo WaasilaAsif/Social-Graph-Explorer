@@ -1,10 +1,10 @@
 #ifndef MESSAGINGSYSTEM_H
 #define MESSAGINGSYSTEM_H
 
-#include "./dsa/messaging_ds/MsgTrie.h"
-#include "./dsa/messaging_ds/MsgStack.h"
-#include "./dsa/messaging_ds/MsgHeap.h"
-#include "./messaging/Message.h"
+#include "Message.h"
+#include "../dsa/messaging_ds/MsgTrie.h"
+#include "../dsa/messaging_ds/MsgStack.h"
+#include "../dsa/messaging_ds/MsgHeap.h"
 #include "../dsa/containers/DynamicArray.h"
 
 class MessagingSystem {

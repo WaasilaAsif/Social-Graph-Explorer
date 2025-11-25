@@ -1,7 +1,7 @@
 #ifndef SCHEDULEDMESSAGES_H
 #define SCHEDULEDMESSAGES_H
 
-#include "./dsa/messaging_ds/MsgHeap.h"
+#include "../dsa/messaging_ds/MsgHeap.h"
 #include "Message.h"
 #include "../dsa/containers/DynamicArray.h"
 

@@ -3,12 +3,23 @@
 MessageQueue::MessageQueue() {}
 
 void MessageQueue::enqueue(const Message& msg) {
-    // TODO: add message to the end of the queue
+    // Add message to the end of the queue
+    queue.push_back(msg);
 }
 
 Message MessageQueue::dequeue() {
-    // TODO: remove message from front of queue and return
-    return Message();
+    // Remove message from front of queue and return
+    if (isEmpty()) {
+        throw std::runtime_error("Cannot dequeue from empty queue");
+    }
+    
+    // Get the first message
+    Message frontMsg = queue.get(0);
+    
+    // Remove the first element by shifting all elements left
+    queue.removeAt(0);
+    
+    return frontMsg;
 }
 
 bool MessageQueue::isEmpty() const {
