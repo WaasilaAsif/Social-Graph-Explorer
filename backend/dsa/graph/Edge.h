@@ -10,10 +10,9 @@ public:
 
     // Equality operator for removal
     bool operator==(const Edge& other) const {
-        return to == other.to && weight == other.weight;
+        return to == other.to;
     }
-
-    // *** ADD THIS: Inequality operator ***
+    // Inequality operator
     bool operator!=(const Edge& other) const {
         return !(*this == other);
     }

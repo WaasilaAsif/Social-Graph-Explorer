@@ -12,7 +12,7 @@
 class GraphLayout {
 public:
     // Generate positions for all nodes in the graph
-    // Returns HashMap of nodeID -> Vector2 position
+    // Returns hashmap of nodeID, the vector2 position
     static HashMap<int, Vector2> generateLayout(const Graph& graph, 
                                                float nodeSpacing = 100.0f,
                                                float layerSpacing = 150.0f) {
@@ -275,4 +275,4 @@ public:
     }
 };
 
-#endif // GRAPHLAYOUT_H
+#endif 

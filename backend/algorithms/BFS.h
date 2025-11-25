@@ -1,16 +1,14 @@
 #ifndef BFS_H
 #define BFS_H
 
-#include "../dsa/graph/Graph.h"          // *** Go up to backend, then into graph ***
-#include "../dsa/containers/Queue.h" // *** Go up to backend, then into dsa/containers ***
+#include "../dsa/graph/Graph.h"         
+#include "../dsa/containers/Queue.h" 
 #include "../dsa/containers/HashMap.h"
 #include <stdexcept>
 #include <iostream>
 
-// BFS traversal class
 class BFS {
 public:
-    // Perform BFS starting from a given node ID
     // Returns nodes in order of visitation
     static LinkedList<int> traverse(const Graph& graph, int startID) {
         if (!graph.hasNode(startID))
@@ -168,7 +166,6 @@ public:
         return -1; // No path found
     }
 
-    // Print BFS traversal
     static void printTraversal(const Graph& graph, int startID) {
         LinkedList<int> order = traverse(graph, startID); 
         std::cout << "BFS from " << startID << ": ";
@@ -180,4 +177,4 @@ public:
     }
 };
 
-#endif // BFS_H
+#endif 
