@@ -3,8 +3,8 @@
 
 #include <cmath>
 #include <iostream>
+#include <string>
 
-// 2D Vector class for graphics, physics, and game development
 class Vector2 {
 public:
     float x, y;
@@ -22,8 +22,6 @@ public:
         }
         return *this;
     }
-
-    // ========== Arithmetic Operators ==========
 
     // Addition
     Vector2 operator+(const Vector2& other) const {
@@ -78,7 +76,6 @@ public:
         return Vector2(-x, -y);
     }
 
-    // ========== Comparison Operators ==========
 
     bool operator==(const Vector2& other) const {
         return (std::abs(x - other.x) < 1e-6f) && (std::abs(y - other.y) < 1e-6f);
@@ -87,9 +84,6 @@ public:
     bool operator!=(const Vector2& other) const {
         return !(*this == other);
     }
-
-    // ========== Vector Operations ==========
-
     // Dot product
     float dot(const Vector2& other) const {
         return x * other.x + y * other.y;
@@ -223,8 +217,6 @@ public:
         return a.lerp(b, t);
     }
 
-    // ========== Common Constants ==========
-
     static const Vector2 Zero() { return Vector2(0.0f, 0.0f); }
     static const Vector2 One() { return Vector2(1.0f, 1.0f); }
     static const Vector2 Up() { return Vector2(0.0f, 1.0f); }
@@ -256,7 +248,6 @@ public:
     }
 };
 
-// ========== Non-member Operators ==========
 
 // Scalar * Vector (left multiplication)
 inline Vector2 operator*(float scalar, const Vector2& vec) {
@@ -269,4 +260,4 @@ inline std::ostream& operator<<(std::ostream& os, const Vector2& vec) {
     return os;
 }
 
-#endif // VECTOR2_H
+#endif 

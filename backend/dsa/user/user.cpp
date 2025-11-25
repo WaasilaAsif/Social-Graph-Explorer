@@ -1,12 +1,10 @@
 #include "User.h"
 
-// *** REMOVE THIS LINE ***
-// int User::currentId = 0;  // Remove this
 
 User::User(const std::string& name, const std::string& password)
     : name(name), password(password) 
 {
-    id = IDGenerator::getNextId();  // *** CHANGE THIS LINE ***
+    id = IDGenerator::getNextId();  
 }
 
 User::User() : name(""), password(""), id(0) {

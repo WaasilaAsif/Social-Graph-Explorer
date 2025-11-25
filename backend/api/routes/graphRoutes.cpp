@@ -4,7 +4,7 @@
 #include "../../dsa/containers/LinkedList.h"
 #include "../../algorithms/BFS.h"
 #include "../../algorithms/DFS.h"
-#include "../../algorithms/Graphstats.h"
+#include "../../analytics/Graphstats.h"
 #include <iostream>
 #include <vector>
 #include <crow.h>  

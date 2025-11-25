@@ -5,14 +5,14 @@
 #include "../containers/DynamicArray.h"
 #include "../containers/Trie.h"
 #include "../containers/HashMap.h"
-#include "../graph/Graph.h"  // *** ADD THIS LINE ***
+#include "../graph/Graph.h"  
 
 class UserManager {
 private:
     DynamicArray<User> users;
     
     Trie usernameTrie;            // for searching by name
-    Graph socialGraph;            // *** ADD THIS: store user connections ***
+    Graph socialGraph;            
     
     int getUserIndexById(int id);
 
