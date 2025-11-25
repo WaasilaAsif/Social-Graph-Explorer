@@ -155,7 +155,18 @@ For complete dependency list, see [DEPENDENCIES.md](DEPENDENCIES.md)
   - `Errors.h`: Custom exception classes.
 - **DSA Concepts:** Utility structures for graphs and algorithms.
 
-### 6. Data Persistence
+### 6. Messaging System
+- **Description:** Complete messaging infrastructure with search, analytics, scheduling, and undo.
+- **Implementation:**
+  - `MessagingSystem`: Main coordinator integrating MsgTrie, MsgStack, MsgHeap.
+  - `MessageQueue`: FIFO message queue using DynamicArray.
+  - `MessageAnalytics`: User interaction tracking with ConversationGraph.
+  - `ScheduledMessages`: Priority-based scheduling with MsgHeap.
+  - `TopKConversations`: Extract top-K users by interaction count.
+  - `UndoStack`: Undo functionality wrapper around MsgStack.
+- **DSA Concepts:** Tries for search, heaps for priority, stacks for undo, graphs for analytics.
+
+### 7. Data Persistence
 - **Description:** Save/load users and friendships to/from JSON.  
 - **Implementation:** `JSONLoader.cpp` and `JSONWriter.cpp`.
 
@@ -163,15 +174,18 @@ For complete dependency list, see [DEPENDENCIES.md](DEPENDENCIES.md)
 
 ## Data Structures & Algorithm Mapping
 
-| Module            | Files                                    | DSA Concepts                                      |
-|------------------|-----------------------------------------|-------------------------------------------------|
-| Graph             | Graph.h/.cpp, Node.h, Edge.h            | Graphs, adjacency list/matrix, node/edge metadata |
-| Traversal         | BFS.h/.cpp, DFS.h/.cpp                   | BFS, DFS, connected components, path finding   |
-| Shortest Paths    | ShortestPath.cpp                         | Dijkstra, Bellman-Ford                           |
-| User Management   | User.h, UserManager.cpp                  | Trees, Trie, recursive search, CRUD            |
-| Containers        | LinkedList, Stack, Queue, HashMap, DynamicArray | Linked lists, stacks, queues, heaps, hash tables |
-| Algorithms        | MutualFriends.cpp, FriendSuggestion.cpp  | Graph-based analytics, hash sets, priority queues |
-| Utilities         | Pair.h, Vector2.h, Errors.h              | Custom structures, graph layout, error handling |
+| Module                  | Files                                           | DSA Concepts                                        |
+|------------------------|------------------------------------------------|---------------------------------------------------|
+| Graph                  | Graph.h/.cpp, Node.h, Edge.h                   | Graphs, adjacency list/matrix, node/edge metadata |
+| Traversal              | BFS.h/.cpp, DFS.h/.cpp                         | BFS, DFS, connected components, path finding      |
+| Shortest Paths         | ShortestPath.cpp                               | Dijkstra, Bellman-Ford                            |
+| User Management        | User.h, UserManager.cpp                        | Trees, Trie, recursive search, CRUD               |
+| Containers             | LinkedList, Stack, Queue, HashMap, DynamicArray, PriorityQueue, Trie | Linked lists, stacks, queues, heaps, hash tables |
+| Messaging DS           | MsgHeap, MsgTrie, MsgStack, ConversationGraph, AVLTree | Priority heaps, tries, weighted graphs, balanced trees |
+| Messaging System       | MessagingSystem, MessageQueue, MessageAnalytics, ScheduledMessages, TopKConversations, UndoStack | System integration, FIFO queues, analytics, scheduling |
+| Msg Algorithms         | MsgFriendSuggestion, MsgMutualInteraction, MsgShortestPath, MsgTopKMessages | Friends-of-friends, mutual connections, BFS, top-K extraction |
+| Graph Algorithms       | MutualFriends.cpp, FriendSuggestion.cpp        | Graph-based analytics, hash sets, priority queues |
+| Utilities              | Pair.h, Vector2.h, Errors.h, IDGenerator       | Custom structures, graph layout, error handling   |
 
 ---
 
@@ -181,10 +195,16 @@ For complete dependency list, see [DEPENDENCIES.md](DEPENDENCIES.md)
 [ UserManager ] <----> [ Graph ] <----> [ BFS/DFS/ShortestPath ]
        |                          |
        v                          v
- [ Containers: LinkedList/Stack/Queue/DynamicArray/HashMap ]
-       |
-       v
- [ MutualFriends / FriendSuggestion ] <- consumes graph + container structures
+ [ Containers: LinkedList/Stack/Queue/DynamicArray/HashMap/PriorityQueue/Trie ]
+       |                          |
+       v                          v
+ [ Messaging DS: MsgHeap/MsgTrie/MsgStack/ConversationGraph/AVLTree ]
+       |                          |
+       v                          v
+ [ MessagingSystem ] <----> [ MessageQueue/Analytics/Scheduling/TopK ]
+       |                          |
+       v                          v
+ [ MutualFriends / FriendSuggestion / Msg Algorithms ] <- consume graph + containers
        |
        v
  [ main.cpp ] <----> [ JSONLoader / JSONWriter ] <- persistent storage
@@ -194,7 +214,9 @@ For complete dependency list, see [DEPENDENCIES.md](DEPENDENCIES.md)
 
 Containers serve as shared structures for storing nodes, posts, feeds, and rankings.
 
-Algorithms consume graph and container data for analytics and friend suggestions.
+Messaging system provides complete infrastructure for user interactions and analytics.
+
+Algorithms consume graph and container data for social network analysis and recommendations.
 ---
 
 ## **Project Structure**
@@ -202,29 +224,48 @@ Algorithms consume graph and container data for analytics and friend suggestions
 SocialGraphExplorer/
 ├── backend/
 │   ├── dsa/
-│   │   ├── graph/          # Graph, Node, Edge
-│   │   ├── containers/     # LinkedList, Stack, Queue, HashMap, DynamicArray, Pair
-│   │   ├── user/           # User, UserManager
-│   │   └── utils/          # Vector2, Errors
-│   ├── algorithms/         # BFS, DFS, ShortestPath, MutualFriends, FriendSuggestion
-│   ├── analytics/          # GraphStats, PopularityRanker
-│   ├── storage/            # JSONLoader, JSONWriter
-│   ├── api/                # REST API routes and server
+│   │   ├── graph/              # Graph, Node, Edge
+│   │   ├── containers/         # LinkedList, Stack, Queue, HashMap, DynamicArray, Pair, PriorityQueue, Trie
+│   │   ├── messaging_ds/       # MsgHeap, MsgTrie, MsgStack, ConversationGraph, AVLTree
+│   │   ├── user/               # User, UserManager
+│   │   └── utils/              # Vector2, Errors, IDGenerator, Pair
+│   ├── algorithms/             # BFS, DFS, ShortestPath, MutualFriends, FriendSuggestion
+│   │   └── Msg*/               # Message-based algorithms (MsgFriendSuggestion, MsgShortestPath, etc.)
+│   ├── messaging/              # Complete messaging system
+│   │   ├── Message.h           # Message data structure
+│   │   ├── MessagingSystem     # Main coordinator
+│   │   ├── MessageQueue        # FIFO queue
+│   │   ├── MessageAnalytics    # Interaction analytics
+│   │   ├── ScheduledMessages   # Priority scheduling
+│   │   ├── TopKConversations   # Top-K extraction
+│   │   └── UndoStack           # Undo functionality
+│   ├── analytics/              # GraphStats, PopularityRanker
+│   ├── storage/                # JSONLoader, JSONWriter
+│   │   └── local_db/           # JSON database (users.json, friendships.json)
+│   ├── api/                    # REST API routes and server (Crow framework)
 │   │   ├── server/
 │   │   └── routes/
-│   ├── tests/              # Unit tests
+│   ├── tests/                  # Comprehensive test suite
+│   │   ├── unit-tests/         # 28+ unit test files
+│   │   │   ├── README_MESSAGING_TESTS.md
+│   │   │   ├── README_MESSAGING_SYSTEM_TESTS.md
+│   │   │   └── README_MSG_ALGORITHMS_TESTS.md
+│   │   ├── integration/        # Integration tests
+│   │   ├── run_all_messaging_tests.ps1
+│   │   └── run_all_msg_algorithm_tests.ps1
 │   └── main.cpp
 ├── frontend/
 │   ├── src/
-│   │   ├── components/     # React components (Sidebar, GraphView, etc.)
-│   │   ├── pages/          # Page components (MainUI)
-│   │   ├── layouts/        # Layout components (AppLayout)
-│   │   ├── data/           # Dummy data for development
-│   │   └── styles/         # Custom CSS files (Obsidian theme)
+│   │   ├── components/         # React components (Sidebar, GraphView, etc.)
+│   │   ├── pages/              # Page components (MainUI)
+│   │   ├── layouts/            # Layout components (AppLayout)
+│   │   ├── data/               # Dummy data for development
+│   │   └── styles/             # 12 custom CSS files (Obsidian theme)
 │   ├── public/
 │   ├── package.json
 │   └── vite.config.ts
-├── DEPENDENCIES.md         # Detailed dependency information
+├── structure.md                # Complete file structure documentation
+├── DEPENDENCIES.md             # Detailed dependency information
 └── README.md
 ```
 
