@@ -1,12 +1,10 @@
 #pragma once
 #include <string>
 #include "../containers/DynamicArray.h"
-#include "../utils/IDGenerator.h"  // *** ADD THIS ***
+#include "../utils/IDGenerator.h" 
 
 class User {
 private:
-    // *** REMOVE THIS LINE ***
-    // static int currentId;  // Remove this
     
     int id;
     std::string name;
