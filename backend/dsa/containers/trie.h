@@ -7,7 +7,7 @@
 using namespace std;
 
 // Convert string to lowercase
-string toLower(const string& s) {
+inline string toLower(const string& s) {
     string res = s;
     transform(res.begin(), res.end(), res.begin(), ::tolower);
     return res;
