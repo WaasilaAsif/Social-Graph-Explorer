@@ -2,11 +2,11 @@
 #define MESSAGEQUEUE_H
 
 #include "Message.h"
-#include <vector>
+#include "../dsa/containers/DynamicArray.h"
 
 class MessageQueue {
 private:
-    std::vector<Message> queue;
+    DynamicArray<Message> queue;
 
 public:
     MessageQueue();

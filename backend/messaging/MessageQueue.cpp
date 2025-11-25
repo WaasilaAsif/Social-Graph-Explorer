@@ -12,7 +12,7 @@ Message MessageQueue::dequeue() {
 }
 
 bool MessageQueue::isEmpty() const {
-    return queue.empty();
+    return queue.size() == 0;
 }
 
 int MessageQueue::size() const {

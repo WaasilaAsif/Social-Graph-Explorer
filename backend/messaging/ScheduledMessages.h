@@ -3,12 +3,12 @@
 
 #include "./dsa/messaging_ds/MsgHeap.h"
 #include "Message.h"
-#include <vector>
+#include "../dsa/containers/DynamicArray.h"
 
 class ScheduledMessages {
 private:
     MsgHeap heap; // Can be replaced with AVL/M-ary tree
-    std::vector<Message> scheduled;
+    DynamicArray<Message> scheduled;
 
 public:
     ScheduledMessages();

@@ -2,8 +2,8 @@
 #define MESSAGEANALYTICS_H
 
 #include "ConversationGraph.h"
+#include "../dsa/containers/DynamicArray.h"
 #include <string>
-#include <vector>
 
 class MessageAnalytics {
 private:
@@ -13,7 +13,7 @@ public:
     MessageAnalytics();
 
     void addMessageInteraction(const std::string& senderId, const std::string& receiverId);
-    std::vector<std::string> getMostActiveUsers(int k);
+    DynamicArray<std::string> getMostActiveUsers(int k);
     int getInteractionCount(const std::string& userId1, const std::string& userId2);
 };
 

@@ -9,7 +9,7 @@ void MessagingSystem::addMessage(const Message& msg) {
     // TODO: Push to undo stack
 }
 
-std::vector<int> MessagingSystem::searchMessages(const std::string& keyword) {
+DynamicArray<int> MessagingSystem::searchMessages(const std::string& keyword) {
     // TODO: Use MsgTrie to find message IDs
     return msgTrie.search(keyword);
 }

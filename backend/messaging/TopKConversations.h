@@ -2,7 +2,7 @@
 #define TOPKCONVERSATIONS_H
 
 #include "MsgHeap.h"
-#include <vector>
+#include "../dsa/containers/DynamicArray.h"
 #include <string>
 
 class TopKConversations {
@@ -13,7 +13,7 @@ public:
     TopKConversations();
 
     void addConversation(const std::string& userId, int interactionCount);
-    std::vector<std::string> getTopK(int k);
+    DynamicArray<std::string> getTopK(int k);
 };
 
 #endif

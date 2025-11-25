@@ -6,9 +6,9 @@ void MessageAnalytics::addMessageInteraction(const std::string& senderId, const 
     // TODO: update ConversationGraph edges
 }
 
-std::vector<std::string> MessageAnalytics::getMostActiveUsers(int k) {
+DynamicArray<std::string> MessageAnalytics::getMostActiveUsers(int k) {
     // TODO: use BFS/DFS or heap to return top-k active users
-    return {};
+    return DynamicArray<std::string>();
 }
 
 int MessageAnalytics::getInteractionCount(const std::string& userId1, const std::string& userId2) {

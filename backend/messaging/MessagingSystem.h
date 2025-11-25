@@ -5,20 +5,20 @@
 #include "./dsa/messaging_ds/MsgStack.h"
 #include "./dsa/messaging_ds/MsgHeap.h"
 #include "./messaging/Message.h"
-#include <vector>
+#include "../dsa/containers/DynamicArray.h"
 
 class MessagingSystem {
 private:
     MsgTrie msgTrie;
     MsgStack undoStack;
     MsgHeap scheduledHeap; // Or AVL/Tree for scheduling
-    std::vector<Message> messages;
+    DynamicArray<Message> messages;
 
 public:
     MessagingSystem();
 
     void addMessage(const Message& msg);
-    std::vector<int> searchMessages(const std::string& keyword);
+    DynamicArray<int> searchMessages(const std::string& keyword);
     void undoLastAction();
     void scheduleMessage(const Message& msg, int priority);
 

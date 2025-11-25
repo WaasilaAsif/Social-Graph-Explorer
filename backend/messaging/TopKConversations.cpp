@@ -6,7 +6,7 @@ void TopKConversations::addConversation(const std::string& userId, int interacti
     // TODO: Add conversation to heap
 }
 
-std::vector<std::string> TopKConversations::getTopK(int k) {
+DynamicArray<std::string> TopKConversations::getTopK(int k) {
     // TODO: Pop top k elements from heap
-    return {};
+    return DynamicArray<std::string>();
 }
