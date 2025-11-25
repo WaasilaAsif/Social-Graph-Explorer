@@ -41,7 +41,9 @@ public:
     T removeTail();
     bool contains(const T& value) const;
     void clear();
-
+    // Remove nodes satisfying predicate
+    template <typename Predicate>
+    void removeIf(Predicate pred);
     // Access Operations
     T& at(int index);
     const T& at(int index) const;
@@ -53,7 +55,7 @@ public:
     bool isEmpty() const;
     ListNode<T>* getHead() const;
     ListNode<T>* getTail() const;
-
+    
     // Debug
     void print() const;
 };
@@ -116,7 +118,7 @@ LinkedList<T>& LinkedList<T>::operator=(LinkedList&& other) noexcept {
     return *this;
 }
 
-// Append - O(1) with tail pointer
+// Append,O(1) with tail pointer
 template <typename T>
 void LinkedList<T>::append(const T& value) {
     ListNode<T>* newNode = new ListNode<T>(value);
@@ -130,7 +132,7 @@ void LinkedList<T>::append(const T& value) {
     length++;
 }
 
-// Prepend - O(1) insertion at front
+// Prepend,O(1) insertion at front
 template <typename T>
 void LinkedList<T>::prepend(const T& value) {
     ListNode<T>* newNode = new ListNode<T>(value);
@@ -144,7 +146,7 @@ void LinkedList<T>::prepend(const T& value) {
     length++;
 }
 
-// Remove by value - O(n)
+// Remove by value,O(n)
 template <typename T>
 bool LinkedList<T>::remove(const T& value) {
     if (!head)
@@ -183,7 +185,7 @@ bool LinkedList<T>::remove(const T& value) {
     return true;
 }
 
-// Remove head node - O(1), returns the removed value
+// Remove head node,O(1), returns the removed value
 template <typename T>
 T LinkedList<T>::removeHead() {
     if (!head)
@@ -217,7 +219,7 @@ T LinkedList<T>::removeTail() {
         return value;
     }
     
-    // Find second-to-last node
+    // Find second to last node
     ListNode<T>* curr = head;
     while (curr->next != tail) {
         curr = curr->next;
@@ -230,7 +232,7 @@ T LinkedList<T>::removeTail() {
     return value;
 }
 
-// Check if list contains value - O(n)
+// Check if list contains value,O(n)
 template <typename T>
 bool LinkedList<T>::contains(const T& value) const {
     ListNode<T>* curr = head;
@@ -242,7 +244,7 @@ bool LinkedList<T>::contains(const T& value) const {
     return false;
 }
 
-// Clear all nodes - O(n)
+// Clear all nodes,O(n)
 template <typename T>
 void LinkedList<T>::clear() {
     ListNode<T>* curr = head;
@@ -258,7 +260,7 @@ void LinkedList<T>::clear() {
     length = 0;
 }
 
-// Access with bounds checking - O(n)
+// Access with bounds checking,O(n)
 template <typename T>
 T& LinkedList<T>::at(int index) {
     if (index < 0 || index >= length)
@@ -283,7 +285,7 @@ const T& LinkedList<T>::at(int index) const {
     return curr->data;
 }
 
-// Operator[] without bounds checking - O(n)
+// Operator[] without bounds checking,O(n)
 template <typename T>
 T& LinkedList<T>::operator[](int index) {
     ListNode<T>* curr = head;
@@ -302,31 +304,31 @@ const T& LinkedList<T>::operator[](int index) const {
     return curr->data;
 }
 
-// Get size - O(1)
+// Get size,O(1)
 template <typename T>
 int LinkedList<T>::size() const {
     return length;
 }
 
-// Check if empty - O(1)
+// Check if empty, O(1)
 template <typename T>
 bool LinkedList<T>::isEmpty() const {
     return length == 0;
 }
 
-// Get head pointer - O(1)
+// Get head pointer,O(1)
 template <typename T>
 ListNode<T>* LinkedList<T>::getHead() const {
     return head;
 }
 
-// Get tail pointer - O(1)
+// Get tail pointer,O(1)
 template <typename T>
 ListNode<T>* LinkedList<T>::getTail() const {
     return tail;
 }
 
-// Print list - O(n)
+// Print list,O(n)
 template <typename T>
 void LinkedList<T>::print() const {
     ListNode<T>* curr = head;
@@ -338,5 +340,35 @@ void LinkedList<T>::print() const {
     }
     std::cout << std::endl;
 }
+
+// Remove nodes satisfying predicate,O(n)
+template <typename T>
+template <typename Predicate>
+void LinkedList<T>::removeIf(Predicate pred) {  
+    while (head && pred(head->data)) {
+        ListNode<T>* temp = head;
+        head = head->next;
+        delete temp;
+        length--;
+    }
+    if (!head) {
+        tail = nullptr;
+        return;
+    }
+    
+    ListNode<T>* curr = head;
+    while (curr->next) {
+        if (pred(curr->next->data)) {
+            ListNode<T>* temp = curr->next;
+            curr->next = temp->next;
+            if (temp == tail) tail = curr;
+            delete temp;
+            length--;
+        } else {
+            curr = curr->next;
+        }
+    }
+}
+
 
 #endif
