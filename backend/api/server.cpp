@@ -1,6 +1,12 @@
 // server.cpp
 #include "routes/graphRoutes.h"
+#include "routes/MsgRoutes.h"
+#include "routes/MsgAPI.h"
 #include "../dsa/graph/Graph.h"
+#include "../dsa/user/UserManager.h"
+#include "../messaging/MessageStore.h"
+#include "../dsa/messaging_ds/MsgTrie.h"
+#include "../dsa/messaging_ds/ConversationGraph.h"
 #include <crow.h>  // vcpkg Crow 1.3.0
 #include <iostream>
 
@@ -10,9 +16,22 @@ int main() {
     // Graph instance
     Graph graph;
 
+    // Messaging instances
+    UserManager userManager;
+    MessageStore msgStore;
+    MsgTrie msgTrie;
+    ConversationGraph convGraph;
+    
+    // Create API instances
+    MsgAPI msgApi(&userManager, &msgStore, &msgTrie, &convGraph);
+
     // Register graph routes
     GraphRoutes graphRoutes(graph);
     graphRoutes.registerRoutes(app);
+    
+    // Register messaging routes
+    MsgRoutes msgRoutes(&msgApi);
+    msgRoutes.registerRoutes(app);
 
     // Health check
     CROW_ROUTE(app, "/health")
@@ -85,6 +104,48 @@ int main() {
         <p>Get number of connected components</p>
     </div>
     
+    <h2>💬 Messaging Endpoints:</h2>
+    
+    <div class="endpoint">
+        <span class="method post">POST</span> <code>/msg/send</code>
+        <p>Send a message<br>Body: <code>{"senderId":1, "receiverId":2, "text":"Hello"}</code></p>
+    </div>
+    
+    <div class="endpoint">
+        <span class="method get">GET</span> <code>/msg/search/:word</code>
+        <p>Search messages by exact word</p>
+    </div>
+    
+    <div class="endpoint">
+        <span class="method get">GET</span> <code>/msg/prefix/:prefix</code>
+        <p>Search messages by word prefix</p>
+    </div>
+    
+    <div class="endpoint">
+        <span class="method get">GET</span> <code>/msg/topk/:userId/:k</code>
+        <p>Get top K interactions for a user</p>
+    </div>
+    
+    <div class="endpoint">
+        <span class="method get">GET</span> <code>/msg/suggestions/:userId/:k</code>
+        <p>Get friend suggestions based on messages</p>
+    </div>
+    
+    <div class="endpoint">
+        <span class="method get">GET</span> <code>/msg/mutual/:userId</code>
+        <p>Find mutual message interactions</p>
+    </div>
+    
+    <div class="endpoint">
+        <span class="method get">GET</span> <code>/msg/rank/:topN</code>
+        <p>Get popularity ranking by messages</p>
+    </div>
+    
+    <div class="endpoint">
+        <span class="method get">GET</span> <code>/msg/path/:src/:dest</code>
+        <p>Find shortest message path between users</p>
+    </div>
+    
     <h2>🧪 Quick Test:</h2>
     <p>Try: <a href="/health">/health</a></p>
 </body>
@@ -123,6 +184,7 @@ int main() {
     std::cout << "🚀 Social Network Graph API Server" << std::endl;
     std::cout << "📡 Listening on: http://localhost:8080" << std::endl;
     std::cout << "📊 Graph routes registered" << std::endl;
+    std::cout << "💬 Messaging routes registered" << std::endl;
     std::cout << "🔥 Server ready!" << std::endl;
     std::cout << "========================================" << std::endl;
 
