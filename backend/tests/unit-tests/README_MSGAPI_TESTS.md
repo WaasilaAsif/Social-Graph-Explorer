@@ -28,14 +28,14 @@ g++ -std=c++17 -I backend -o backend/tests/MsgAPI.exe `
 ## Test Coverage
 
 ### API Endpoint Tests
-- ✅ **handleSendMessage** - Send message, word extraction, trie indexing, graph update
-- ✅ **handleSearchWord** - Full word search in messages
-- ✅ **handleSearchPrefix** - Prefix-based message search
-- ✅ **handleTopK** - Top-K interactions by weight
-- ✅ **handleFriendSuggestion** - Friend recommendations based on messages
-- ✅ **handleMutualInteractions** - Find mutual message connections
-- ✅ **handleShortestPath** - Shortest path through message network
-- ✅ **Integration Scenario** - Multi-user messaging workflow
+-    **handleSendMessage** - Send message, word extraction, trie indexing, graph update
+-    **handleSearchWord** - Full word search in messages
+-    **handleSearchPrefix** - Prefix-based message search
+-    **handleTopK** - Top-K interactions by weight
+-    **handleFriendSuggestion** - Friend recommendations based on messages
+-    **handleMutualInteractions** - Find mutual message connections
+-    **handleShortestPath** - Shortest path through message network
+-    **Integration Scenario** - Multi-user messaging workflow
 
 ### Components Tested
 - MessageStore integration

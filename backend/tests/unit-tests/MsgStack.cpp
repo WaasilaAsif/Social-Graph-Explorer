@@ -117,7 +117,7 @@ void testPushPop() {
     assert(stack.isEmpty());
     assert(stack.size() == 0);
     
-    cout << "✓ Push/Pop tests passed!" << endl;
+    cout << "Push/Pop tests passed!" << endl;
 }
 
 void testPeek() {
@@ -138,7 +138,7 @@ void testPeek() {
     assert(stack.peek(peeked));
     assert(peeked.id == "2"); // Still the same
     
-    cout << "✓ Peek tests passed!" << endl;
+    cout << "Peek tests passed!" << endl;
 }
 
 void testEmptyStack() {
@@ -152,7 +152,7 @@ void testEmptyStack() {
     assert(!stack.pop(msg)); // Can't pop from empty
     assert(!stack.peek(msg)); // Can't peek empty
     
-    cout << "✓ Empty stack tests passed!" << endl;
+    cout << "Empty stack tests passed!" << endl;
 }
 
 int main() {
@@ -163,10 +163,10 @@ int main() {
         testPeek();
         testEmptyStack();
         
-        cout << "\n✓ ALL MSGSTACK TESTS PASSED!" << endl;
+        cout << "\nALL MSGSTACK TESTS PASSED!" << endl;
         return 0;
     } catch (const exception& e) {
-        cout << "\n✗ Test failed: " << e.what() << endl;
+        cout << "\nTest failed: " << e.what() << endl;
         return 1;
     }
 }

@@ -39,7 +39,7 @@ void testInsertAndSearch() {
     result = trie.search("goodbye");
     assert(result.size() == 0);
     
-    cout << "✓ Insert/Search tests passed!" << endl;
+    cout << "Insert/Search tests passed!" << endl;
 }
 
 void testPrefixSearch() {
@@ -66,7 +66,7 @@ void testPrefixSearch() {
     result = trie.startsWith("xyz");
     assert(result.size() == 0);
     
-    cout << "✓ Prefix search tests passed!" << endl;
+    cout << "Prefix search tests passed!" << endl;
 }
 
 void testMultipleMessages() {
@@ -101,7 +101,7 @@ void testMultipleMessages() {
     result = trie.search("you");
     assert(result.size() == 2);
     
-    cout << "✓ Multiple messages tests passed!" << endl;
+    cout << "Multiple messages tests passed!" << endl;
 }
 
 void testEmptyTrie() {
@@ -114,7 +114,7 @@ void testEmptyTrie() {
     result = trie.startsWith("any");
     assert(result.size() == 0);
     
-    cout << "✓ Empty trie tests passed!" << endl;
+    cout << "Empty trie tests passed!" << endl;
 }
 
 int main() {
@@ -126,10 +126,10 @@ int main() {
         testMultipleMessages();
         testEmptyTrie();
         
-        cout << "\n✓ ALL MSGTRIE TESTS PASSED!" << endl;
+        cout << "\nALL MSGTRIE TESTS PASSED!" << endl;
         return 0;
     } catch (const exception& e) {
-        cout << "\n✗ Test failed: " << e.what() << endl;
+        cout << "\nTest failed: " << e.what() << endl;
         return 1;
     }
 }

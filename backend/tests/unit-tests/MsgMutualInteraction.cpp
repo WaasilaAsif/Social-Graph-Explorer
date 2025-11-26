@@ -26,7 +26,7 @@ void testFindMutualInteractions() {
     assert(mutuals.size() > 0);
     
     cout << "Found " << mutuals.size() << " mutual interaction pairs for user 1" << endl;
-    cout << "✓ Find mutual interactions tests passed!" << endl;
+    cout << "Find mutual interactions tests passed!" << endl;
 }
 
 void testNonExistentUser() {

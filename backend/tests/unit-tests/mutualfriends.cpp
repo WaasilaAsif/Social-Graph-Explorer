@@ -32,19 +32,19 @@ int main() {
     }
     std::cout << std::endl;
     std::cout << "Count: " << mutuals1.size() << std::endl;
-    std::cout << "✓ Test 1 PASSED" << std::endl;
+    std::cout << "Test 1 PASSED" << std::endl;
     
     // Test 2: Get mutual friends count
     std::cout << "\nTest 2: Mutual friends count" << std::endl;
     int count = mf.getMutualFriendsCount(1, 2);
     std::cout << "Mutual friends count between 1 and 2: " << count << std::endl;
-    std::cout << "✓ Test 2 PASSED" << std::endl;
+    std::cout << "Test 2 PASSED" << std::endl;
     
     // Test 3: Has mutual friends
     std::cout << "\nTest 3: Has mutual friends check" << std::endl;
     bool hasMutual = mf.hasMutualFriends(1, 2);
     std::cout << "1 and 2 have mutual friends: " << (hasMutual ? "Yes" : "No") << std::endl;
-    std::cout << "✓ Test 3 PASSED" << std::endl;
+    std::cout << "Test 3 PASSED" << std::endl;
     
     std::cout << "\n=== All MutualFriends Tests PASSED! ===" << std::endl;
     return 0;

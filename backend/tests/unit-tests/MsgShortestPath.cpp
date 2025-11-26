@@ -20,7 +20,7 @@ void testShortestPathDirect() {
     assert(path.get(0) == 1);
     assert(path.get(1) == 2);
     
-    cout << "✓ Direct connection tests passed!" << endl;
+    cout << "Direct connection tests passed!" << endl;
 }
 
 void testShortestPathMultiHop() {
@@ -41,7 +41,7 @@ void testShortestPathMultiHop() {
     assert(path.get(path.size() - 1) == 4);
     
     cout << "Path length: " << path.size() << " nodes" << endl;
-    cout << "✓ Multi-hop tests passed!" << endl;
+    cout << "Multi-hop tests passed!" << endl;
 }
 
 void testNoPathExists() {
@@ -58,7 +58,7 @@ void testNoPathExists() {
     
     assert(path.size() == 0);
     
-    cout << "✓ No path tests passed!" << endl;
+    cout << "No path tests passed!" << endl;
 }
 
 void testSameSourceAndDest() {
@@ -74,7 +74,7 @@ void testSameSourceAndDest() {
     assert(path.size() == 1);
     assert(path.get(0) == 1);
     
-    cout << "✓ Same source/dest tests passed!" << endl;
+    cout << "Same source/dest tests passed!" << endl;
 }
 
 void testShortestPathInComplexGraph() {
@@ -101,7 +101,7 @@ void testShortestPathInComplexGraph() {
     
     cout << "Path found with " << path.size() << " nodes" << endl;
     
-    cout << "✓ Complex graph tests passed!" << endl;
+    cout << "Complex graph tests passed!" << endl;
 }
 
 void testNonExistentUsers() {
@@ -118,7 +118,7 @@ void testNonExistentUsers() {
     DynamicArray<int> path2 = pathFinder.findShortestPath(1, 999);
     assert(path2.size() == 0);
     
-    cout << "✓ Non-existent users tests passed!" << endl;
+    cout << "Non-existent users tests passed!" << endl;
 }
 
 int main() {
@@ -132,10 +132,10 @@ int main() {
         testShortestPathInComplexGraph();
         testNonExistentUsers();
         
-        cout << "\n✓ ALL MSGSHORTESTPATH TESTS PASSED!" << endl;
+        cout << "\nALL MSGSHORTESTPATH TESTS PASSED!" << endl;
         return 0;
     } catch (const exception& e) {
-        cout << "\n✗ Test failed: " << e.what() << endl;
+        cout << "\nTest failed: " << e.what() << endl;
         return 1;
     }
 }

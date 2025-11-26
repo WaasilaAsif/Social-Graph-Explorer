@@ -24,7 +24,7 @@ void testAddScheduledMessage() {
     // Verify messages were added (printAll shouldn't crash)
     scheduler.printAll();
     
-    cout << "✓ Add scheduled message tests passed!" << endl;
+    cout << "Add scheduled message tests passed!" << endl;
 }
 
 void testGetNextMessage() {
@@ -53,7 +53,7 @@ void testGetNextMessage() {
     assert(next.id == "2");
     assert(next.senderId == "bob");
     
-    cout << "✓ Get next message tests passed!" << endl;
+    cout << "Get next message tests passed!" << endl;
 }
 
 void testEmptyScheduler() {
@@ -66,7 +66,7 @@ void testEmptyScheduler() {
     
     scheduler.printAll(); // Should print 0 messages
     
-    cout << "✓ Empty scheduler tests passed!" << endl;
+    cout << "Empty scheduler tests passed!" << endl;
 }
 
 void testSamePriority() {
@@ -87,7 +87,7 @@ void testSamePriority() {
     Message next = scheduler.getNextMessage();
     assert(next.id != "");
     
-    cout << "✓ Same priority tests passed!" << endl;
+    cout << "Same priority tests passed!" << endl;
 }
 
 void testMultipleRetrievals() {
@@ -108,7 +108,7 @@ void testMultipleRetrievals() {
         assert(next.id != "");
     }
     
-    cout << "✓ Multiple retrievals tests passed!" << endl;
+    cout << "Multiple retrievals tests passed!" << endl;
 }
 
 int main() {
@@ -121,10 +121,10 @@ int main() {
         testSamePriority();
         testMultipleRetrievals();
         
-        cout << "\n✓ ALL SCHEDULEDMESSAGES TESTS PASSED!" << endl;
+        cout << "\nALL SCHEDULEDMESSAGES TESTS PASSED!" << endl;
         return 0;
     } catch (const exception& e) {
-        cout << "\n✗ Test failed: " << e.what() << endl;
+        cout << "\nTest failed: " << e.what() << endl;
         return 1;
     }
 }

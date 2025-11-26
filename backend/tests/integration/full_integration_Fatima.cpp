@@ -15,7 +15,7 @@ int main() {
     totalTests++;
     if (result1 == 0) {
         passedTests++;
-        std::cout << "✓ PriorityQueue tests PASSED\n" << std::endl;
+        std::cout << "PriorityQueue tests PASSED\n" << std::endl;
     } else {
         std::cout << "✗ PriorityQueue tests FAILED\n" << std::endl;
     }

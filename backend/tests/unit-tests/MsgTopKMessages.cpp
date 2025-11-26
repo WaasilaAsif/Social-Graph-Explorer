@@ -27,7 +27,7 @@ void testGetTopKInteractions() {
     cout << "Top interaction: User " << top2.get(0).first 
          << " with weight " << top2.get(0).second << endl;
     
-    cout << "✓ Get top K interactions tests passed!" << endl;
+    cout << "Get top K interactions tests passed!" << endl;
 }
 
 void testNoInteractions() {
@@ -43,7 +43,7 @@ void testNoInteractions() {
     
     assert(result.size() == 0);
     
-    cout << "✓ No interactions tests passed!" << endl;
+    cout << "No interactions tests passed!" << endl;
 }
 
 void testKLargerThanInteractions() {
@@ -60,7 +60,7 @@ void testKLargerThanInteractions() {
     
     assert(result.size() == 2);
     
-    cout << "✓ K larger than interactions tests passed!" << endl;
+    cout << "K larger than interactions tests passed!" << endl;
 }
 
 void testSortingByWeight() {
@@ -92,7 +92,7 @@ void testSortingByWeight() {
              << ": weight " << top3.get(i).second << endl;
     }
     
-    cout << "✓ Sorting by weight tests passed!" << endl;
+    cout << "Sorting by weight tests passed!" << endl;
 }
 
 void testNonExistentUser() {
@@ -107,7 +107,7 @@ void testNonExistentUser() {
     
     assert(result.size() == 0);
     
-    cout << "✓ Non-existent user tests passed!" << endl;
+    cout << "Non-existent user tests passed!" << endl;
 }
 
 void testInvalidK() {
@@ -124,7 +124,7 @@ void testInvalidK() {
     DynamicArray<Pair<int, int>> result2 = topK.getTopKInteractions(1, -5);
     assert(result2.size() == 0);
     
-    cout << "✓ Invalid k tests passed!" << endl;
+    cout << "Invalid k tests passed!" << endl;
 }
 
 int main() {
@@ -138,10 +138,10 @@ int main() {
         testNonExistentUser();
         testInvalidK();
         
-        cout << "\n✓ ALL MSGTOPKMESSAGES TESTS PASSED!" << endl;
+        cout << "\nALL MSGTOPKMESSAGES TESTS PASSED!" << endl;
         return 0;
     } catch (const exception& e) {
-        cout << "\n✗ Test failed: " << e.what() << endl;
+        cout << "\nTest failed: " << e.what() << endl;
         return 1;
     }
 }

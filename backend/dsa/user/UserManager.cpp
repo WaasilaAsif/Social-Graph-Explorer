@@ -193,7 +193,7 @@ bool UserManager::areConnected(int userAId, int userBId) {
     if (!socialGraph.hasNode(userAId) || !socialGraph.hasNode(userBId))
         return false;
     
-    return DFS::existsPath(socialGraph, userAId, userBId);  // ✅ Use YOUR DFS!
+    return DFS::existsPath(socialGraph, userAId, userBId);  //    Use YOUR DFS!
 }
 
 // Get degrees of separation (using YOUR BFS!)
@@ -201,7 +201,7 @@ int UserManager::degreesOfSeparation(int userAId, int userBId) {
     if (!socialGraph.hasNode(userAId) || !socialGraph.hasNode(userBId))
         return -1;
     
-    return BFS::distance(socialGraph, userAId, userBId);  // ✅ Use YOUR BFS!
+    return BFS::distance(socialGraph, userAId, userBId);  //    Use YOUR BFS!
 }
 
 // Get friend count

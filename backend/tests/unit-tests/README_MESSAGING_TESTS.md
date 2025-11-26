@@ -52,36 +52,36 @@ g++ -std=c++17 -I backend -o backend/tests/AVLTree_messaging.exe backend/tests/u
 ## Test Coverage
 
 ### MsgHeap
-- ✅ Min heap operations
-- ✅ Max heap operations
-- ✅ Push, pop, peek
-- ✅ Empty heap edge cases
+-    Min heap operations
+-    Max heap operations
+-    Push, pop, peek
+-    Empty heap edge cases
 
 ### MsgTrie
-- ✅ Insert and exact word search
-- ✅ Prefix search
-- ✅ Multiple messages indexing
-- ✅ Empty trie handling
+-    Insert and exact word search
+-    Prefix search
+-    Multiple messages indexing
+-    Empty trie handling
 
 ### MsgStack
-- ✅ Push/pop with Message objects
-- ✅ Peek without removal
-- ✅ LIFO ordering
-- ✅ Empty stack operations
+-    Push/pop with Message objects
+-    Peek without removal
+-    LIFO ordering
+-    Empty stack operations
 
 ### ConversationGraph
-- ✅ Add bidirectional interactions
-- ✅ Incremental weight updates
-- ✅ Get neighbors
-- ✅ Complex network scenarios
+-    Add bidirectional interactions
+-    Incremental weight updates
+-    Get neighbors
+-    Complex network scenarios
 
 ### AVLTree
-- ✅ Insert/remove/search
-- ✅ Inorder traversal (sorted)
-- ✅ Auto-balancing
-- ✅ Duplicate handling
-- ✅ Large tree performance (1000 elements)
+-    Insert/remove/search
+-    Inorder traversal (sorted)
+-    Auto-balancing
+-    Duplicate handling
+-    Large tree performance (1000 elements)
 
 ## All Tests Status
 
-✅ **ALL TESTS PASSING**
+   **ALL TESTS PASSING**

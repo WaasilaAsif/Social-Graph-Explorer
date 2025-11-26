@@ -36,7 +36,7 @@ int main() {
     std::cout << std::endl;
     int dist1 = sp.getDistance(1, 2);
     std::cout << "Distance: " << dist1 << std::endl;
-    std::cout << "✓ Test 1 PASSED" << std::endl;
+    std::cout << "Test 1 PASSED" << std::endl;
     
     // Test 2: Two hops
     std::cout << "\nTest 2: Two Hops (1 to 4)" << std::endl;
@@ -49,7 +49,7 @@ int main() {
     std::cout << std::endl;
     int dist2 = sp.getDistance(1, 4);
     std::cout << "Distance: " << dist2 << std::endl;
-    std::cout << "✓ Test 2 PASSED" << std::endl;
+    std::cout << "Test 2 PASSED" << std::endl;
     
     // Test 3: Three hops
     std::cout << "\nTest 3: Three Hops (1 to 6)" << std::endl;
@@ -62,13 +62,13 @@ int main() {
     std::cout << std::endl;
     int dist3 = sp.getDistance(1, 6);
     std::cout << "Distance: " << dist3 << std::endl;
-    std::cout << "✓ Test 3 PASSED" << std::endl;
+    std::cout << "Test 3 PASSED" << std::endl;
     
     // Test 4: Path exists
     std::cout << "\nTest 4: Path Exists Check" << std::endl;
     bool exists = sp.pathExists(1, 6);
     std::cout << "Path exists from 1 to 6: " << (exists ? "Yes" : "No") << std::endl;
-    std::cout << "✓ Test 4 PASSED" << std::endl;
+    std::cout << "Test 4 PASSED" << std::endl;
     
     // Test 5: Users within distance
     std::cout << "\nTest 5: Users Within Distance (1, distance=2)" << std::endl;
@@ -79,7 +79,7 @@ int main() {
     }
     std::cout << std::endl;
     std::cout << "Count: " << nearby.size() << std::endl;
-    std::cout << "✓ Test 5 PASSED" << std::endl;
+    std::cout << "Test 5 PASSED" << std::endl;
     
     std::cout << "\n=== All ShortestPath Tests PASSED! ===" << std::endl;
     return 0;

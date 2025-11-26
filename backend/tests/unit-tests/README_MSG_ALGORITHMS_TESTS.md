@@ -40,33 +40,33 @@ g++ -std=c++17 -I backend -o backend/tests/MsgTopKMessages.exe backend/tests/uni
 ## Test Coverage
 
 ### MsgMutualInteraction
-- ✅ Find mutual connections in conversation network
-- ✅ Non-existent user handling
-- ✅ User with no mutual connections
-- ✅ Complex network scenarios
+-    Find mutual connections in conversation network
+-    Non-existent user handling
+-    User with no mutual connections
+-    Complex network scenarios
 
 ### MsgFriendSuggestion
-- ✅ Suggest friends based on mutual connections
-- ✅ No suggestions available
-- ✅ Non-existent user handling
-- ✅ K limit enforcement
-- ✅ Mutual connections priority (most mutual first)
+-    Suggest friends based on mutual connections
+-    No suggestions available
+-    Non-existent user handling
+-    K limit enforcement
+-    Mutual connections priority (most mutual first)
 
 ### MsgShortestPath
-- ✅ Direct connection (1 hop)
-- ✅ Multi-hop paths
-- ✅ No path exists (disconnected components)
-- ✅ Same source and destination
-- ✅ Complex graph with multiple paths
-- ✅ Non-existent users handling
+-    Direct connection (1 hop)
+-    Multi-hop paths
+-    No path exists (disconnected components)
+-    Same source and destination
+-    Complex graph with multiple paths
+-    Non-existent users handling
 
 ### MsgTopKMessages
-- ✅ Get top-K interactions by weight
-- ✅ User with no interactions
-- ✅ K larger than available interactions
-- ✅ Sorting by interaction weight (descending)
-- ✅ Non-existent user handling
-- ✅ Invalid k values (0, negative)
+-    Get top-K interactions by weight
+-    User with no interactions
+-    K larger than available interactions
+-    Sorting by interaction weight (descending)
+-    Non-existent user handling
+-    Invalid k values (0, negative)
 
 ## Algorithm Details
 
@@ -88,7 +88,7 @@ g++ -std=c++17 -I backend -o backend/tests/MsgTopKMessages.exe backend/tests/uni
 
 ## All Tests Status
 
-✅ **ALL MSG ALGORITHM TESTS IMPLEMENTED**
+   **ALL MSG ALGORITHM TESTS IMPLEMENTED**
 - 4 test files created
 - Complete coverage of message-based graph algorithms
 - All using custom data structures (no STL)
