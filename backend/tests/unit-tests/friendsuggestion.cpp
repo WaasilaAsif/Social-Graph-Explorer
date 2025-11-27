@@ -34,7 +34,7 @@ int main() {
                   << ", frequency: " << suggestions1[i].frequencyScore << ")" << std::endl;
     }
     std::cout << "Total suggestions: " << suggestions1.size() << std::endl;
-    std::cout << "✓ Test 1 PASSED" << std::endl;
+    std::cout << " Test 1 PASSED" << std::endl;
     
     // Test 2: Two-hop friends
     std::cout << "\nTest 2: Two-Hop Friends for user 1" << std::endl;
@@ -45,7 +45,7 @@ int main() {
     }
     std::cout << std::endl;
     std::cout << "Count: " << twoHop.size() << std::endl;
-    std::cout << "✓ Test 2 PASSED" << std::endl;
+    std::cout << " Test 2 PASSED" << std::endl;
     
     std::cout << "\n=== All FriendSuggestion Tests PASSED! ===" << std::endl;
     return 0;

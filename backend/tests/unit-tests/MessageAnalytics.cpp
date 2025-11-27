@@ -18,7 +18,7 @@ void testAddInteraction() {
     assert(analytics.getInteractionCount("bob", "charlie") == 1);
     assert(analytics.getInteractionCount("alice", "charlie") == 1);
     
-    cout << "✓ Add interaction tests passed!" << endl;
+    cout << " Add interaction tests passed!" << endl;
 }
 
 void testMultipleInteractions() {
@@ -34,7 +34,7 @@ void testMultipleInteractions() {
     assert(analytics.getInteractionCount("alice", "bob") == 3);
     assert(analytics.getInteractionCount("bob", "alice") == 3);
     
-    cout << "✓ Multiple interactions tests passed!" << endl;
+    cout << " Multiple interactions tests passed!" << endl;
 }
 
 void testGetMostActiveUsers() {
@@ -55,7 +55,7 @@ void testGetMostActiveUsers() {
     // Alice should be most active (3 connections)
     assert(top3.get(0) == "alice");
     
-    cout << "✓ Get most active users tests passed!" << endl;
+    cout << " Get most active users tests passed!" << endl;
 }
 
 void testNonExistentUsers() {
@@ -68,7 +68,7 @@ void testNonExistentUsers() {
     assert(analytics.getInteractionCount("alice", "nonexistent") == 0);
     assert(analytics.getInteractionCount("user1", "user2") == 0);
     
-    cout << "✓ Non-existent users tests passed!" << endl;
+    cout << " Non-existent users tests passed!" << endl;
 }
 
 void testEmptyAnalytics() {
@@ -80,7 +80,7 @@ void testEmptyAnalytics() {
     
     assert(analytics.getInteractionCount("anyone", "anyone") == 0);
     
-    cout << "✓ Empty analytics tests passed!" << endl;
+    cout << " Empty analytics tests passed!" << endl;
 }
 
 void testComplexNetwork() {
@@ -104,7 +104,7 @@ void testComplexNetwork() {
     DynamicArray<string> top3 = analytics.getMostActiveUsers(3);
     assert(top3.size() == 3);
     
-    cout << "✓ Complex network tests passed!" << endl;
+    cout << " Complex network tests passed!" << endl;
 }
 
 int main() {
@@ -118,7 +118,7 @@ int main() {
         testEmptyAnalytics();
         testComplexNetwork();
         
-        cout << "\n✓ ALL MESSAGEANALYTICS TESTS PASSED!" << endl;
+        cout << "\n ALL MESSAGEANALYTICS TESTS PASSED!" << endl;
         return 0;
     } catch (const exception& e) {
         cout << "\n✗ Test failed: " << e.what() << endl;

@@ -26,7 +26,7 @@ int main() {
     totalTests++;
     if (result2 == 0) {
         passedTests++;
-        std::cout << "✓ MutualFriends tests PASSED\n" << std::endl;
+        std::cout << " MutualFriends tests PASSED\n" << std::endl;
     } else {
         std::cout << "✗ MutualFriends tests FAILED\n" << std::endl;
     }
@@ -37,7 +37,7 @@ int main() {
     totalTests++;
     if (result3 == 0) {
         passedTests++;
-        std::cout << "✓ ShortestPath tests PASSED\n" << std::endl;
+        std::cout << " ShortestPath tests PASSED\n" << std::endl;
     } else {
         std::cout << "✗ ShortestPath tests FAILED\n" << std::endl;
     }
@@ -48,7 +48,7 @@ int main() {
     totalTests++;
     if (result4 == 0) {
         passedTests++;
-        std::cout << "✓ GraphStats tests PASSED\n" << std::endl;
+        std::cout << " GraphStats tests PASSED\n" << std::endl;
     } else {
         std::cout << "✗ GraphStats tests FAILED\n" << std::endl;
     }
@@ -59,7 +59,7 @@ int main() {
     totalTests++;
     if (result5 == 0) {
         passedTests++;
-        std::cout << "✓ PopularityRanker tests PASSED\n" << std::endl;
+        std::cout << " PopularityRanker tests PASSED\n" << std::endl;
     } else {
         std::cout << "✗ PopularityRanker tests FAILED\n" << std::endl;
     }
@@ -70,7 +70,7 @@ int main() {
     totalTests++;
     if (result6 == 0) {
         passedTests++;
-        std::cout << "✓ FriendSuggestion tests PASSED\n" << std::endl;
+        std::cout << " FriendSuggestion tests PASSED\n" << std::endl;
     } else {
         std::cout << "✗ FriendSuggestion tests FAILED\n" << std::endl;
     }
@@ -85,7 +85,7 @@ int main() {
     std::cout << "Success Rate: " << (passedTests * 100.0 / totalTests) << "%" << std::endl;
     
     if (passedTests == totalTests) {
-        std::cout << "\n✓ ALL TESTS PASSED! " << std::endl;
+        std::cout << "\n ALL TESTS PASSED! " << std::endl;
         return 0;
     } else {
         std::cout << "\n✗ SOME TESTS FAILED" << std::endl;

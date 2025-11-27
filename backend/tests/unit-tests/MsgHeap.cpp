@@ -36,7 +36,7 @@ void testMinHeap() {
     assert(minHeap.pop(top));
     assert(top == 50);
     
-    cout << "✓ Min Heap tests passed!" << endl;
+    cout << " Min Heap tests passed!" << endl;
 }
 
 void testMaxHeap() {
@@ -64,7 +64,7 @@ void testMaxHeap() {
     assert(maxHeap.pop(top));
     assert(top == 50);
     
-    cout << "✓ Max Heap tests passed!" << endl;
+    cout << " Max Heap tests passed!" << endl;
 }
 
 void testEmptyOperations() {
@@ -75,7 +75,7 @@ void testEmptyOperations() {
     assert(!heap.pop(value)); // Can't pop from empty
     assert(!heap.peek(value)); // Can't peek empty
     
-    cout << "✓ Empty operations tests passed!" << endl;
+    cout << " Empty operations tests passed!" << endl;
 }
 
 int main() {
@@ -86,7 +86,7 @@ int main() {
         testMaxHeap();
         testEmptyOperations();
         
-        cout << "\n✓ ALL MSGHEAP TESTS PASSED!" << endl;
+        cout << "\n ALL MSGHEAP TESTS PASSED!" << endl;
         return 0;
     } catch (const exception& e) {
         cout << "\n✗ Test failed: " << e.what() << endl;

@@ -30,7 +30,7 @@ void testMessageStoreBasics() {
     assert(msg1 != nullptr);
     assert(msg1->content == "Hello world");
     
-    cout << "✓ MessageStore basic tests passed!" << endl;
+    cout << " MessageStore basic tests passed!" << endl;
 }
 
 void testWordExtraction() {
@@ -45,7 +45,7 @@ void testWordExtraction() {
     assert(words.get(1) == "world");
     assert(words.get(2) == "test");
     
-    cout << "✓ Word extraction tests passed!" << endl;
+    cout << " Word extraction tests passed!" << endl;
 }
 
 void testTrieIndexing() {
@@ -74,7 +74,7 @@ void testTrieIndexing() {
     DynamicArray<int> results = trie.search("hello");
     assert(results.size() == 2);
     
-    cout << "✓ Trie indexing tests passed!" << endl;
+    cout << " Trie indexing tests passed!" << endl;
 }
 
 void testConversationGraph() {
@@ -98,7 +98,7 @@ void testConversationGraph() {
     assert(weight2 == 2); // Weight 2
     assert(weight3 == 1); // Weight 1
     
-    cout << "✓ ConversationGraph tests passed!" << endl;
+    cout << " ConversationGraph tests passed!" << endl;
 }
 
 void testTopKInteractions() {
@@ -122,7 +122,7 @@ void testTopKInteractions() {
     assert(results.get(1).first == 2); // User 2 has weight 2
     assert(results.get(1).second == 2);
     
-    cout << "✓ Top K interactions tests passed!" << endl;
+    cout << " Top K interactions tests passed!" << endl;
 }
 
 void testFriendSuggestions() {
@@ -141,7 +141,7 @@ void testFriendSuggestions() {
     // Should suggest 3 and 4 (friends of friend 2)
     assert(suggestions.size() == 2);
     
-    cout << "✓ Friend suggestions tests passed!" << endl;
+    cout << " Friend suggestions tests passed!" << endl;
 }
 
 void testMutualInteractions() {
@@ -160,7 +160,7 @@ void testMutualInteractions() {
     // Should find (2, 3) as mutual connection - both 2 and 3 are neighbors of 1, and they connect to each other
     assert(results.size() > 0);
     
-    cout << "✓ Mutual interactions tests passed!" << endl;
+    cout << " Mutual interactions tests passed!" << endl;
 }
 
 void testShortestPath() {
@@ -182,7 +182,7 @@ void testShortestPath() {
     assert(path.get(2) == 3);
     assert(path.get(3) == 4);
     
-    cout << "✓ Shortest path tests passed!" << endl;
+    cout << " Shortest path tests passed!" << endl;
 }
 
 void testIntegrationScenario() {
@@ -223,7 +223,7 @@ void testIntegrationScenario() {
     DynamicArray<Pair<int, int>> topUsers = topK.getTopKInteractions(1, 2);
     assert(topUsers.size() == 2);
     
-    cout << "✓ Integration scenario tests passed!" << endl;
+    cout << " Integration scenario tests passed!" << endl;
 }
 
 int main() {
@@ -240,7 +240,7 @@ int main() {
         testShortestPath();
         testIntegrationScenario();
         
-        cout << "\n✓ ALL MESSAGING INTEGRATION TESTS PASSED!" << endl;
+        cout << "\n ALL MESSAGING INTEGRATION TESTS PASSED!" << endl;
         return 0;
     } catch (const exception& e) {
         cout << "\n✗ Test failed: " << e.what() << endl;

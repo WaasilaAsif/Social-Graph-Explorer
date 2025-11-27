@@ -52,7 +52,7 @@ void testEnqueueDequeue() {
     assert(queue.size() == 0);
     assert(queue.isEmpty());
     
-    cout << "✓ Enqueue/Dequeue tests passed!" << endl;
+    cout << " Enqueue/Dequeue tests passed!" << endl;
 }
 
 void testEmptyQueue() {
@@ -71,7 +71,7 @@ void testEmptyQueue() {
     }
     assert(exceptionThrown);
     
-    cout << "✓ Empty queue tests passed!" << endl;
+    cout << " Empty queue tests passed!" << endl;
 }
 
 void testLargeQueue() {
@@ -99,7 +99,7 @@ void testLargeQueue() {
     
     assert(queue.isEmpty());
     
-    cout << "✓ Large queue tests passed!" << endl;
+    cout << " Large queue tests passed!" << endl;
 }
 
 int main() {
@@ -110,7 +110,7 @@ int main() {
         testEmptyQueue();
         testLargeQueue();
         
-        cout << "\n✓ ALL MESSAGEQUEUE TESTS PASSED!" << endl;
+        cout << "\n ALL MESSAGEQUEUE TESTS PASSED!" << endl;
         return 0;
     } catch (const exception& e) {
         cout << "\n✗ Test failed: " << e.what() << endl;

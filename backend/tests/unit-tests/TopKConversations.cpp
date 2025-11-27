@@ -23,7 +23,7 @@ void testAddAndGetTopK() {
     assert(top3.get(1) == "bob");     // 100
     assert(top3.get(2) == "charlie"); // 75
     
-    cout << "✓ Add and getTopK tests passed!" << endl;
+    cout << " Add and getTopK tests passed!" << endl;
 }
 
 void testGetMoreThanAvailable() {
@@ -37,7 +37,7 @@ void testGetMoreThanAvailable() {
     DynamicArray<string> result = topK.getTopK(5);
     assert(result.size() == 2); // Should only return available items
     
-    cout << "✓ Get more than available tests passed!" << endl;
+    cout << " Get more than available tests passed!" << endl;
 }
 
 void testNonDestructiveGetTopK() {
@@ -59,7 +59,7 @@ void testNonDestructiveGetTopK() {
     assert(first.get(0) == second.get(0));
     assert(first.get(1) == second.get(1));
     
-    cout << "✓ Non-destructive getTopK tests passed!" << endl;
+    cout << " Non-destructive getTopK tests passed!" << endl;
 }
 
 void testSameInteractionCount() {
@@ -76,7 +76,7 @@ void testSameInteractionCount() {
     assert(top2.get(0) == "user4"); // Highest
     // Second can be any of user1, user2, user3
     
-    cout << "✓ Same interaction count tests passed!" << endl;
+    cout << " Same interaction count tests passed!" << endl;
 }
 
 void testEmptyTopK() {
@@ -86,7 +86,7 @@ void testEmptyTopK() {
     DynamicArray<string> result = topK.getTopK(5);
     assert(result.size() == 0);
     
-    cout << "✓ Empty TopK tests passed!" << endl;
+    cout << " Empty TopK tests passed!" << endl;
 }
 
 void testLargeTopK() {
@@ -107,7 +107,7 @@ void testLargeTopK() {
     assert(top10.get(1) == "user98");  // 980
     assert(top10.get(9) == "user90");  // 900
     
-    cout << "✓ Large TopK tests passed!" << endl;
+    cout << " Large TopK tests passed!" << endl;
 }
 
 int main() {
@@ -121,7 +121,7 @@ int main() {
         testEmptyTopK();
         testLargeTopK();
         
-        cout << "\n✓ ALL TOPKCONVERSATIONS TESTS PASSED!" << endl;
+        cout << "\n ALL TOPKCONVERSATIONS TESTS PASSED!" << endl;
         return 0;
     } catch (const exception& e) {
         cout << "\n✗ Test failed: " << e.what() << endl;

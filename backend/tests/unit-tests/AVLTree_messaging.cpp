@@ -22,7 +22,7 @@ void testInsertAndSearch() {
     assert(!tree.search(100));
     assert(!tree.search(10));
     
-    cout << "✓ Insert/Search tests passed!" << endl;
+    cout << " Insert/Search tests passed!" << endl;
 }
 
 void testInorderTraversal() {
@@ -50,7 +50,7 @@ void testInorderTraversal() {
     assert(result.get(5) == 70);
     assert(result.get(6) == 80);
     
-    cout << "✓ Inorder traversal tests passed!" << endl;
+    cout << " Inorder traversal tests passed!" << endl;
 }
 
 void testRemove() {
@@ -81,7 +81,7 @@ void testRemove() {
     assert(tree.search(60));
     assert(tree.search(80));
     
-    cout << "✓ Remove tests passed!" << endl;
+    cout << " Remove tests passed!" << endl;
 }
 
 void testBalancing() {
@@ -105,7 +105,7 @@ void testBalancing() {
         assert(result.get(i) == i + 1);
     }
     
-    cout << "✓ Balancing tests passed!" << endl;
+    cout << " Balancing tests passed!" << endl;
 }
 
 void testDuplicates() {
@@ -120,7 +120,7 @@ void testDuplicates() {
     DynamicArray<int> result = tree.inorder();
     assert(result.size() == 2); // Duplicates not allowed
     
-    cout << "✓ Duplicate handling tests passed!" << endl;
+    cout << " Duplicate handling tests passed!" << endl;
 }
 
 void testLargeTree() {
@@ -141,7 +141,7 @@ void testLargeTree() {
     DynamicArray<int> result = tree.inorder();
     assert(result.size() == 1000);
     
-    cout << "✓ Large tree tests passed!" << endl;
+    cout << " Large tree tests passed!" << endl;
 }
 
 int main() {
@@ -155,7 +155,7 @@ int main() {
         testDuplicates();
         testLargeTree();
         
-        cout << "\n✓ ALL AVLTREE TESTS PASSED!" << endl;
+        cout << "\n ALL AVLTREE TESTS PASSED!" << endl;
         return 0;
     } catch (const exception& e) {
         cout << "\n✗ Test failed: " << e.what() << endl;

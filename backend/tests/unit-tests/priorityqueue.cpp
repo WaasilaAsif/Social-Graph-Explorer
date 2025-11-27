@@ -26,7 +26,7 @@ int main() {
     std::cout << "5 ";
     assert(pq.extractMax() == 3);
     std::cout << "3" << std::endl;
-    std::cout << "✓ Test 1 PASSED" << std::endl;
+    std::cout << " Test 1 PASSED" << std::endl;
     
     // Test 2: Peek operation
     std::cout << "\nTest 2: Peek Operation" << std::endl;
@@ -41,7 +41,7 @@ int main() {
     assert(pq2.peek() == 150);
     std::cout << "Size: " << pq2.size() << std::endl;
     assert(pq2.size() == 4);
-    std::cout << "✓ Test 2 PASSED" << std::endl;
+    std::cout << " Test 2 PASSED" << std::endl;
     
     // Test 3: isEmpty and size
     std::cout << "\nTest 3: isEmpty and Size" << std::endl;
@@ -56,7 +56,7 @@ int main() {
     assert(pq3.size() == 3);
     std::cout << "After inserting 3 elements, isEmpty: " << (pq3.isEmpty() ? "true" : "false") << std::endl;
     std::cout << "Size: " << pq3.size() << std::endl;
-    std::cout << "✓ Test 3 PASSED" << std::endl;
+    std::cout << " Test 3 PASSED" << std::endl;
     
     // Test 4: Build heap from vector
     std::cout << "\nTest 4: Build Heap from Vector" << std::endl;
@@ -70,7 +70,7 @@ int main() {
         std::cout << pq4.extractMax() << " ";
     }
     std::cout << std::endl;
-    std::cout << "✓ Test 4 PASSED" << std::endl;
+    std::cout << " Test 4 PASSED" << std::endl;
     
     // Test 5: Clear operation
     std::cout << "\nTest 5: Clear Operation" << std::endl;
@@ -84,7 +84,7 @@ int main() {
     pq5.clear();
     std::cout << "Size after clear: " << pq5.size() << std::endl;
     assert(pq5.isEmpty());
-    std::cout << "✓ Test 5 PASSED" << std::endl;
+    std::cout << " Test 5 PASSED" << std::endl;
     
     // Test 6: Error handling
     std::cout << "\nTest 6: Error Handling" << std::endl;
@@ -94,7 +94,7 @@ int main() {
         std::cout << "✗ Test 6 FAILED - Should have thrown error" << std::endl;
     } catch (const std::runtime_error& e) {
         std::cout << "Caught expected error: " << e.what() << std::endl;
-        std::cout << "✓ Test 6 PASSED" << std::endl;
+        std::cout << " Test 6 PASSED" << std::endl;
     }
     
     std::cout << "\n=== All PriorityQueue Tests PASSED! ===" << std::endl;

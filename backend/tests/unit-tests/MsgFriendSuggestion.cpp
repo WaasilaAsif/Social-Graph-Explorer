@@ -29,7 +29,7 @@ void testSuggestFriends() {
     assert(suggestions.size() > 0);
     cout << "Suggested " << suggestions.size() << " friends for user 1" << endl;
     
-    cout << "✓ Suggest friends tests passed!" << endl;
+    cout << " Suggest friends tests passed!" << endl;
 }
 
 void testNoSuggestions() {
@@ -46,7 +46,7 @@ void testNoSuggestions() {
     DynamicArray<int> suggestions = suggester.suggestFriends(1, 5);
     assert(suggestions.size() == 0);
     
-    cout << "✓ No suggestions tests passed!" << endl;
+    cout << " No suggestions tests passed!" << endl;
 }
 
 void testNonExistentUser() {
@@ -60,7 +60,7 @@ void testNonExistentUser() {
     DynamicArray<int> suggestions = suggester.suggestFriends(999, 5);
     assert(suggestions.size() == 0);
     
-    cout << "✓ Non-existent user tests passed!" << endl;
+    cout << " Non-existent user tests passed!" << endl;
 }
 
 void testLimitK() {
@@ -83,7 +83,7 @@ void testLimitK() {
     assert(suggestions.size() <= 3);
     cout << "Got " << suggestions.size() << " suggestions (requested 3)" << endl;
     
-    cout << "✓ K limit tests passed!" << endl;
+    cout << " K limit tests passed!" << endl;
 }
 
 void testMutualConnectionsPriority() {
@@ -112,7 +112,7 @@ void testMutualConnectionsPriority() {
         cout << "Top suggestion: " << suggestions.get(0) << " (expected 5)" << endl;
     }
     
-    cout << "✓ Mutual connections priority tests passed!" << endl;
+    cout << " Mutual connections priority tests passed!" << endl;
 }
 
 int main() {
@@ -125,7 +125,7 @@ int main() {
         testLimitK();
         testMutualConnectionsPriority();
         
-        cout << "\n✓ ALL MSGFRIENDSUGGESTION TESTS PASSED!" << endl;
+        cout << "\n ALL MSGFRIENDSUGGESTION TESTS PASSED!" << endl;
         return 0;
     } catch (const exception& e) {
         cout << "\n✗ Test failed: " << e.what() << endl;

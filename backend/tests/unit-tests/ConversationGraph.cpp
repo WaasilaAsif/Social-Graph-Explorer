@@ -20,7 +20,7 @@ void testAddInteraction() {
     assert(graph.userExists(3));
     assert(!graph.userExists(4));
     
-    cout << "✓ Add interaction tests passed!" << endl;
+    cout << " Add interaction tests passed!" << endl;
 }
 
 void testInteractionWeights() {
@@ -42,7 +42,7 @@ void testInteractionWeights() {
     assert(graph.getInteractionWeight(1, 3) == 0);
     assert(graph.getInteractionWeight(5, 6) == 0);
     
-    cout << "✓ Interaction weights tests passed!" << endl;
+    cout << " Interaction weights tests passed!" << endl;
 }
 
 void testGetNeighbors() {
@@ -76,7 +76,7 @@ void testGetNeighbors() {
     neighbors = graph.getNeighbors(99);
     assert(neighbors.size() == 0);
     
-    cout << "✓ Get neighbors tests passed!" << endl;
+    cout << " Get neighbors tests passed!" << endl;
 }
 
 void testBidirectionalEdges() {
@@ -99,7 +99,7 @@ void testBidirectionalEdges() {
     // Weights should be equal in both directions
     assert(graph.getInteractionWeight(5, 10) == graph.getInteractionWeight(10, 5));
     
-    cout << "✓ Bidirectional edges tests passed!" << endl;
+    cout << " Bidirectional edges tests passed!" << endl;
 }
 
 void testComplexNetwork() {
@@ -129,7 +129,7 @@ void testComplexNetwork() {
     assert(graph.getNeighbors(3).size() == 2); // 1, 2
     assert(graph.getNeighbors(4).size() == 1); // 1
     
-    cout << "✓ Complex network tests passed!" << endl;
+    cout << " Complex network tests passed!" << endl;
 }
 
 int main() {
@@ -142,7 +142,7 @@ int main() {
         testBidirectionalEdges();
         testComplexNetwork();
         
-        cout << "\n✓ ALL CONVERSATIONGRAPH TESTS PASSED!" << endl;
+        cout << "\n ALL CONVERSATIONGRAPH TESTS PASSED!" << endl;
         return 0;
     } catch (const exception& e) {
         cout << "\n✗ Test failed: " << e.what() << endl;

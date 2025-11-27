@@ -40,7 +40,7 @@ void testNonExistentUser() {
     DynamicArray<Pair<int, int>> mutuals = mutualFinder.findMutualInteractions(999);
     assert(mutuals.size() == 0);
     
-    cout << "✓ Non-existent user tests passed!" << endl;
+    cout << " Non-existent user tests passed!" << endl;
 }
 
 void testUserWithNoMutuals() {
@@ -59,7 +59,7 @@ void testUserWithNoMutuals() {
     // No mutual connections should be found
     cout << "Found " << mutuals.size() << " mutual pairs (expected 0)" << endl;
     
-    cout << "✓ No mutuals tests passed!" << endl;
+    cout << " No mutuals tests passed!" << endl;
 }
 
 void testComplexNetwork() {
@@ -81,7 +81,7 @@ void testComplexNetwork() {
     cout << "Found " << mutuals.size() << " mutual pairs in complex network" << endl;
     assert(mutuals.size() > 0);
     
-    cout << "✓ Complex network tests passed!" << endl;
+    cout << " Complex network tests passed!" << endl;
 }
 
 int main() {
@@ -93,7 +93,7 @@ int main() {
         testUserWithNoMutuals();
         testComplexNetwork();
         
-        cout << "\n✓ ALL MSGMUTUALINTERACTION TESTS PASSED!" << endl;
+        cout << "\n ALL MSGMUTUALINTERACTION TESTS PASSED!" << endl;
         return 0;
     } catch (const exception& e) {
         cout << "\n✗ Test failed: " << e.what() << endl;

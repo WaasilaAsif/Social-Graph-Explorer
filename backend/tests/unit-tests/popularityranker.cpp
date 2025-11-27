@@ -31,7 +31,7 @@ int main() {
         std::cout << "  " << (i+1) << ". User " << topUsers[i].userId 
                   << " (score: " << topUsers[i].score << ")" << std::endl;
     }
-    std::cout << "✓ Test 1 PASSED" << std::endl;
+    std::cout << " Test 1 PASSED" << std::endl;
     
     // Test 2: User rank
     std::cout << "\nTest 2: Get User Rank" << std::endl;
@@ -39,7 +39,7 @@ int main() {
     int rank2 = ranker.getUserRank(6);
     std::cout << "User 2 rank: " << rank1 << std::endl;
     std::cout << "User 6 rank: " << rank2 << std::endl;
-    std::cout << "✓ Test 2 PASSED" << std::endl;
+    std::cout << " Test 2 PASSED" << std::endl;
     
     // Test 3: Percentile rank
     std::cout << "\nTest 3: Get Percentile Rank" << std::endl;
@@ -47,7 +47,7 @@ int main() {
     double percentile2 = ranker.getPercentileRank(6);
     std::cout << "User 2 percentile: " << percentile1 << "%" << std::endl;
     std::cout << "User 6 percentile: " << percentile2 << "%" << std::endl;
-    std::cout << "✓ Test 3 PASSED" << std::endl;
+    std::cout << " Test 3 PASSED" << std::endl;
     
     std::cout << "\n=== All PopularityRanker Tests PASSED! ===" << std::endl;
     return 0;

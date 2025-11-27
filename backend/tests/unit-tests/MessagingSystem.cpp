@@ -23,7 +23,7 @@ void testAddMessage() {
     assert(results.size() == 1);
     assert(results.get(0) == 0); // First message, index 0
     
-    cout << "✓ Add message tests passed!" << endl;
+    cout << " Add message tests passed!" << endl;
 }
 
 void testSearchMessages() {
@@ -57,7 +57,7 @@ void testSearchMessages() {
     results = system.searchMessages("nonexistent");
     assert(results.size() == 0);
     
-    cout << "✓ Search messages tests passed!" << endl;
+    cout << " Search messages tests passed!" << endl;
 }
 
 void testCaseInsensitiveSearch() {
@@ -78,7 +78,7 @@ void testCaseInsensitiveSearch() {
     assert(results2.size() == 1);
     assert(results3.size() == 1);
     
-    cout << "✓ Case-insensitive search tests passed!" << endl;
+    cout << " Case-insensitive search tests passed!" << endl;
 }
 
 void testScheduleMessage() {
@@ -98,7 +98,7 @@ void testScheduleMessage() {
     // Just verify no crashes
     system.printScheduledMessages();
     
-    cout << "✓ Schedule message tests passed!" << endl;
+    cout << " Schedule message tests passed!" << endl;
 }
 
 void testUndoLastAction() {
@@ -132,7 +132,7 @@ void testUndoLastAction() {
     results = system.searchMessages("third");
     // Note: Trie still contains the word, but message is removed from array
     
-    cout << "✓ Undo last action tests passed!" << endl;
+    cout << " Undo last action tests passed!" << endl;
 }
 
 void testMultipleWords() {
@@ -150,7 +150,7 @@ void testMultipleWords() {
     assert(system.searchMessages("fox").size() == 1);
     assert(system.searchMessages("jumps").size() == 1);
     
-    cout << "✓ Multiple words tests passed!" << endl;
+    cout << " Multiple words tests passed!" << endl;
 }
 
 int main() {
@@ -164,7 +164,7 @@ int main() {
         testUndoLastAction();
         testMultipleWords();
         
-        cout << "\n✓ ALL MESSAGINGSYSTEM TESTS PASSED!" << endl;
+        cout << "\n ALL MESSAGINGSYSTEM TESTS PASSED!" << endl;
         return 0;
     } catch (const exception& e) {
         cout << "\n✗ Test failed: " << e.what() << endl;
