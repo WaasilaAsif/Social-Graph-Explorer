@@ -81,7 +81,7 @@ SocialGraphExplorer/
 
 ## **Team Member Assignments**
 
-### **1️⃣ Team Member 1 – Graph & Traversals**
+### ** Team Member 1 – Graph & Traversals**
 
 **Responsibilities:**
 - Implement the core **Graph structure**.
@@ -102,7 +102,7 @@ SocialGraphExplorer/
 
 ---
 
-### **2️⃣ Team Member 2 – Trees & User Hierarchy**
+### **Team Member 2 – Trees & User Hierarchy**
 
 **Responsibilities:**
 - Implement **user management** with tree/trie support.
@@ -122,7 +122,7 @@ SocialGraphExplorer/
 
 ---
 
-### **3️⃣ Team Member 3 – Containers: Lists, Stacks, Queues, Heaps**
+### **Team Member 3 – Containers: Lists, Stacks, Queues, Heaps**
 
 **Responsibilities:**
 - Implement **core container data structures** used across the project.
@@ -142,7 +142,7 @@ SocialGraphExplorer/
 
 ---
 
-### **4️⃣ Team Member 4 – Algorithms & Utilities**
+### **Team Member 4 – Algorithms & Utilities**
 
 **Responsibilities:**
 - Implement **supporting algorithms** and utility functions.
