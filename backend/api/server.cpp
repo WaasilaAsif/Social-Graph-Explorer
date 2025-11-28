@@ -64,7 +64,7 @@ int main() {
     </style>
 </head>
 <body>
-    <h1>🚀 Social Network Graph API</h1>
+    <h1> Social Network Graph API</h1>
     <p>Server is running successfully!</p>
     
     <h2>📡 Available Endpoints:</h2>
@@ -181,7 +181,7 @@ int main() {
 
     // Start server
     std::cout << "========================================" << std::endl;
-    std::cout << "🚀 Social Network Graph API Server" << std::endl;
+    std::cout << " Social Network Graph API Server" << std::endl;
     std::cout << "📡 Listening on: http://localhost:8080" << std::endl;
     std::cout << "📊 Graph routes registered" << std::endl;
     std::cout << "💬 Messaging routes registered" << std::endl;
