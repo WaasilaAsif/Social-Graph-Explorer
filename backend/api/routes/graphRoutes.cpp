@@ -2,12 +2,11 @@
 #include "../../dsa/graph/Graph.h"
 #include "../../dsa/graph/Edge.h"
 #include "../../dsa/containers/LinkedList.h"
-#include "../../algorithms/BFS.h"
-#include "../../algorithms/DFS.h"
+#include "../../libs/project_headers/BFS.h"
+#include "../../libs/project_headers/DFS.h"
 #include "../../analytics/Graphstats.h"
 #include <iostream>
-#include <vector>
-#include <crow.h>  
+#include <vector>  
 
 GraphRoutes::GraphRoutes(Graph& g) : graph(g) {}
 

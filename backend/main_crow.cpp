@@ -1,6 +1,6 @@
 #define CROW_MAIN
-#include <crow.h>
-#include "libs/json.hpp"
+#include "libs/crow/crow_all.h"
+#include "libs/crow/nlohmann/json.hpp"
 #include "dsa/user/UserManager.h"
 #include "api/routes/UserRouter.h"
 #include <iostream>

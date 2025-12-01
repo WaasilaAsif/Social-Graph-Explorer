@@ -4,7 +4,7 @@
 #include "../dsa/graph/Graph.h"
 #include "../dsa/containers/HashMap.h"
 #include "../dsa/containers/Queue.h"
-#include "DFS.h"
+#include "../libs/project_headers/DFS.h"
 #include <stdexcept>
 class GraphStats {
 public:

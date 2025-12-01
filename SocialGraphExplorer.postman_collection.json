@@ -1,0 +1,377 @@
+{
+  "info": {
+    "name": "Social Graph Explorer API",
+    "description": "Complete API collection for Social Graph Explorer backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "item": [
+        {
+          "name": "Server Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "User Management",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"alice\",\n  \"password\": \"alice123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"alice\",\n  \"password\": \"alice123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "login"]
+            }
+          }
+        },
+        {
+          "name": "Search Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/search?prefix=ali",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "search"],
+              "query": [
+                {
+                  "key": "prefix",
+                  "value": "ali"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{user_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{user_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Create Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"This is my first post!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/{{user_id}}/posts",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{user_id}}", "posts"]
+            }
+          }
+        },
+        {
+          "name": "Get User Posts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/{{user_id}}/posts",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{user_id}}", "posts"]
+            }
+          }
+        },
+        {
+          "name": "Delete Post",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/{{user_id}}/posts/0",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{user_id}}", "posts", "0"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Graph Operations",
+      "item": [
+        {
+          "name": "Get Friends",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/graph/friends/1",
+              "host": ["{{base_url}}"],
+              "path": ["graph", "friends", "1"]
+            }
+          }
+        },
+        {
+          "name": "Add Friendship",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"u\": 1,\n  \"v\": 2\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/graph/addFriend",
+              "host": ["{{base_url}}"],
+              "path": ["graph", "addFriend"]
+            }
+          }
+        },
+        {
+          "name": "Remove Friendship",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"u\": 1,\n  \"v\": 2\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/graph/removeFriend",
+              "host": ["{{base_url}}"],
+              "path": ["graph", "removeFriend"]
+            }
+          }
+        },
+        {
+          "name": "Graph Statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/graph/stats",
+              "host": ["{{base_url}}"],
+              "path": ["graph", "stats"]
+            }
+          }
+        },
+        {
+          "name": "Check Connected",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/graph/connected/1/5",
+              "host": ["{{base_url}}"],
+              "path": ["graph", "connected", "1", "5"]
+            }
+          }
+        },
+        {
+          "name": "Component Count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/graph/components",
+              "host": ["{{base_url}}"],
+              "path": ["graph", "components"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Messaging System",
+      "item": [
+        {
+          "name": "Send Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"senderId\": 1,\n  \"receiverId\": 2,\n  \"text\": \"Hello! How are you doing today?\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/msg/send",
+              "host": ["{{base_url}}"],
+              "path": ["msg", "send"]
+            }
+          }
+        },
+        {
+          "name": "Search by Word",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/msg/search/hello",
+              "host": ["{{base_url}}"],
+              "path": ["msg", "search", "hello"]
+            }
+          }
+        },
+        {
+          "name": "Search by Prefix",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/msg/prefix/hel",
+              "host": ["{{base_url}}"],
+              "path": ["msg", "prefix", "hel"]
+            }
+          }
+        },
+        {
+          "name": "Top K Interactions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/msg/topk/1/5",
+              "host": ["{{base_url}}"],
+              "path": ["msg", "topk", "1", "5"]
+            }
+          }
+        },
+        {
+          "name": "Friend Suggestions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/msg/suggestions/1/3",
+              "host": ["{{base_url}}"],
+              "path": ["msg", "suggestions", "1", "3"]
+            }
+          }
+        },
+        {
+          "name": "Mutual Interactions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/msg/mutual/1",
+              "host": ["{{base_url}}"],
+              "path": ["msg", "mutual", "1"]
+            }
+          }
+        },
+        {
+          "name": "Popularity Ranking",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/msg/rank/10",
+              "host": ["{{base_url}}"],
+              "path": ["msg", "rank", "10"]
+            }
+          }
+        },
+        {
+          "name": "Shortest Path",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/msg/path/1/7",
+              "host": ["{{base_url}}"],
+              "path": ["msg", "path", "1", "7"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

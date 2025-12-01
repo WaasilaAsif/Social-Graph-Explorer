@@ -1,6 +1,6 @@
 #pragma once
-#include <crow.h>
-#include "../../libs/json.hpp"
+#include "../../libs/crow/crow_all.h"
+#include "../../libs/crow/nlohmann/json.hpp"
 #include "../../dsa/user/UserManager.h"
 
 using json = nlohmann::json;
@@ -14,7 +14,7 @@ public:
 
     void setupRoutes(crow::SimpleApp& app) {
         CROW_ROUTE(app, "/api/users/register")
-            .methods(crow::HTTPMethod::POST)
+            .methods(crow::HTTPMethod::Post)
             ([this](const crow::request& req) {
                 try {
                     auto body = json::parse(req.body);
@@ -45,7 +45,7 @@ public:
 
         // ==================== LOGIN ====================
         CROW_ROUTE(app, "/api/users/login")
-            .methods(crow::HTTPMethod::POST)
+            .methods(crow::HTTPMethod::Post)
             ([this](const crow::request& req) {
                 try {
                     auto body = json::parse(req.body);
@@ -80,7 +80,7 @@ public:
 
         // ==================== SEARCH USERS ====================
         CROW_ROUTE(app, "/api/users/search")
-            .methods(crow::HTTPMethod::GET)
+            .methods(crow::HTTPMethod::Get)
             ([this](const crow::request& req) {
                 try {
                     std::string prefix = req.url_params.get("prefix") 
@@ -110,7 +110,7 @@ public:
 
         // ==================== GET USER BY ID ====================
         CROW_ROUTE(app, "/api/users/<int>")
-            .methods(crow::HTTPMethod::GET)
+            .methods(crow::HTTPMethod::Get)
             ([this](int userId) {
                 try {
                     User* user = userManager.getUserById(userId);
@@ -178,7 +178,7 @@ public:
 
         // ==================== CREATE POST ====================
         CROW_ROUTE(app, "/api/users/<int>/posts")
-            .methods(crow::HTTPMethod::POST)
+            .methods(crow::HTTPMethod::Post)
             ([this](const crow::request& req, int userId) {
                 try {
                     User* user = userManager.getUserById(userId);
@@ -217,7 +217,7 @@ public:
 
         // ==================== GET USER POSTS ====================
         CROW_ROUTE(app, "/api/users/<int>/posts")
-            .methods(crow::HTTPMethod::GET)
+            .methods(crow::HTTPMethod::Get)
             ([this](int userId) {
                 try {
                     User* user = userManager.getUserById(userId);
@@ -291,7 +291,7 @@ public:
 
         // ==================== CORS ====================
         CROW_ROUTE(app, "/api/<path>")
-            .methods(crow::HTTPMethod::OPTIONS)
+            .methods(crow::HTTPMethod::Options)
             ([](const crow::request&, std::string) {
                 crow::response res(200);
                 res.add_header("Access-Control-Allow-Origin", "*");

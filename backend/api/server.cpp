@@ -2,12 +2,13 @@
 #include "routes/graphRoutes.h"
 #include "routes/MsgRoutes.h"
 #include "routes/MsgAPI.h"
+#include "routes/UserRouter.h"
 #include "../dsa/graph/Graph.h"
 #include "../dsa/user/UserManager.h"
 #include "../messaging/MessageStore.h"
 #include "../dsa/messaging_ds/MsgTrie.h"
 #include "../dsa/messaging_ds/ConversationGraph.h"
-#include <crow.h>  // vcpkg Crow 1.3.0
+#include "../libs/crow/crow_all.h"
 #include <iostream>
 
 int main() {
@@ -32,6 +33,55 @@ int main() {
     // Register messaging routes
     MsgRoutes msgRoutes(&msgApi);
     msgRoutes.registerRoutes(app);
+    
+    // Register user routes
+    UserRouter userRouter(userManager);
+    userRouter.setupRoutes(app);
+
+    // Root - API Menu
+    CROW_ROUTE(app, "/")
+    ([]() {
+        crow::json::wvalue menu;
+        menu["server"] = "Social Network Graph API";
+        menu["port"] = 8081;
+        menu["status"] = "running";
+        
+        // Graph endpoints
+        menu["endpoints"]["graph"]["friends"] = "GET /graph/friends/:id";
+        menu["endpoints"]["graph"]["addFriend"] = "POST /graph/addFriend - Body: {u, v}";
+        menu["endpoints"]["graph"]["removeFriend"] = "POST /graph/removeFriend - Body: {u, v}";
+        menu["endpoints"]["graph"]["stats"] = "GET /graph/stats";
+        menu["endpoints"]["graph"]["connected"] = "GET /graph/connected/:u/:v";
+        menu["endpoints"]["graph"]["components"] = "GET /graph/components";
+        
+        // Messaging endpoints
+        menu["endpoints"]["messaging"]["send"] = "POST /msg/send - Body: {senderId, receiverId, text}";
+        menu["endpoints"]["messaging"]["search"] = "GET /msg/search/:word";
+        menu["endpoints"]["messaging"]["prefix"] = "GET /msg/prefix/:prefix";
+        menu["endpoints"]["messaging"]["topk"] = "GET /msg/topk/:userId/:k";
+        menu["endpoints"]["messaging"]["suggestions"] = "GET /msg/suggestions/:userId/:k";
+        menu["endpoints"]["messaging"]["mutual"] = "GET /msg/mutual/:userId";
+        menu["endpoints"]["messaging"]["rank"] = "GET /msg/rank/:topN";
+        menu["endpoints"]["messaging"]["path"] = "GET /msg/path/:src/:dest";
+        
+        // User endpoints
+        menu["endpoints"]["users"]["register"] = "POST /api/users/register - Body: {username, password}";
+        menu["endpoints"]["users"]["login"] = "POST /api/users/login - Body: {username, password}";
+        menu["endpoints"]["users"]["search"] = "GET /api/users/search?prefix=...";
+        menu["endpoints"]["users"]["getUser"] = "GET /api/users/:id";
+        menu["endpoints"]["users"]["deleteUser"] = "DELETE /api/users/:id";
+        menu["endpoints"]["users"]["createPost"] = "POST /api/users/:id/posts - Body: {content}";
+        menu["endpoints"]["users"]["getPosts"] = "GET /api/users/:id/posts";
+        menu["endpoints"]["users"]["deletePost"] = "DELETE /api/users/:id/posts/:postIndex";
+        
+        // Health
+        menu["endpoints"]["health"] = "GET /health";
+        
+        crow::response res(menu);
+        res.add_header("Content-Type", "application/json");
+        res.add_header("Access-Control-Allow-Origin", "*");
+        return res;
+    });
 
     // Health check
     CROW_ROUTE(app, "/health")
@@ -41,118 +91,6 @@ int main() {
         response["message"] = "Server is running";
         crow::response res(response);
         res.add_header("Content-Type", "application/json");
-        res.add_header("Access-Control-Allow-Origin", "*");
-        return res;
-    });
-
-    // Root endpoint
-    CROW_ROUTE(app, "/")
-    ([]() {
-        std::string html = R"(
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Social Network Graph API</title>
-    <style>
-        body { font-family: Arial, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; }
-        h1 { color: #333; }
-        .endpoint { background: #f4f4f4; padding: 10px; margin: 10px 0; border-radius: 5px; }
-        .method { color: #fff; padding: 3px 8px; border-radius: 3px; font-size: 12px; }
-        .get { background: #61affe; }
-        .post { background: #49cc90; }
-        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
-    </style>
-</head>
-<body>
-    <h1> Social Network Graph API</h1>
-    <p>Server is running successfully!</p>
-    
-    <h2>📡 Available Endpoints:</h2>
-    
-    <div class="endpoint">
-        <span class="method get">GET</span> <code>/health</code>
-        <p>Check server health</p>
-    </div>
-    
-    <div class="endpoint">
-        <span class="method get">GET</span> <code>/graph/friends/:id</code>
-        <p>Get friends list for a user</p>
-    </div>
-    
-    <div class="endpoint">
-        <span class="method post">POST</span> <code>/graph/addFriend</code>
-        <p>Add friendship between two users<br>Body: <code>{"u":1, "v":2}</code></p>
-    </div>
-    
-    <div class="endpoint">
-        <span class="method post">POST</span> <code>/graph/removeFriend</code>
-        <p>Remove friendship between two users<br>Body: <code>{"u":1, "v":2}</code></p>
-    </div>
-    
-    <div class="endpoint">
-        <span class="method get">GET</span> <code>/graph/stats</code>
-        <p>Get graph statistics</p>
-    </div>
-    
-    <div class="endpoint">
-        <span class="method get">GET</span> <code>/graph/connected/:u/:v</code>
-        <p>Check if two users are connected</p>
-    </div>
-    
-    <div class="endpoint">
-        <span class="method get">GET</span> <code>/graph/components</code>
-        <p>Get number of connected components</p>
-    </div>
-    
-    <h2>💬 Messaging Endpoints:</h2>
-    
-    <div class="endpoint">
-        <span class="method post">POST</span> <code>/msg/send</code>
-        <p>Send a message<br>Body: <code>{"senderId":1, "receiverId":2, "text":"Hello"}</code></p>
-    </div>
-    
-    <div class="endpoint">
-        <span class="method get">GET</span> <code>/msg/search/:word</code>
-        <p>Search messages by exact word</p>
-    </div>
-    
-    <div class="endpoint">
-        <span class="method get">GET</span> <code>/msg/prefix/:prefix</code>
-        <p>Search messages by word prefix</p>
-    </div>
-    
-    <div class="endpoint">
-        <span class="method get">GET</span> <code>/msg/topk/:userId/:k</code>
-        <p>Get top K interactions for a user</p>
-    </div>
-    
-    <div class="endpoint">
-        <span class="method get">GET</span> <code>/msg/suggestions/:userId/:k</code>
-        <p>Get friend suggestions based on messages</p>
-    </div>
-    
-    <div class="endpoint">
-        <span class="method get">GET</span> <code>/msg/mutual/:userId</code>
-        <p>Find mutual message interactions</p>
-    </div>
-    
-    <div class="endpoint">
-        <span class="method get">GET</span> <code>/msg/rank/:topN</code>
-        <p>Get popularity ranking by messages</p>
-    </div>
-    
-    <div class="endpoint">
-        <span class="method get">GET</span> <code>/msg/path/:src/:dest</code>
-        <p>Find shortest message path between users</p>
-    </div>
-    
-    <h2>🧪 Quick Test:</h2>
-    <p>Try: <a href="/health">/health</a></p>
-</body>
-</html>
-        )";
-        crow::response res(html);
-        res.add_header("Content-Type", "text/html");
         res.add_header("Access-Control-Allow-Origin", "*");
         return res;
     });
@@ -182,13 +120,14 @@ int main() {
     // Start server
     std::cout << "========================================" << std::endl;
     std::cout << " Social Network Graph API Server" << std::endl;
-    std::cout << "📡 Listening on: http://localhost:8080" << std::endl;
-    std::cout << "📊 Graph routes registered" << std::endl;
-    std::cout << "💬 Messaging routes registered" << std::endl;
-    std::cout << "🔥 Server ready!" << std::endl;
+    std::cout << "Listening on: http://localhost:8081" << std::endl;
+    std::cout << "Graph routes registered" << std::endl;
+    std::cout << "Messaging routes registered" << std::endl;
+    std::cout << "User routes registered" << std::endl;
+    std::cout << "Server ready!" << std::endl;
     std::cout << "========================================" << std::endl;
 
-    app.port(8080).multithreaded().run();
+    app.port(8081).multithreaded().run();
 
     return 0;
 }
