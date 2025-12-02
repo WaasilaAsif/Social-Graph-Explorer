@@ -8,6 +8,7 @@
 #include "../messaging/MessageStore.h"
 #include "../dsa/messaging_ds/MsgTrie.h"
 #include "../dsa/messaging_ds/ConversationGraph.h"
+#include "../storage/JSONLoader.h"
 #include "../libs/crow/crow_all.h"
 #include <iostream>
 
@@ -22,6 +23,13 @@ int main() {
     MessageStore msgStore;
     MsgTrie msgTrie;
     ConversationGraph convGraph;
+    
+    // Load data from JSON files
+    std::cout << "Loading data from JSON files..." << std::endl;
+    loadUsersFromJSON(userManager, "storage/local_db/users.json");
+    loadFriendshipsFromJSON(graph, "storage/local_db/friendships.json");
+    loadMessagesFromJSON(msgStore, "storage/local_db/messages.json");
+    std::cout << "Data loaded successfully!" << std::endl << std::endl;
     
     // Create API instances
     MsgAPI msgApi(&userManager, &msgStore, &msgTrie, &convGraph);
