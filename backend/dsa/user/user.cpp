@@ -15,6 +15,7 @@ int User::getId() const { return id; }
 std::string User::getName() const { return name; }
 std::string User::getPassword() const { return password; }
 DynamicArray<std::string>& User::getPosts() { return posts; }
+const DynamicArray<std::string>& User::getPosts() const { return posts; }
 
 // Post management
 void User::createPost(const std::string& content) {
