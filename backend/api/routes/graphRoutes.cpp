@@ -5,7 +5,7 @@
 #include "../../libs/project_headers/BFS.h"
 #include "../../libs/project_headers/DFS.h"
 #include "../../analytics/Graphstats.h"
-#include "../../storage/JSONWriter.cpp"
+#include "../../storage/JSONWriter.h"
 #include <iostream>
 #include <vector>  
 

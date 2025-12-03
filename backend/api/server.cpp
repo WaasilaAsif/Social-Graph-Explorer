@@ -28,7 +28,7 @@ int main() {
     std::cout << "Loading data from JSON files..." << std::endl;
     loadUsersFromJSON(userManager, "storage/local_db/users.json");
     loadFriendshipsFromJSON(graph, "storage/local_db/friendships.json");
-    loadMessagesFromJSON(msgStore, "storage/local_db/messages.json");
+    loadMessagesFromJSON(msgStore, msgTrie, convGraph, "storage/local_db/messages.json");
     std::cout << "Data loaded successfully!" << std::endl << std::endl;
     
     // Create API instances

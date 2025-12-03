@@ -15,6 +15,31 @@ SocialGraphExplorer/
 │
 ├── backend/                          # C++ Backend
 │   ├── main.cpp                      # Main entry point
+│   ├── server.exe                    # Compiled server binary
+│   │
+│   ├── libs/                         # External Dependencies (Generated)
+│   │   ├── asio/                     # ASIO 1.30.2 standalone async I/O
+│   │   │   ├── asio.hpp
+│   │   │   ├── detail/
+│   │   │   ├── execution/
+│   │   │   ├── experimental/
+│   │   │   ├── generic/
+│   │   │   ├── impl/
+│   │   │   ├── ip/
+│   │   │   ├── local/
+│   │   │   ├── posix/
+│   │   │   ├── ssl/
+│   │   │   ├── ts/
+│   │   │   └── windows/
+│   │   ├── crow/                     # Crow HTTP framework
+│   │   │   ├── crow_all.h            # Main Crow header
+│   │   │   └── nlohmann/
+│   │   │       └── json.hpp          # JSON parsing library
+│   │   └── project_headers/          # Copied algorithm headers
+│   │       ├── BFS.h
+│   │       ├── DFS.h
+│   │       ├── FriendSuggestion.h
+│   │       └── ShortestPath.h
 │   │
 │   ├── algorithms/                   # Graph & Messaging Algorithms
 │   │   ├── BFS.h                     # Breadth-First Search
@@ -44,15 +69,17 @@ SocialGraphExplorer/
 │   │   └── PopularityRanker.h
 │   │
 │   ├── api/                          # REST API Server
-│   │   ├── server.cpp                # Main API server
-│   │   ├── routes/                   # API Route Handlers
-│   │   │   ├── algoRoutes.cpp        # Algorithm endpoints
-│   │   │   ├── graphRoutes.cpp       # Graph operation endpoints
-│   │   │   ├── graphRoutes.h
-│   │   │   ├── messageRoutes.cpp     # Messaging endpoints
-│   │   │   └── userRoutes.cpp        # User management endpoints
-│   │   └── server/
-│   │       └── server.cpp
+│   │   ├── server.cpp                # Main API server (port 8081)
+│   │   └── routes/                   # API Route Handlers
+│   │       ├── algoRoutes.cpp        # Algorithm endpoints (legacy)
+│   │       ├── graphRoutes.cpp       # Graph operation endpoints (6 APIs)
+│   │       ├── graphRoutes.h
+│   │       ├── MsgRoutes.cpp         # Messaging route registration (8 APIs)
+│   │       ├── MsgRoutes.h
+│   │       ├── MsgAPI.cpp            # Messaging API handlers
+│   │       ├── MsgAPI.h
+│   │       ├── messageRoutes.cpp     # Legacy message routes
+│   │       └── userRoutes.cpp        # User management endpoints
 │   │
 │   ├── dsa/                          # Custom Data Structures & Algorithms
 │   │   ├── containers/               # Generic Container Implementations
@@ -104,6 +131,8 @@ SocialGraphExplorer/
 │   │
 │   ├── messaging/                    # Messaging System
 │   │   ├── Message.h                 # Message data structure
+│   │   ├── MessageStore.cpp          # Message storage and retrieval
+│   │   ├── MessageStore.h
 │   │   ├── MessageAnalytics.cpp      # Message analytics & statistics
 │   │   ├── MessageAnalytics.h
 │   │   ├── MessageQueue.cpp          # Message queue implementation
@@ -119,35 +148,44 @@ SocialGraphExplorer/
 │   │
 │   ├── storage/                      # Data Persistence
 │   │   ├── JSONLoader.cpp            # Load data from JSON
+│   │   ├── JSONLoader.h
 │   │   ├── JSONWriter.cpp            # Write data to JSON
+│   │   ├── JSONWriter.h
 │   │   └── local_db/                 # Local JSON Database
-│   │       ├── friendships.json      # Friendship connections
-│   │       └── users.json            # User data
+│   │       ├── friendships.json      # 62 friendship connections
+│   │       ├── messages.json         # 50+ messages with full text
+│   │       └── users.json            # 20 users with posts
 │   │
-│   └── tests/                        # Testing Suite
-│       ├── integration/              # Integration Tests
-│       │   ├── full_integration_aman.cpp
-│       │   └── full_integration_Fatima.cpp
-│       │
-│       └── unit-tests/               # Unit Tests
-│           ├── AVLTree_messaging.cpp
-│           ├── BFS.cpp
-│           ├── ConversationGraph.cpp
-│           ├── DFS.cpp
-│           ├── friendsuggestion.cpp
-│           ├── Graph.cpp
-│           ├── graphstats.cpp
-│           ├── LinkedList.cpp
-│           ├── MsgHeap.cpp
-│           ├── MsgStack.cpp
-│           ├── MsgTrie.cpp
-│           ├── mutualfriends.cpp
-│           ├── popularityranker.cpp
-│           ├── priorityqueue.cpp
-│           ├── Queue.cpp
-│           ├── README_MESSAGING_TESTS.md
-│           ├── shortestpath.cpp
-│           └── Stack.cpp
+│   ├── tests/                        # Testing Suite
+│   │   ├── integration/              # Integration Tests
+│   │   │   ├── full_integration_aman.cpp
+│   │   │   └── full_integration_Fatima.cpp
+│   │   │
+│   │   └── unit-tests/               # Unit Tests
+│   │       ├── AVLTree_messaging.cpp
+│   │       ├── BFS.cpp
+│   │       ├── ConversationGraph.cpp
+│   │       ├── DFS.cpp
+│   │       ├── friendsuggestion.cpp
+│   │       ├── Graph.cpp
+│   │       ├── graphstats.cpp
+│   │       ├── LinkedList.cpp
+│   │       ├── MsgHeap.cpp
+│   │       ├── MsgStack.cpp
+│   │       ├── MsgTrie.cpp
+│   │       ├── mutualfriends.cpp
+│   │       ├── popularityranker.cpp
+│   │       ├── priorityqueue.cpp
+│   │       ├── Queue.cpp
+│   │       ├── README_MESSAGING_TESTS.md
+│   │       ├── shortestpath.cpp
+│   │       └── Stack.cpp
+│   │
+│   └── MESSAGING_API_GUIDE.md        # Complete messaging API documentation
+│       # - 8 messaging endpoints documented
+│       # - Real examples with cURL/PowerShell
+│       # - Expected outputs and testing guide
+│       # - Performance metrics and troubleshooting
 │
 └── frontend/                         # React TypeScript Frontend
     ├── .gitignore
@@ -214,25 +252,37 @@ SocialGraphExplorer/
   - `HashMap` replaces `std::unordered_map`
   - Custom `Stack`, `Queue`, `LinkedList`, `PriorityQueue`, `Trie`
   
-- **Messaging System**: Complete messaging infrastructure
+- **Messaging System**: Complete messaging infrastructure with database integration
+  - `MessageStore`: Storage and retrieval of messages
   - `ConversationGraph`: Weighted graph for user interactions
-  - `MsgTrie`: Fast message search by keywords
+  - `MsgTrie`: Fast message search by keywords (word and prefix search)
   - `MsgHeap`: Priority-based message handling
   - `MsgStack`: Undo/redo functionality
   - `AVLTree`: Self-balancing tree for sorted data
+  - **Database Integration**: All messages loaded from and saved to `messages.json`
+  - **Auto-persistence**: New messages automatically saved to database
 
 - **Graph Algorithms**: Social network analysis
   - BFS/DFS traversal
-  - Shortest path finding
+  - Shortest path finding (Dijkstra/Bellman-Ford)
   - Mutual friends detection
-  - Friend suggestions
+  - Friend suggestions (graph-based and message-based)
   - Popularity ranking
 
-- **API Server**: Crow-based HTTP REST API
-  - User management endpoints
-  - Graph operation endpoints
-  - Messaging endpoints
-  - Algorithm execution endpoints
+- **API Server**: Crow-based HTTP REST API (Port 8081)
+  - **6 Graph endpoints**: Friends list, add/remove friends, BFS, DFS, shortest path
+  - **8 Messaging endpoints**: Send, word search, prefix search, top-K, suggestions, mutual, rank, path
+  - **8+ User endpoints**: Registration, login, profile, posts
+  - Total: 32+ REST endpoints
+  - JSON request/response format
+  - CORS enabled for frontend integration
+
+- **Data Persistence**: JSON-based local database
+  - `users.json`: 20 users with profiles and posts
+  - `friendships.json`: 62 friendship connections
+  - `messages.json`: 50+ messages with full text
+  - Auto-load on server startup
+  - Auto-save on data modifications
 
 ### Frontend (React + TypeScript)
 - **Obsidian Dark Theme**: Custom CSS with CSS variables
@@ -245,10 +295,12 @@ SocialGraphExplorer/
 ## Technology Stack
 
 **Backend:**
-- C++17
-- Crow (HTTP framework)
+- C++17 (GCC 13.2.0 on Windows/MSYS2)
+- Crow 1.0+ (HTTP framework)
+- ASIO 1.30.2 (Standalone async I/O)
 - nlohmann/json (JSON parsing)
-- Custom DSA implementations
+- Custom DSA implementations (no STL containers)
+- Windows Sockets (ws2_32, wsock32)
 
 **Frontend:**
 - React 19.2.0
@@ -257,14 +309,25 @@ SocialGraphExplorer/
 - lucide-react (icons)
 - React Router 7.9.6
 
+**Development Tools:**
+- g++ (MinGW-w64)
+- PowerShell (automation scripts)
+- Git (version control)
+
 **Testing:**
-- Unit tests for all custom data structures
+- Unit tests for all custom data structures (79+ tests passing)
 - Integration tests for system components
+- PowerShell test runners
 - g++ with C++17 standard
 
 ## File Statistics
-- **Total Files**: ~150 files
-- **Backend C++ Files**: ~90 files
+- **Total Files**: ~180+ files
+- **Backend C++ Files**: ~100+ files
+  - Source files (.cpp): ~50 files
+  - Header files (.h): ~50 files
+  - Library files: 1000+ headers in libs/asio/
 - **Frontend Files**: ~35 files
-- **Test Files**: ~20 files
-- **Documentation**: 3 files
+- **Test Files**: ~25 files
+- **Documentation**: 5 files (README, structure, DEPENDENCIES, MESSAGING_API_GUIDE, Overview)
+- **Database Files**: 3 JSON files (users, friendships, messages)
+- **Configuration**: 10+ config files (package.json, tsconfig, eslint, vite, .gitignore)

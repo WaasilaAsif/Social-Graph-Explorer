@@ -1,5 +1,6 @@
 #include "MsgAPI.h"
 #include <sstream>
+#include "../../storage/JSONWriter.h"
 
 MsgAPI::MsgAPI(UserManager* userManager,
                MessageStore* msgStore,
@@ -26,6 +27,9 @@ std::string MsgAPI::handleSendMessage(const std::unordered_map<std::string, std:
 
     // Add to graph
     graph->addInteraction(sender, receiver);
+
+    // Save to JSON database
+    saveMessagesToJSON(*store, "storage/local_db/messages.json");
 
     std::ostringstream out;
     out << "{ \"status\": \"success\", \"messageId\": " << msgId << " }";

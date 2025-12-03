@@ -3,6 +3,7 @@
 #include "../libs/crow/nlohmann/json.hpp"
 #include "../dsa/user/UserManager.h"
 #include "../dsa/graph/Graph.h"
+#include "../messaging/MessageStore.h"
 
 using json = nlohmann::json;
 
@@ -60,4 +61,30 @@ void saveFriendshipsToJSON(const Graph& graph, const std::string& filepath) {
     file << data.dump(4);
     file.close();
     std::cout << "✓ Saved friendships to " << filepath << std::endl;
+}
+
+void saveMessagesToJSON(const MessageStore& msgStore, const std::string& filepath) {
+    json data;
+    data["messages"] = json::array();
+    
+    const DynamicArray<Message>& messages = msgStore.getAllMessages();
+    for (int i = 0; i < messages.size(); ++i) {
+        const Message& msg = messages.get(i);
+        json msgObj;
+        msgObj["id"] = std::stoi(msg.id);
+        msgObj["senderId"] = std::stoi(msg.senderId);
+        msgObj["receiverId"] = std::stoi(msg.receiverId);
+        msgObj["text"] = msg.content;
+        msgObj["timestamp"] = msg.timestamp;
+        data["messages"].push_back(msgObj);
+    }
+    
+    std::ofstream file(filepath);
+    if (!file.is_open()) {
+        std::cerr << "Error: Could not open " << filepath << " for writing." << std::endl;
+        return;
+    }
+    file << data.dump(4);
+    file.close();
+    std::cout << "✓ Saved messages to " << filepath << std::endl;
 }

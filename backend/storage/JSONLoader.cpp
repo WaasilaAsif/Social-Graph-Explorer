@@ -4,6 +4,8 @@
 #include "../dsa/user/UserManager.h"
 #include "../dsa/graph/Graph.h"
 #include "../messaging/MessageStore.h"
+#include "../dsa/messaging_ds/MsgTrie.h"
+#include "../dsa/messaging_ds/ConversationGraph.h"
 
 using json = nlohmann::json;
 
@@ -92,7 +94,7 @@ void loadFriendshipsFromJSON(Graph& graph, const std::string& filepath) {
     file.close();
 }
 
-void loadMessagesFromJSON(MessageStore& msgStore, const std::string& filepath) {
+void loadMessagesFromJSON(MessageStore& msgStore, MsgTrie& msgTrie, ConversationGraph& convGraph, const std::string& filepath) {
     std::ifstream file(filepath);
     if (!file.is_open()) {
         std::cerr << "Warning: Could not open " << filepath << std::endl;
@@ -112,7 +114,17 @@ void loadMessagesFromJSON(MessageStore& msgStore, const std::string& filepath) {
             int receiverId = msgObj["receiverId"];
             std::string text = msgObj["text"];
             
-            msgStore.addMessage(senderId, receiverId, text);
+            // Add to message store
+            int msgId = msgStore.addMessage(senderId, receiverId, text);
+            
+            // Extract words and add to trie
+            auto words = msgStore.extractWords(text);
+            for (int i = 0; i < words.size(); i++) {
+                msgTrie.insert(words.get(i), msgId);
+            }
+            
+            // Add interaction to conversation graph
+            convGraph.addInteraction(senderId, receiverId);
         }
         
         std::cout << "✓ Loaded " << data["messages"].size() << " messages from " << filepath << std::endl;

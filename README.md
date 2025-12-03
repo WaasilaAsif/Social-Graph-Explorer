@@ -48,6 +48,16 @@ Modern social networks are complex systems with users, posts, friendships, and i
 
 ## Quick Start
 
+### Recent Updates (January 2024)
+
+✅ **Full Database Integration Complete**
+- All messaging APIs now read/write from local JSON database
+- Server loads 20 users, 62 friendships, and 50+ messages at startup
+- Automatic persistence on message send
+- All data structures (MessageStore, MsgTrie, ConversationGraph) initialized from JSON
+- **8 Messaging APIs** fully operational with search, analytics, and path-finding
+- See [backend/MESSAGING_API_GUIDE.md](backend/MESSAGING_API_GUIDE.md) for complete API documentation
+
 ### Prerequisites
 - C++17 or higher compiler (GCC 9.0+, Clang 10.0+, MSVC 2019+)
 - Node.js v18.0.0 or higher
@@ -91,8 +101,10 @@ Copy-Item -Path "algorithms/*.h" -Destination "libs/project_headers/" -Force
 Whenever you make changes to any C++ files, recompile using:
 
 ```bash
-g++ api/server.cpp api/routes/graphRoutes.cpp api/routes/MsgRoutes.cpp api/routes/MsgAPI.cpp dsa/user/UserManager.cpp dsa/user/user.cpp dsa/utils/idGenerator.cpp messaging/MessageStore.cpp dsa/messaging_ds/MsgTrie.cpp dsa/messaging_ds/ConversationGraph.cpp algorithms/MsgTopKMessage.cpp algorithms/MsgFriendSuggestion.cpp algorithms/MsgMutualInteractions.cpp algorithms/MsgPopularityRanker.cpp algorithms/MsgShortestPatch.cpp storage/JSONLoader.cpp -I. -Ilibs -Ilibs/asio -std=c++17 -DASIO_STANDALONE -lws2_32 -lwsock32 -o server.exe
+g++ api/server.cpp api/routes/graphRoutes.cpp api/routes/MsgRoutes.cpp api/routes/MsgAPI.cpp dsa/user/UserManager.cpp dsa/user/user.cpp dsa/utils/idGenerator.cpp messaging/MessageStore.cpp dsa/messaging_ds/MsgTrie.cpp dsa/messaging_ds/ConversationGraph.cpp algorithms/MsgTopKMessage.cpp algorithms/MsgFriendSuggestion.cpp algorithms/MsgMutualInteractions.cpp algorithms/MsgPopularityRanker.cpp algorithms/MsgShortestPatch.cpp storage/JSONLoader.cpp storage/JSONWriter.cpp -I. -Ilibs -Ilibs/asio -std=c++17 -DASIO_STANDALONE -lws2_32 -lwsock32 -o server.exe
 ```
+
+**Note**: This includes all messaging system files, database loaders/writers, and algorithm implementations.
 
 #### Run the Server
 After compilation, start the server:
@@ -107,17 +119,91 @@ Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd $pwd; .\server
 
 The API server will be available at `http://localhost:8081`
 
+**Expected Startup Output:**
+```
+Loading data from JSON files...
+✓ Loaded 20 users from storage/local_db/users.json
+✓ Loaded 62 friendships from storage/local_db/friendships.json
+✓ Loaded 50 messages from storage/local_db/messages.json
+Data loaded successfully!
+
+========================================
+ Social Network Graph API Server
+Listening on: http://localhost:8081
+Graph routes registered
+Messaging routes registered
+User routes registered
+Server ready!
+========================================
+```
+
+#### Verify Server is Running
+
+```bash
+# Test health endpoint
+curl http://localhost:8081/
+
+# Test messaging search (should return message IDs)
+curl http://localhost:8081/msg/search/project
+
+# Test graph endpoint
+curl http://localhost:8081/graph/friends/1
+```
+
 #### Quick Commands
 ```powershell
 # Navigate to backend
 cd backend
 
 # Compile
-g++ api/server.cpp api/routes/graphRoutes.cpp api/routes/MsgRoutes.cpp api/routes/MsgAPI.cpp dsa/user/UserManager.cpp dsa/user/user.cpp dsa/utils/idGenerator.cpp messaging/MessageStore.cpp dsa/messaging_ds/MsgTrie.cpp dsa/messaging_ds/ConversationGraph.cpp algorithms/MsgTopKMessage.cpp algorithms/MsgFriendSuggestion.cpp algorithms/MsgMutualInteractions.cpp algorithms/MsgPopularityRanker.cpp algorithms/MsgShortestPatch.cpp storage/JSONLoader.cpp -I. -Ilibs -Ilibs/asio -std=c++17 -DASIO_STANDALONE -lws2_32 -lwsock32 -o server.exe
+g++ api/server.cpp api/routes/graphRoutes.cpp api/routes/MsgRoutes.cpp api/routes/MsgAPI.cpp dsa/user/UserManager.cpp dsa/user/user.cpp dsa/utils/idGenerator.cpp messaging/MessageStore.cpp dsa/messaging_ds/MsgTrie.cpp dsa/messaging_ds/ConversationGraph.cpp algorithms/MsgTopKMessage.cpp algorithms/MsgFriendSuggestion.cpp algorithms/MsgMutualInteractions.cpp algorithms/MsgPopularityRanker.cpp algorithms/MsgShortestPatch.cpp storage/JSONLoader.cpp storage/JSONWriter.cpp -I. -Ilibs -Ilibs/asio -std=c++17 -DASIO_STANDALONE -lws2_32 -lwsock32 -o server.exe
 
 # Run
 .\server.exe
 ```
+
+### Troubleshooting Backend Setup
+
+#### Compilation Errors
+
+**Missing ASIO headers:**
+```
+fatal error: asio.hpp: No such file or directory
+```
+Solution: Re-run the ASIO download and setup commands from "Setup Dependencies" section.
+
+**Multiple definition errors:**
+```
+multiple definition of `saveMessagesToJSON'
+```
+Solution: Ensure you're not including `.cpp` files in headers. Check that `#include "../../storage/JSONWriter.h"` (not `.cpp`) in all files.
+
+**Linker errors (Windows):**
+```
+undefined reference to `WSAStartup'
+```
+Solution: Ensure `-lws2_32 -lwsock32` flags are included in the compile command.
+
+#### Runtime Errors
+
+**Port already in use:**
+```
+Failed to bind to port 8081
+```
+Solution: Stop any existing server instances or change the port in `api/server.cpp`.
+
+**JSON file not found:**
+```
+Cannot open file: storage/local_db/users.json
+```
+Solution: Ensure you're running `server.exe` from the `backend/` directory, not the repository root.
+
+**Missing database files:**
+If `storage/local_db/` doesn't exist or is empty:
+```powershell
+New-Item -ItemType Directory -Path "storage/local_db" -Force
+```
+The initial JSON files should be committed in the repository. Check git status.
 
 ### Frontend Setup
 ```bash
@@ -282,6 +368,10 @@ Algorithms consume graph and container data for social network analysis and reco
 ```
 SocialGraphExplorer/
 ├── backend/
+│   ├── libs/                   # External dependencies (ASIO, Crow, headers)
+│   │   ├── asio/               # ASIO 1.30.2 standalone headers
+│   │   ├── crow/               # Crow framework (crow_all.h, nlohmann/json)
+│   │   └── project_headers/    # Project algorithm headers
 │   ├── dsa/
 │   │   ├── graph/              # Graph, Node, Edge
 │   │   ├── containers/         # LinkedList, Stack, Queue, HashMap, DynamicArray, Pair, PriorityQueue, Trie
@@ -292,6 +382,7 @@ SocialGraphExplorer/
 │   │   └── Msg*/               # Message-based algorithms (MsgFriendSuggestion, MsgShortestPath, etc.)
 │   ├── messaging/              # Complete messaging system
 │   │   ├── Message.h           # Message data structure
+│   │   ├── MessageStore        # Message storage and retrieval
 │   │   ├── MessagingSystem     # Main coordinator
 │   │   ├── MessageQueue        # FIFO queue
 │   │   ├── MessageAnalytics    # Interaction analytics
@@ -300,10 +391,17 @@ SocialGraphExplorer/
 │   │   └── UndoStack           # Undo functionality
 │   ├── analytics/              # GraphStats, PopularityRanker
 │   ├── storage/                # JSONLoader, JSONWriter
-│   │   └── local_db/           # JSON database (users.json, friendships.json)
+│   │   └── local_db/           # JSON database
+│   │       ├── users.json      # 20 users with posts
+│   │       ├── friendships.json # 62 friendship connections
+│   │       └── messages.json   # 50+ messages with full text
 │   ├── api/                    # REST API routes and server (Crow framework)
-│   │   ├── server/
+│   │   ├── server.cpp          # Main server (port 8081)
 │   │   └── routes/
+│   │       ├── graphRoutes.cpp # 6 graph endpoints
+│   │       ├── MsgRoutes.cpp   # 8 messaging endpoints
+│   │       ├── MsgAPI.cpp      # Messaging API handlers
+│   │       └── userRoutes.cpp  # User management endpoints
 │   ├── tests/                  # Comprehensive test suite
 │   │   ├── unit-tests/         # 28+ unit test files
 │   │   │   ├── README_MESSAGING_TESTS.md
@@ -312,7 +410,9 @@ SocialGraphExplorer/
 │   │   ├── integration/        # Integration tests
 │   │   ├── run_all_messaging_tests.ps1
 │   │   └── run_all_msg_algorithm_tests.ps1
-│   └── main.cpp
+│   ├── MESSAGING_API_GUIDE.md  # Complete messaging API documentation
+│   ├── main.cpp
+│   └── server.exe              # Compiled server binary
 ├── frontend/
 │   ├── src/
 │   │   ├── components/         # React components (Sidebar, GraphView, etc.)
@@ -325,7 +425,7 @@ SocialGraphExplorer/
 │   └── vite.config.ts
 ├── structure.md                # Complete file structure documentation
 ├── DEPENDENCIES.md             # Detailed dependency information
-└── README.md
+└── README.md                   # This file
 ```
 
 ## **Team Responsibilities**
@@ -370,6 +470,72 @@ While SocialGraphExplorer currently provides a robust backend framework and demo
 7. **Analytics & Reporting**
    - User engagement metrics: top influencers, activity trends.  
    - Graph analytics: average shortest path, clustering coefficients, centrality measures.  
+
+---
+
+## API Documentation
+
+### Available API Endpoints
+
+The backend server exposes **32+ REST API endpoints** across three categories:
+
+#### 1. Graph APIs (6 endpoints)
+- `GET /graph/friends/:id` - Get all friends of a user
+- `POST /graph/add-friend` - Create friendship between two users
+- `DELETE /graph/remove-friend/:user1/:user2` - Remove friendship
+- `GET /graph/bfs/:start` - Perform BFS traversal from a user
+- `GET /graph/dfs/:start` - Perform DFS traversal from a user
+- `GET /graph/shortest-path/:src/:dest` - Find shortest path between users
+
+#### 2. Messaging APIs (8 endpoints)
+- `POST /msg/send` - Send a new message (auto-saves to DB)
+- `GET /msg/search/:word` - Search messages by exact word
+- `GET /msg/prefix/:prefix` - Search messages by word prefix
+- `GET /msg/topk/:userId/:k` - Get top K conversation partners
+- `GET /msg/suggestions/:userId/:k` - Get friend suggestions based on messages
+- `GET /msg/mutual/:userId` - Find mutual interactions
+- `GET /msg/rank/:top` - Get top N most active users
+- `GET /msg/path/:src/:dest` - Find shortest messaging path between users
+
+#### 3. User Management APIs (8+ endpoints)
+- User registration, login, profile management
+- Post creation and retrieval
+- User search and discovery
+
+### Complete Messaging API Guide
+
+For detailed documentation with examples, expected outputs, and testing instructions, see:
+
+📖 **[backend/MESSAGING_API_GUIDE.md](backend/MESSAGING_API_GUIDE.md)**
+
+The guide includes:
+- Real cURL and PowerShell examples
+- Expected JSON responses
+- Sample data from the database
+- Performance metrics
+- Troubleshooting tips
+- Testing workflows
+
+### Quick API Test
+
+```bash
+# Get API menu
+curl http://localhost:8081/
+
+# Search for word "project" in messages
+curl http://localhost:8081/msg/search/project
+# Expected: {"results":[1,5,12,23,34,42]}
+
+# Get top 5 conversations for user 1
+curl http://localhost:8081/msg/topk/1/5
+# Expected: {"messages":[{"userId":2,"weight":8},{"userId":3,"weight":6}...]}
+
+# Send a new message
+curl -X POST http://localhost:8081/msg/send \
+  -H "Content-Type: application/json" \
+  -d '{"senderId":1,"receiverId":3,"text":"Hello!"}'
+# Expected: {"status":"success","messageId":51}
+```
 
 ---
 
