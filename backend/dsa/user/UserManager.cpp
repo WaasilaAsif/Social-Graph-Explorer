@@ -5,8 +5,126 @@
 #include "../../algorithms/DFS.h"
 #include "../../analytics/Graphstats.h"  
 #include <iostream>
+#include "../../libs/json.hpp"
+#include <fstream>
+#include <direct.h>
+using json = nlohmann::json;
+UserManager::UserManager(const std::string& filePath) : dbFilePath(filePath) {
+    loadFromFile();
+}
+// Load users from JSON file
+void UserManager::loadFromFile() {
+    std::ifstream file(dbFilePath);
+    
+    if (!file.is_open()) {
+        std::cout << "No existing database found at " << dbFilePath << ". Starting fresh." << std::endl;
+        return;
+    }
+    
+    try {
+        json data;
+        file >> data;
+        file.close();
+        
+        // Load users
+        if (data.contains("users") && data["users"].is_array()) {
+            for (const auto& userJson : data["users"]) {
+                std::string username = userJson["username"];
+                std::string password = userJson["password"];
+                int id = userJson["id"];
+                
+                // Create user (will auto-assign ID, but we'll use the saved one)
+                User user(username, password);
+                users.push_back(user);
+                usernameTrie.insert(username);
+                socialGraph.addNode(id);
+                
+                // Load posts if they exist
+                if (userJson.contains("posts") && userJson["posts"].is_array()) {
+                    User* loadedUser = &users.get(users.size() - 1);
+                    for (const auto& post : userJson["posts"]) {
+                        loadedUser->createPost(post);
+                    }
+                }
+            }
+        }
+        
+        // Load connections/friendships
+        if (data.contains("connections") && data["connections"].is_array()) {
+            for (const auto& conn : data["connections"]) {
+                int userA = conn["userA"];
+                int userB = conn["userB"];
+                if (socialGraph.hasNode(userA) && socialGraph.hasNode(userB)) {
+                    socialGraph.addEdge(userA, userB, 1, true);
+                }
+            }
+        }
+        
+        std::cout << "Loaded " << users.size() << " users from database." << std::endl;
+        
+    } catch (const std::exception& e) {
+        std::cerr << "Error loading database: " << e.what() << std::endl;
+    }
+}
 
-UserManager::UserManager() {}
+// Save users to JSON file
+void UserManager::saveToFile() {
+    // Create directory if it doesn't exist
+    _mkdir("storage");
+    _mkdir("storage/local_db");
+    
+    json data;
+    json usersArray = json::array();
+    json connectionsArray = json::array();
+    
+    // Save users
+    for (int i = 0; i < users.size(); i++) {
+        User& user = users.get(i);
+        json userJson;
+        
+        userJson["id"] = user.getId();
+        userJson["username"] = user.getName();
+        userJson["password"] = user.getPassword();
+        
+        // Save posts
+        json postsArray = json::array();
+        DynamicArray<std::string>& posts = user.getPosts();
+        for (int j = 0; j < posts.size(); j++) {
+            postsArray.push_back(posts.get(j));
+        }
+        userJson["posts"] = postsArray;
+        
+        usersArray.push_back(userJson);
+        
+        // Save connections (only save once per edge)
+        if (socialGraph.hasNode(user.getId())) {
+            const LinkedList<Edge>& neighbors = socialGraph.getNeighbors(user.getId());
+            for (int j = 0; j < neighbors.size(); j++) {
+                int friendId = neighbors[j].to;
+                // Only save if current user ID < friend ID (to avoid duplicates)
+                if (user.getId() < friendId) {
+                    json conn;
+                    conn["userA"] = user.getId();
+                    conn["userB"] = friendId;
+                    connectionsArray.push_back(conn);
+                }
+            }
+        }
+    }
+    
+    data["users"] = usersArray;
+    data["connections"] = connectionsArray;
+    
+    // Write to file
+    std::ofstream file(dbFilePath);
+    if (file.is_open()) {
+        file << data.dump(4);  // Pretty print with 4 spaces
+        file.close();
+        std::cout << "Saved " << users.size() << " users to database." << std::endl;
+    } else {
+        std::cerr << "Error: Could not open file for writing: " << dbFilePath << std::endl;
+    }
+}
 
 // Helper: get index of user in DynamicArray
 int UserManager::getUserIndexById(int id) {
@@ -24,20 +142,24 @@ void UserManager::addUser(const std::string& name, const std::string& password) 
     
     // *** ADD: Add user to social graph ***
     socialGraph.addNode(newUser.getId());
+    saveToFile();
 }
 
-// Remove user by ID
 bool UserManager::removeUserById(int id) {
     int idx = getUserIndexById(id);
     if (idx == -1) return false;
-    
-    // *** ADD: Remove from social graph ***
+    // Get username BEFORE deleting user
+    std::string username = users.get(idx).getName();
+    // Remove from social graph
     if (socialGraph.hasNode(id)) {
         socialGraph.removeNode(id);
     }
-    
-    users.get(idx) = users.get(users.size() - 1); // swap with last
+    // REMOVE FROM TRIE
+    usernameTrie.remove(username);
+    // Remove from array (swap with last)
+    users.get(idx) = users.get(users.size() - 1);
     users.pop_back();
+    saveToFile();
     return true;
 }
 
@@ -47,12 +169,10 @@ User* UserManager::getUserById(int id) {
     if (idx == -1) return nullptr;
     return &users.get(idx);
 }
-
 // Search users by prefix
 DynamicArray<std::string> UserManager::searchUsersByPrefix(const std::string& prefix) {
     return usernameTrie.startsWith(prefix);
 }
-
 User* UserManager::login(const std::string& username, const std::string& password) {
     // Linear search over DynamicArray<User>
     for (int i = 0; i < users.size(); i++) {
@@ -61,6 +181,7 @@ User* UserManager::login(const std::string& username, const std::string& passwor
             return &users.get(i); // login success
         }
     }
+    saveToFile();
     return nullptr; // not found or password wrong
 }
 
@@ -225,4 +346,24 @@ User* UserManager::getMostPopularUser() {
     
     int mostPopularId = GraphStats::findMostConnectedNode(socialGraph);
     return getUserById(mostPopularId);
+}
+
+bool UserManager::createPostForUser(int userId, const std::string& content) {
+    User* user = getUserById(userId);
+    if (!user) return false;
+    
+    user->createPost(content);
+    saveToFile();
+    return true;
+}
+
+bool UserManager::deletePostForUser(int userId, int postIndex) {
+    User* user = getUserById(userId);
+    if (!user) return false;
+    
+    bool success = user->deletePost(postIndex);
+    if (success) {
+        saveToFile();
+    }
+    return success;
 }
