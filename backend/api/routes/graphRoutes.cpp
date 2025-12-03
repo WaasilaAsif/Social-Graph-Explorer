@@ -5,6 +5,7 @@
 #include "../../libs/project_headers/BFS.h"
 #include "../../libs/project_headers/DFS.h"
 #include "../../analytics/Graphstats.h"
+#include "../../storage/JSONWriter.cpp"
 #include <iostream>
 #include <vector>  
 
@@ -48,10 +49,8 @@ void GraphRoutes::registerRoutes(crow::SimpleApp& app) {
     CROW_ROUTE(app, "/graph/addFriend").methods(crow::HTTPMethod::Post)
     ([this](const crow::request& req) {
         crow::json::wvalue response;
-
         try {
             auto body = crow::json::load(req.body);
-
             if (!body || !body.has("u") || !body.has("v")) {
                 response["success"] = false;
                 response["error"] = "Missing fields u or v";
@@ -60,17 +59,22 @@ void GraphRoutes::registerRoutes(crow::SimpleApp& app) {
                 res.add_header("Access-Control-Allow-Origin", "*");
                 return res;
             }
-
             int u = body["u"].i();
             int v = body["v"].i();
-
             if (!graph.hasNode(u)) graph.addNode(u);
             if (!graph.hasNode(v)) graph.addNode(v);
-
             if (!graph.hasEdge(u, v)) {
                 graph.addEdge(u, v, 1, true);
+                // Debug output: print neighbors of u
+                std::cout << "Neighbors of " << u << ": ";
+                const LinkedList<Edge>& neighbors = graph.getNeighbors(u);
+                for (int i = 0; i < neighbors.size(); ++i) {
+                    std::cout << neighbors[i].to << " ";
+                }
+                std::cout << std::endl;
                 response["success"] = true;
                 response["message"] = "Friendship created";
+                saveFriendshipsToJSON(graph, "storage/local_db/friendships.json");
             } else {
                 response["success"] = true;
                 response["message"] = "Friendship already exists";
@@ -80,7 +84,6 @@ void GraphRoutes::registerRoutes(crow::SimpleApp& app) {
             response["success"] = false;
             response["error"] = std::string(e.what());
         }
-
         crow::response res(response);
         res.add_header("Content-Type", "application/json");
         res.add_header("Access-Control-Allow-Origin", "*");
@@ -91,10 +94,8 @@ void GraphRoutes::registerRoutes(crow::SimpleApp& app) {
     CROW_ROUTE(app, "/graph/removeFriend").methods(crow::HTTPMethod::Post)
     ([this](const crow::request& req) {
         crow::json::wvalue response;
-
         try {
             auto body = crow::json::load(req.body);
-
             if (!body || !body.has("u") || !body.has("v")) {
                 response["success"] = false;
                 response["error"] = "Missing fields u or v";
@@ -103,10 +104,8 @@ void GraphRoutes::registerRoutes(crow::SimpleApp& app) {
                 res.add_header("Access-Control-Allow-Origin", "*");
                 return res;
             }
-
             int u = body["u"].i();
             int v = body["v"].i();
-
             if (!graph.hasEdge(u, v)) {
                 response["success"] = false;
                 response["error"] = "Friendship does not exist";
@@ -114,13 +113,13 @@ void GraphRoutes::registerRoutes(crow::SimpleApp& app) {
                 graph.removeEdge(u, v, true);
                 response["success"] = true;
                 response["message"] = "Friendship removed";
+                saveFriendshipsToJSON(graph, "storage/local_db/friendships.json");
             }
         }
         catch (const std::exception& e) {
             response["success"] = false;
             response["error"] = std::string(e.what());
         }
-
         crow::response res(response);
         res.add_header("Content-Type", "application/json");
         res.add_header("Access-Control-Allow-Origin", "*");

@@ -21,6 +21,7 @@ public:
     std::string getName() const;
     std::string getPassword() const;
     DynamicArray<std::string>& getPosts();
+    const DynamicArray<std::string>& getPosts() const;
 
     // Setters
     void setName(const std::string& newName) { name = newName; }

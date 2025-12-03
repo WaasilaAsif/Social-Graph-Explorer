@@ -17,6 +17,8 @@ private:
     int getUserIndexById(int id);
 
 public:
+    // Getter for users
+    const DynamicArray<User>& getUsers() const { return users; }
     UserManager();
     // Add/remove users
     void addUser(const std::string& name, const std::string& password);
