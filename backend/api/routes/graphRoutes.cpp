@@ -194,4 +194,123 @@ void GraphRoutes::registerRoutes(crow::SimpleApp& app) {
         res.add_header("Access-Control-Allow-Origin", "*");
         return res;
     });
+
+    // GET /graph/bfs/:start - BFS traversal
+    CROW_ROUTE(app, "/graph/bfs/<int>")
+    ([this](int start) {
+        crow::json::wvalue response;
+
+        try {
+            if (!graph.hasNode(start)) {
+                response["success"] = false;
+                response["error"] = "Start node does not exist";
+                crow::response res(404, response);
+                res.add_header("Content-Type", "application/json");
+                res.add_header("Access-Control-Allow-Origin", "*");
+                return res;
+            }
+
+            LinkedList<int> traversal = BFS::traverse(graph, start);
+            
+            response["success"] = true;
+            response["start"] = start;
+            std::vector<crow::json::wvalue> traversalArray;
+            for (int i = 0; i < traversal.size(); i++) {
+                traversalArray.push_back(traversal[i]);
+            }
+            response["traversal"] = std::move(traversalArray);
+        }
+        catch (const std::exception& e) {
+            response["success"] = false;
+            response["error"] = std::string(e.what());
+        }
+
+        crow::response res(response);
+        res.add_header("Content-Type", "application/json");
+        res.add_header("Access-Control-Allow-Origin", "*");
+        return res;
+    });
+
+    // GET /graph/dfs/:start - DFS traversal
+    CROW_ROUTE(app, "/graph/dfs/<int>")
+    ([this](int start) {
+        crow::json::wvalue response;
+
+        try {
+            if (!graph.hasNode(start)) {
+                response["success"] = false;
+                response["error"] = "Start node does not exist";
+                crow::response res(404, response);
+                res.add_header("Content-Type", "application/json");
+                res.add_header("Access-Control-Allow-Origin", "*");
+                return res;
+            }
+
+            LinkedList<int> traversal = DFS::traverse(graph, start);
+            
+            response["success"] = true;
+            response["start"] = start;
+            std::vector<crow::json::wvalue> traversalArray;
+            for (int i = 0; i < traversal.size(); i++) {
+                traversalArray.push_back(traversal[i]);
+            }
+            response["traversal"] = std::move(traversalArray);
+        }
+        catch (const std::exception& e) {
+            response["success"] = false;
+            response["error"] = std::string(e.what());
+        }
+
+        crow::response res(response);
+        res.add_header("Content-Type", "application/json");
+        res.add_header("Access-Control-Allow-Origin", "*");
+        return res;
+    });
+
+    // GET /graph/shortest-path/:src/:dest - Find shortest path
+    CROW_ROUTE(app, "/graph/shortest-path/<int>/<int>")
+    ([this](int src, int dest) {
+        crow::json::wvalue response;
+
+        try {
+            if (!graph.hasNode(src)) {
+                response["success"] = false;
+                response["error"] = "Source node does not exist";
+                crow::response res(404, response);
+                res.add_header("Content-Type", "application/json");
+                res.add_header("Access-Control-Allow-Origin", "*");
+                return res;
+            }
+
+            if (!graph.hasNode(dest)) {
+                response["success"] = false;
+                response["error"] = "Destination node does not exist";
+                crow::response res(404, response);
+                res.add_header("Content-Type", "application/json");
+                res.add_header("Access-Control-Allow-Origin", "*");
+                return res;
+            }
+
+            LinkedList<int> path = BFS::shortestPath(graph, src, dest);
+            
+            response["success"] = true;
+            response["src"] = src;
+            response["dest"] = dest;
+            std::vector<crow::json::wvalue> pathArray;
+            for (int i = 0; i < path.size(); i++) {
+                pathArray.push_back(path[i]);
+            }
+            response["path"] = std::move(pathArray);
+            response["length"] = path.size() > 0 ? path.size() - 1 : 0;
+        }
+        catch (const std::exception& e) {
+            response["success"] = false;
+            response["error"] = std::string(e.what());
+        }
+
+        crow::response res(response);
+        res.add_header("Content-Type", "application/json");
+        res.add_header("Access-Control-Allow-Origin", "*");
+        return res;
+    });
 }

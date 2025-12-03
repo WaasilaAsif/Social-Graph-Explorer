@@ -115,3 +115,29 @@
   font-weight: 600;
   color: var(--accent-purple);
 }
+
+.algorithm-btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  background: var(--accent);
+  color: var(--text-primary);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.algorithm-btn:hover:not(:disabled) {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+.algorithm-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.algorithm-btn:active:not(:disabled) {
+  transform: translateY(0);
+}

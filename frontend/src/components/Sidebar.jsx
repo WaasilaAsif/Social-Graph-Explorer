@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronRight, Users, Network, Home } from 'lucide-react';
+import { ChevronDown, ChevronRight, Users, Network, Home, MessageSquare, Activity } from 'lucide-react';
 import { dummyUsers } from '../data/dummyUsers';
 import '../styles/Sidebar.css';
 
 export default function Sidebar({ onUserClick, onNavigate }) {
   const [usersExpanded, setUsersExpanded] = useState(true);
   const [graphsExpanded, setGraphsExpanded] = useState(true);
+  const [apiExpanded, setApiExpanded] = useState(true);
 
   return (
     <div className="sidebar">
@@ -99,6 +100,42 @@ export default function Sidebar({ onUserClick, onNavigate }) {
                 <div className="item-left">
                   <Network size={14} />
                   <span>Communities</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="sidebar-section">
+          <div
+            onClick={() => setApiExpanded(!apiExpanded)}
+            className="section-header"
+          >
+            <div className="section-title">
+              {apiExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+              <Activity size={16} />
+              <span>API Tools</span>
+            </div>
+          </div>
+
+          {apiExpanded && (
+            <div>
+              <div
+                onClick={() => onNavigate('graph-explorer')}
+                className="sidebar-item"
+              >
+                <div className="item-left">
+                  <Network size={14} />
+                  <span>Graph Explorer</span>
+                </div>
+              </div>
+              <div
+                onClick={() => onNavigate('messaging-hub')}
+                className="sidebar-item"
+              >
+                <div className="item-left">
+                  <MessageSquare size={14} />
+                  <span>Messaging Hub</span>
                 </div>
               </div>
             </div>

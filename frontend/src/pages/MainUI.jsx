@@ -7,8 +7,10 @@ import GraphView from '../components/GraphView';
 import UserProfileView from '../components/UserProfileView';
 import PostView from '../components/PostView';
 import RightInfoPane from '../components/RightInfoPane';
+import GraphExplorer from './GraphExplorer';
+import MessagingHub from './MessagingHub';
 import { getRecentPosts } from '../data/dummyPosts';
-import { Network, User, FileText, Home } from 'lucide-react';
+import { Network, User, FileText, Home, Activity, MessageSquare } from 'lucide-react';
 import '../styles/MainUI.css';
 
 export default function MainUI() {
@@ -46,6 +48,14 @@ export default function MainUI() {
       case 'post':
         title = 'Post';
         icon = <FileText size={14} />;
+        break;
+      case 'graph-explorer':
+        title = 'Graph Explorer';
+        icon = <Activity size={14} />;
+        break;
+      case 'messaging-hub':
+        title = 'Messaging Hub';
+        icon = <MessageSquare size={14} />;
         break;
       default:
         title = 'New Tab';
@@ -85,6 +95,10 @@ export default function MainUI() {
       setActiveTab('home');
     } else if (type === 'graph') {
       openTab('graph', data);
+    } else if (type === 'graph-explorer') {
+      openTab('graph-explorer', {});
+    } else if (type === 'messaging-hub') {
+      openTab('messaging-hub', {});
     }
   };
 
@@ -131,6 +145,10 @@ export default function MainUI() {
             onUserClick={handleUserClick}
           />
         );
+      case 'graph-explorer':
+        return <GraphExplorer />;
+      case 'messaging-hub':
+        return <MessagingHub />;
       default:
         return <div style={{ padding: '1.5rem', color: 'var(--text-secondary)' }}>Unknown view type</div>;
     }
