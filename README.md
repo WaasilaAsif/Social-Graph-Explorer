@@ -53,11 +53,70 @@ Modern social networks are complex systems with users, posts, friendships, and i
 - Node.js v18.0.0 or higher
 - npm v9.0.0 or higher
 
-### Backend Setup
+### Backend Setup & Compilation
+
+#### Initial Setup
 ```bash
 cd backend
-g++ -std=c++17 -o socialgraph main.cpp
-./socialgraph
+```
+
+#### Setup Dependencies (First Time Only)
+
+1. **Create libs folder structure:**
+```powershell
+New-Item -ItemType Directory -Path "libs/crow", "libs/asio", "libs/project_headers" -Force
+```
+
+2. **Download ASIO library:**
+```powershell
+Invoke-WebRequest -Uri "https://github.com/chriskohlhoff/asio/archive/refs/tags/asio-1-30-2.zip" -OutFile "asio.zip"
+Expand-Archive -Path "asio.zip" -DestinationPath "." -Force
+Copy-Item -Path "asio-asio-1-30-2/asio/include/*" -Destination "libs/asio/" -Recurse -Force
+Remove-Item "asio.zip", "asio-asio-1-30-2" -Recurse -Force
+```
+
+3. **Copy Crow framework headers:**
+```powershell
+# Assuming you have Crow headers in an include/ directory
+Copy-Item -Path "include/crow_all.h" -Destination "libs/crow/" -Force
+Copy-Item -Path "include/nlohmann" -Destination "libs/crow/" -Recurse -Force
+```
+
+4. **Copy project algorithm headers:**
+```powershell
+Copy-Item -Path "algorithms/*.h" -Destination "libs/project_headers/" -Force
+```
+
+#### Compile the Server
+Whenever you make changes to any C++ files, recompile using:
+
+```bash
+g++ api/server.cpp api/routes/graphRoutes.cpp api/routes/MsgRoutes.cpp api/routes/MsgAPI.cpp dsa/user/UserManager.cpp dsa/user/user.cpp dsa/utils/idGenerator.cpp messaging/MessageStore.cpp dsa/messaging_ds/MsgTrie.cpp dsa/messaging_ds/ConversationGraph.cpp algorithms/MsgTopKMessage.cpp algorithms/MsgFriendSuggestion.cpp algorithms/MsgMutualInteractions.cpp algorithms/MsgPopularityRanker.cpp algorithms/MsgShortestPatch.cpp storage/JSONLoader.cpp -I. -Ilibs -Ilibs/asio -std=c++17 -DASIO_STANDALONE -lws2_32 -lwsock32 -o server.exe
+```
+
+#### Run the Server
+After compilation, start the server:
+
+```bash
+# Run in current terminal
+.\server.exe
+
+# OR run in new window to see logs
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd $pwd; .\server.exe"
+```
+
+The API server will be available at `http://localhost:8081`
+
+#### Quick Commands
+```powershell
+# Navigate to backend
+cd backend
+
+# Compile
+g++ api/server.cpp api/routes/graphRoutes.cpp api/routes/MsgRoutes.cpp api/routes/MsgAPI.cpp dsa/user/UserManager.cpp dsa/user/user.cpp dsa/utils/idGenerator.cpp messaging/MessageStore.cpp dsa/messaging_ds/MsgTrie.cpp dsa/messaging_ds/ConversationGraph.cpp algorithms/MsgTopKMessage.cpp algorithms/MsgFriendSuggestion.cpp algorithms/MsgMutualInteractions.cpp algorithms/MsgPopularityRanker.cpp algorithms/MsgShortestPatch.cpp storage/JSONLoader.cpp -I. -Ilibs -Ilibs/asio -std=c++17 -DASIO_STANDALONE -lws2_32 -lwsock32 -o server.exe
+
+# Run
+.\server.exe
 ```
 
 ### Frontend Setup
