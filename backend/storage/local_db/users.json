@@ -1,0 +1,204 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "alice_smith",
+      "password": "pass123",
+      "posts": [
+        "Just deployed my first C++ server!",
+        "Learning graph algorithms is fascinating",
+        "Coffee and code, the perfect combo"
+      ]
+    },
+    {
+      "id": 2,
+      "username": "bob_jones",
+      "password": "pass123",
+      "posts": [
+        "Working on data structures project",
+        "Anyone want to collaborate on DSA?",
+        "Graph theory is so cool!"
+      ]
+    },
+    {
+      "id": 3,
+      "username": "charlie_brown",
+      "password": "pass123",
+      "posts": [
+        "Finished implementing BFS algorithm",
+        "Social networks are interesting to model",
+        "Time for a coding break"
+      ]
+    },
+    {
+      "id": 4,
+      "username": "diana_wilson",
+      "password": "pass123",
+      "posts": [
+        "Building APIs with Crow framework",
+        "Backend development is my passion",
+        "Just fixed a critical bug!"
+      ]
+    },
+    {
+      "id": 5,
+      "username": "eve_davis",
+      "password": "pass123",
+      "posts": [
+        "Exploring shortest path algorithms",
+        "Data structures make everything possible",
+        "Loving this project!"
+      ]
+    },
+    {
+      "id": 6,
+      "username": "frank_miller",
+      "password": "pass123",
+      "posts": [
+        "Testing the new API endpoints",
+        "REST APIs are elegant",
+        "Documentation is important"
+      ]
+    },
+    {
+      "id": 7,
+      "username": "grace_lee",
+      "password": "pass123",
+      "posts": [
+        "Graph traversal algorithms rock",
+        "Working on friend suggestions feature",
+        "Code review time!"
+      ]
+    },
+    {
+      "id": 8,
+      "username": "henry_taylor",
+      "password": "pass123",
+      "posts": [
+        "Implementing messaging system",
+        "Real-time features coming soon",
+        "This is going to be awesome"
+      ]
+    },
+    {
+      "id": 9,
+      "username": "iris_anderson",
+      "password": "pass123",
+      "posts": [
+        "Testing graph connectivity",
+        "Mutual friends algorithm works perfectly",
+        "Great progress today!"
+      ]
+    },
+    {
+      "id": 10,
+      "username": "jack_thomas",
+      "password": "pass123",
+      "posts": [
+        "Building social graph features",
+        "DFS and BFS implementations complete",
+        "Time to test everything"
+      ]
+    },
+    {
+      "id": 11,
+      "username": "kate_moore",
+      "password": "pass123",
+      "posts": [
+        "Working on user authentication",
+        "Security is paramount",
+        "Almost done with login system"
+      ]
+    },
+    {
+      "id": 12,
+      "username": "leo_jackson",
+      "password": "pass123",
+      "posts": [
+        "Graph statistics are insightful",
+        "Analytics dashboard next?",
+        "Data-driven development"
+      ]
+    },
+    {
+      "id": 13,
+      "username": "mia_white",
+      "password": "pass123",
+      "posts": [
+        "Message search functionality is live",
+        "Trie data structure is efficient",
+        "Performance optimization complete"
+      ]
+    },
+    {
+      "id": 14,
+      "username": "noah_harris",
+      "password": "pass123",
+      "posts": [
+        "Building the frontend next",
+        "React integration coming",
+        "Full-stack development journey"
+      ]
+    },
+    {
+      "id": 15,
+      "username": "olivia_martin",
+      "password": "pass123",
+      "posts": [
+        "Testing all API endpoints",
+        "Everything works smoothly",
+        "Ready for deployment!"
+      ]
+    },
+    {
+      "id": 16,
+      "username": "paul_garcia",
+      "password": "pass123",
+      "posts": [
+        "Popularity ranking algorithm done",
+        "Priority queue implementation rocks",
+        "Performance is excellent"
+      ]
+    },
+    {
+      "id": 17,
+      "username": "quinn_martinez",
+      "password": "pass123",
+      "posts": [
+        "Friend suggestion algorithm tuned",
+        "Mutual connections work great",
+        "Users will love this feature"
+      ]
+    },
+    {
+      "id": 18,
+      "username": "rachel_rodriguez",
+      "password": "pass123",
+      "posts": [
+        "Messaging graph implementation",
+        "Conversation tracking is solid",
+        "Another feature complete!"
+      ]
+    },
+    {
+      "id": 19,
+      "username": "sam_lopez",
+      "password": "pass123",
+      "posts": [
+        "Testing shortest path queries",
+        "Response time is amazing",
+        "Optimizations paying off"
+      ]
+    },
+    {
+      "id": 20,
+      "username": "tina_gonzalez",
+      "password": "pass123",
+      "posts": [
+        "User management system complete",
+        "CRUD operations working",
+        "Backend is solid!"
+      ]
+    }
+  ]
+}
