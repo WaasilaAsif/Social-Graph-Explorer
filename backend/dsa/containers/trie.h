@@ -35,6 +35,42 @@ inline int charToIndex(char c) {
 class Trie {
 private:
     TrieNode* root;
+    bool removeHelper(TrieNode* node, const string& word, int depth) {
+    if (!node) return false;
+
+    if (depth == word.size()) {
+        // End of the word
+        if (!node->isEndOfWord) return false; // not a word
+        node->isEndOfWord = false;
+
+        // If node has no children → tell parent to delete it
+        for (int i = 0; i < 27; i++)
+            if (node->children[i] != nullptr)
+                return false;
+
+        return true; // delete me
+    }
+
+    int idx = charToIndex(word[depth]);
+    if (idx == -1 || !node->children[idx]) return false; // not found
+
+    // Recursively delete child
+    bool shouldDeleteChild = removeHelper(node->children[idx], word, depth + 1);
+
+    if (shouldDeleteChild) {
+        delete node->children[idx];
+        node->children[idx] = nullptr;
+    }
+
+    // After deleting child, check if current node should also be deleted
+    if (node->isEndOfWord) return false;
+
+    for (int i = 0; i < 27; i++)
+        if (node->children[i] != nullptr)
+            return false;
+
+    return true; // delete me
+}
 
     void collectAllWords(TrieNode* node, string prefix, DynamicArray<string>& result) {
         if (!node) return;
@@ -112,4 +148,9 @@ public:
         collectAllWords(current, p, result);
         return result;
     }
+    bool remove(const string& word) {
+    string w = toLower(word);
+    removeHelper(root, w, 0);
+    return true;
+}
 };

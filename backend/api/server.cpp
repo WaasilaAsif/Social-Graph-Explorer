@@ -19,7 +19,7 @@ int main() {
     Graph graph;
 
     // Messaging instances
-    UserManager userManager;
+    UserManager userManager("../storage/local_db/users.json");
     MessageStore msgStore;
     MsgTrie msgTrie;
     ConversationGraph convGraph;
