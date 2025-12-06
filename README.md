@@ -48,15 +48,25 @@ Modern social networks are complex systems with users, posts, friendships, and i
 
 ## Quick Start
 
-### Recent Updates (January 2024)
+### Recent Updates (December 2024)
 
-✅ **Full Database Integration Complete**
-- All messaging APIs now read/write from local JSON database
-- Server loads 20 users, 62 friendships, and 50+ messages at startup
-- Automatic persistence on message send
-- All data structures (MessageStore, MsgTrie, ConversationGraph) initialized from JSON
-- **8 Messaging APIs** fully operational with search, analytics, and path-finding
+✅ **Complete Data Persistence System**
+- All user operations (registration, posts, deletion) now persist to JSON database
+- Messaging APIs read/write from local JSON database
+- Graph operations (add/remove friends) persist automatically
+- Server loads 320 users, 61 friendships, and 51 messages at startup
+- Optimized startup: eliminated duplicate loading for instant server start
+- All data structures (MessageStore, MsgTrie, ConversationGraph, UserManager) initialized from JSON
+- **8 Messaging APIs + 8 User APIs + 6 Graph APIs** fully operational
 - See [backend/MESSAGING_API_GUIDE.md](backend/MESSAGING_API_GUIDE.md) for complete API documentation
+
+✅ **Backend Enhancements**
+- Added `UserRouter` with complete user management endpoints
+- Fixed path inconsistencies in file loading
+- Added `getAllUsers()` and `constructGraph()` methods to UserManager
+- Implemented automatic `saveToFile()` after all data modifications
+- Resolved merge conflicts and integrated graph algorithm endpoints (BFS, DFS, shortest-path)
+- CORS headers properly configured for all endpoints
 
 ### Prerequisites
 - C++17 or higher compiler (GCC 9.0+, Clang 10.0+, MSVC 2019+)
@@ -103,7 +113,18 @@ Whenever you make changes to any C++ files, recompile using:
 ```bash
 g++ api/server.cpp api/routes/graphRoutes.cpp api/routes/MsgRoutes.cpp api/routes/MsgAPI.cpp dsa/user/UserManager.cpp dsa/user/user.cpp dsa/utils/idGenerator.cpp messaging/MessageStore.cpp dsa/messaging_ds/MsgTrie.cpp dsa/messaging_ds/ConversationGraph.cpp algorithms/MsgTopKMessage.cpp algorithms/MsgFriendSuggestion.cpp algorithms/MsgMutualInteractions.cpp algorithms/MsgPopularityRanker.cpp algorithms/MsgShortestPatch.cpp storage/JSONLoader.cpp storage/JSONWriter.cpp -I. -Ilibs -Ilibs/asio -std=c++17 -DASIO_STANDALONE -lws2_32 -lwsock32 -o server.exe
 ```
-
+---
+*Just in case that does not work*
+```bash
+cd d:\SocialGraphExplorer\backend; taskkill /F /IM server.exe 2>$null; g++ api/server.cpp api/routes/graphRoutes.cpp api/routes/MsgRoutes.cpp api/routes/MsgAPI.cpp dsa/user/UserManager.cpp dsa/user/user.cpp dsa/utils/idGenerator.cpp messaging/MessageStore.cpp dsa/messaging_ds/MsgTrie.cpp dsa/messaging_ds/ConversationGraph.cpp algorithms/MsgTopKMessage.cpp algorithms/MsgFriendSuggestion.cpp algorithms/MsgMutualInteractions.cpp algorithms/MsgPopularityRanker.cpp algorithms/MsgShortestPatch.cpp storage/JSONLoader.cpp storage/JSONWriter.cpp -I. -Ilibs -Ilibs/asio -std=c++17 -DASIO_STANDALONE -lws2_32 -lwsock32 -o server.exe
+```
+*And then to run*
+```bash
+Set-Location d:\SocialGraphExplorer\backend; .\server.exe
+```
+---
+***Note: These commands should work regardless of the folder position but they have been tested and ran from the root folder of the project. i.e. SocialGraphExplorer/***
+---
 **Note**: This includes all messaging system files, database loaders/writers, and algorithm implementations.
 
 #### Run the Server
@@ -121,10 +142,10 @@ The API server will be available at `http://localhost:8081`
 
 **Expected Startup Output:**
 ```
+Loaded 320 users from database.
 Loading data from JSON files...
-✓ Loaded 20 users from storage/local_db/users.json
-✓ Loaded 62 friendships from storage/local_db/friendships.json
-✓ Loaded 50 messages from storage/local_db/messages.json
+✓ Loaded 61 friendships from storage/local_db/friendships.json
+✓ Loaded 51 messages from storage/local_db/messages.json
 Data loaded successfully!
 
 ========================================
@@ -136,6 +157,8 @@ User routes registered
 Server ready!
 ========================================
 ```
+
+**Note:** Users are loaded automatically by UserManager constructor, ensuring fast startup without duplication.
 
 #### Verify Server is Running
 
@@ -204,6 +227,18 @@ If `storage/local_db/` doesn't exist or is empty:
 New-Item -ItemType Directory -Path "storage/local_db" -Force
 ```
 The initial JSON files should be committed in the repository. Check git status.
+
+**Server timeout on startup:**
+If the server takes too long to start or times out:
+- This was fixed by removing duplicate user loading
+- UserManager now loads users only once in its constructor
+- Ensure you're running the latest compiled `server.exe`
+
+**Data not persisting:**
+If user posts or friendships don't persist:
+- This has been fixed - all operations now call `saveToFile()` or `saveFriendshipsToJSON()`
+- Verify you're using the latest code with persistence fixes
+- Check file permissions on `storage/local_db/` directory
 
 ### Frontend Setup
 ```bash
@@ -383,16 +418,18 @@ SocialGraphExplorer/
 │   ├── messaging/              # Complete messaging system
 │   │   ├── Message.h           # Message data structure
 │   │   ├── MessageStore        # Message storage and retrieval
-│   │   ├── MessagingSystem     # Main coordinator
-│   │   ├── MessageQueue        # FIFO queue
-│   │   ├── MessageAnalytics    # Interaction analytics
-│   │   ├── ScheduledMessages   # Priority scheduling
-│   │   ├── TopKConversations   # Top-K extraction
-│   │   └── UndoStack           # Undo functionality
-│   ├── analytics/              # GraphStats, PopularityRanker
-│   ├── storage/                # JSONLoader, JSONWriter
-│   │   └── local_db/           # JSON database
-│   │       ├── users.json      # 20 users with posts
+│   ├── api/                    # REST API routes and server (Crow framework)
+│   │   ├── server.cpp          # Main server (port 8081)
+│   │   └── routes/
+│   │       ├── graphRoutes.h   # GraphRoutes class definition
+│   │       ├── graphRoutes.cpp # 9 graph endpoints with persistence
+│   │       ├── MsgRoutes.cpp   # 8 messaging endpoints
+│   │       ├── MsgAPI.cpp      # Messaging API handlers
+│   ├── storage/                # JSONLoader, JSONWriter with persistence
+│   │   └── local_db/           # JSON database (auto-updated)
+│   │       ├── users.json      # 320 users with posts (persistent)
+│   │       ├── friendships.json # 61 friendship connections (persistent)
+│   │       └── messages.json   # 51 messages with full text (persistent)
 │   │       ├── friendships.json # 62 friendship connections
 │   │       └── messages.json   # 50+ messages with full text
 │   ├── api/                    # REST API routes and server (Crow framework)
@@ -479,10 +516,13 @@ While SocialGraphExplorer currently provides a robust backend framework and demo
 
 The backend server exposes **32+ REST API endpoints** across three categories:
 
-#### 1. Graph APIs (6 endpoints)
+#### 1. Graph APIs (9 endpoints)
 - `GET /graph/friends/:id` - Get all friends of a user
-- `POST /graph/add-friend` - Create friendship between two users
-- `DELETE /graph/remove-friend/:user1/:user2` - Remove friendship
+- `POST /graph/addFriend` - Create friendship between two users (with auto-save)
+- `POST /graph/removeFriend` - Remove friendship (with auto-save)
+- `GET /graph/stats` - Get graph statistics (nodes, edges, components, density)
+- `GET /graph/connected/:u/:v` - Check if two users are connected
+- `GET /graph/components` - Get number of connected components
 - `GET /graph/bfs/:start` - Perform BFS traversal from a user
 - `GET /graph/dfs/:start` - Perform DFS traversal from a user
 - `GET /graph/shortest-path/:src/:dest` - Find shortest path between users
@@ -494,10 +534,17 @@ The backend server exposes **32+ REST API endpoints** across three categories:
 - `GET /msg/topk/:userId/:k` - Get top K conversation partners
 - `GET /msg/suggestions/:userId/:k` - Get friend suggestions based on messages
 - `GET /msg/mutual/:userId` - Find mutual interactions
-- `GET /msg/rank/:top` - Get top N most active users
-- `GET /msg/path/:src/:dest` - Find shortest messaging path between users
+#### 3. User Management APIs (8 endpoints)
+- `POST /api/users/register` - Register new user (with auto-save)
+- `POST /api/users/login` - User login with credentials
+- `GET /api/users/search?prefix=...` - Search users by username prefix
+- `GET /api/users/:id` - Get user profile with all posts
+- `DELETE /api/users/:id` - Delete user (with auto-save)
+- `POST /api/users/:id/posts` - Create a new post (with auto-save)
+- `GET /api/users/:id/posts` - Get all posts for a user
+- `DELETE /api/users/:id/posts/:postIndex` - Delete a post (with auto-save)
 
-#### 3. User Management APIs (8+ endpoints)
+**All modifications now persist to JSON database automatically!**s (8+ endpoints)
 - User registration, login, profile management
 - Post creation and retrieval
 - User search and discovery
@@ -514,26 +561,42 @@ The guide includes:
 - Sample data from the database
 - Performance metrics
 - Troubleshooting tips
-- Testing workflows
-
 ### Quick API Test
 
 ```bash
 # Get API menu
 curl http://localhost:8081/
 
+# Test user registration (persists to database)
+curl -X POST http://localhost:8081/api/users/register \
+  -H "Content-Type: application/json" \
+  -d '{"username":"newuser","password":"pass123"}'
+# Expected: {"success":true,"message":"User registered successfully"}
+
+# Create a post (persists to database)
+curl -X POST http://localhost:8081/api/users/1/posts \
+  -H "Content-Type: application/json" \
+  -d '{"content":"My first post!"}'
+# Expected: {"success":true,"message":"Post created successfully"}
+
+# Get user with posts
+curl http://localhost:8081/api/users/1
+# Expected: {"success":true,"user":{"id":1,"username":"alice_smith","posts":[...]}}
+
 # Search for word "project" in messages
 curl http://localhost:8081/msg/search/project
 # Expected: {"results":[1,5,12,23,34,42]}
 
-# Get top 5 conversations for user 1
-curl http://localhost:8081/msg/topk/1/5
-# Expected: {"messages":[{"userId":2,"weight":8},{"userId":3,"weight":6}...]}
+# Get graph friends
+curl http://localhost:8081/graph/friends/1
+# Expected: {"success":true,"userId":1,"friends":[...],"count":5}
 
-# Send a new message
-curl -X POST http://localhost:8081/msg/send \
-  -H "Content-Type: application/json" \
-  -d '{"senderId":1,"receiverId":3,"text":"Hello!"}'
+# BFS traversal from user 1
+curl http://localhost:8081/graph/bfs/1
+# Expected: {"success":true,"start":1,"traversal":[1,2,3,5,7,10,...]}
+```
+
+**Note:** All POST/DELETE operations now persist changes to the JSON database automatically!d '{"senderId":1,"receiverId":3,"text":"Hello!"}'
 # Expected: {"status":"success","messageId":51}
 ```
 
