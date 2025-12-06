@@ -50,7 +50,7 @@ Modern social networks are complex systems with users, posts, friendships, and i
 
 ### Recent Updates (December 2024)
 
-✅ **Complete Data Persistence System**
+  **Complete Data Persistence System**
 - All user operations (registration, posts, deletion) now persist to JSON database
 - Messaging APIs read/write from local JSON database
 - Graph operations (add/remove friends) persist automatically
@@ -60,7 +60,7 @@ Modern social networks are complex systems with users, posts, friendships, and i
 - **8 Messaging APIs + 8 User APIs + 6 Graph APIs** fully operational
 - See [backend/MESSAGING_API_GUIDE.md](backend/MESSAGING_API_GUIDE.md) for complete API documentation
 
-✅ **Backend Enhancements**
+  **Backend Enhancements**
 - Added `UserRouter` with complete user management endpoints
 - Fixed path inconsistencies in file loading
 - Added `getAllUsers()` and `constructGraph()` methods to UserManager
@@ -123,7 +123,7 @@ cd d:\SocialGraphExplorer\backend; taskkill /F /IM server.exe 2>$null; g++ api/s
 Set-Location d:\SocialGraphExplorer\backend; .\server.exe
 ```
 ---
-***Note: These commands should work regardless of the folder position but they have been tested and ran from the root folder of the project. i.e. SocialGraphExplorer/***
+*Note: These commands should work regardless of the folder position but they have been tested and ran from the root folder of the project. i.e. SocialGraphExplorer/*
 ---
 **Note**: This includes all messaging system files, database loaders/writers, and algorithm implementations.
 
