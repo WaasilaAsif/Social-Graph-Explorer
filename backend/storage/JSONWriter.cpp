@@ -11,7 +11,7 @@ void saveUsersToJSON(const UserManager& userManager, const std::string& filepath
     json data;
     data["users"] = json::array();
     // Save all users
-    const DynamicArray<User>& users = userManager.getUsers();
+    const DynamicArray<User>& users = userManager.getAllUsers();
     for (int i = 0; i < users.size(); ++i) {
         const User& user = users.get(i);
         json userObj;

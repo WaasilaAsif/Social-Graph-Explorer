@@ -5,7 +5,7 @@
 #include "../../algorithms/DFS.h"
 #include "../../analytics/Graphstats.h"  
 #include <iostream>
-#include "../../libs/json.hpp"
+#include "../../libs/crow/nlohmann/json.hpp"
 #include <fstream>
 #include <direct.h>
 using json = nlohmann::json;
@@ -143,6 +143,16 @@ void UserManager::addUser(const std::string& name, const std::string& password) 
     // *** ADD: Add user to social graph ***
     socialGraph.addNode(newUser.getId());
     saveToFile();
+}
+
+// Get all users (const access)
+const DynamicArray<User>& UserManager::getAllUsers() const {
+    return users;
+}
+
+// Construct and return the social graph
+const Graph& UserManager::constructGraph() const {
+    return socialGraph;
 }
 
 bool UserManager::removeUserById(int id) {

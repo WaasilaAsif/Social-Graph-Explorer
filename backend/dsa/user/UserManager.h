@@ -52,4 +52,8 @@ public:
     // Analytics
     void printNetworkStats();
     User* getMostPopularUser();
+
+    // Access methods
+    const DynamicArray<User>& getAllUsers() const;
+    const Graph& constructGraph() const;
 };
