@@ -29,6 +29,7 @@ public:
                     }
                     
                     userManager.addUser(username, password);
+                    userManager.saveToFile();
                     
                     return crow::response(201, json{
                         {"success", true},
@@ -157,6 +158,7 @@ public:
                     bool success = userManager.removeUserById(userId);
                     
                     if (success) {
+                        userManager.saveToFile();
                         return crow::response(200, json{
                             {"success", true},
                             {"message", "User deleted successfully"}
@@ -201,6 +203,7 @@ public:
                     }
                     
                     user->createPost(content);
+                    userManager.saveToFile();
                     
                     return crow::response(201, json{
                         {"success", true},
@@ -270,6 +273,7 @@ public:
                     bool success = user->deletePost(postIndex);
                     
                     if (success) {
+                        userManager.saveToFile();
                         return crow::response(200, json{
                             {"success", true},
                             {"message", "Post deleted successfully"}

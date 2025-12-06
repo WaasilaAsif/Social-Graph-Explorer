@@ -19,14 +19,14 @@ int main() {
     Graph graph;
 
     // Messaging instances
-    UserManager userManager("../storage/local_db/users.json");
+    UserManager userManager("storage/local_db/users.json");
     MessageStore msgStore;
     MsgTrie msgTrie;
     ConversationGraph convGraph;
     
     // Load data from JSON files
     std::cout << "Loading data from JSON files..." << std::endl;
-    loadUsersFromJSON(userManager, "storage/local_db/users.json");
+    // UserManager already loads users in its constructor, so no need to load again
     loadFriendshipsFromJSON(graph, "storage/local_db/friendships.json");
     loadMessagesFromJSON(msgStore, msgTrie, convGraph, "storage/local_db/messages.json");
     std::cout << "Data loaded successfully!" << std::endl << std::endl;
