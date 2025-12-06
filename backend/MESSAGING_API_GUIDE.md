@@ -857,7 +857,7 @@ cd backend
 ### Search Returns No Results
 - Verify spelling (case-sensitive)
 - Try prefix search instead
-- Check if messages were loaded: look for "✓ Loaded X messages" on startup
+- Check if messages were loaded: look for "  Loaded X messages" on startup
 
 ### Invalid JSON Error
 - Use proper JSON format in POST body

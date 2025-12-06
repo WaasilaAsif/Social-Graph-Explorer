@@ -41,7 +41,7 @@ void loadUsersFromJSON(UserManager& userManager, const std::string& filepath) {
             }
         }
         
-        std::cout << "✓ Loaded " << data["users"].size() << " users from " << filepath << std::endl;
+        std::cout << "  Loaded " << data["users"].size() << " users from " << filepath << std::endl;
         
     } catch (const std::exception& e) {
         std::cerr << "Error parsing users.json: " << e.what() << std::endl;
@@ -85,7 +85,7 @@ void loadFriendshipsFromJSON(Graph& graph, const std::string& filepath) {
             }
         }
         
-        std::cout << "✓ Loaded " << count << " friendships from " << filepath << std::endl;
+        std::cout << "  Loaded " << count << " friendships from " << filepath << std::endl;
         
     } catch (const std::exception& e) {
         std::cerr << "Error parsing friendships.json: " << e.what() << std::endl;
@@ -127,7 +127,7 @@ void loadMessagesFromJSON(MessageStore& msgStore, MsgTrie& msgTrie, Conversation
             convGraph.addInteraction(senderId, receiverId);
         }
         
-        std::cout << "✓ Loaded " << data["messages"].size() << " messages from " << filepath << std::endl;
+        std::cout << "  Loaded " << data["messages"].size() << " messages from " << filepath << std::endl;
         
     } catch (const std::exception& e) {
         std::cerr << "Error parsing messages.json: " << e.what() << std::endl;

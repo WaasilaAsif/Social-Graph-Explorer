@@ -33,7 +33,7 @@ void saveUsersToJSON(const UserManager& userManager, const std::string& filepath
     }
     file << data.dump(4);
     file.close();
-    std::cout << "✓ Saved users to " << filepath << std::endl;
+    std::cout << "  Saved users to " << filepath << std::endl;
 }
 
 void saveFriendshipsToJSON(const Graph& graph, const std::string& filepath) {
@@ -60,7 +60,7 @@ void saveFriendshipsToJSON(const Graph& graph, const std::string& filepath) {
     }
     file << data.dump(4);
     file.close();
-    std::cout << "✓ Saved friendships to " << filepath << std::endl;
+    std::cout << "  Saved friendships to " << filepath << std::endl;
 }
 
 void saveMessagesToJSON(const MessageStore& msgStore, const std::string& filepath) {
@@ -86,5 +86,5 @@ void saveMessagesToJSON(const MessageStore& msgStore, const std::string& filepat
     }
     file << data.dump(4);
     file.close();
-    std::cout << "✓ Saved messages to " << filepath << std::endl;
+    std::cout << "  Saved messages to " << filepath << std::endl;
 }
