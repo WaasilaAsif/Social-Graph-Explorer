@@ -1,12 +1,13 @@
 #pragma once
 #include "../../libs/crow/crow_all.h"
 #include "../../dsa/graph/Graph.h"
+#include"../../dsa/user/UserManager.h"
 
 class GraphRoutes {
-private:
+    public:
     Graph& graph;
-
-public:
-    GraphRoutes(Graph& g);
+    UserManager &userManager;
+    GraphRoutes(Graph &g, UserManager &um);
+    
     void registerRoutes(crow::SimpleApp& app);
 };

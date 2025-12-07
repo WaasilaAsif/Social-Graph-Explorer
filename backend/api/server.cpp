@@ -35,7 +35,7 @@ int main() {
     MsgAPI msgApi(&userManager, &msgStore, &msgTrie, &convGraph);
 
     // Register graph routes
-    GraphRoutes graphRoutes(graph);
+    GraphRoutes graphRoutes(graph,userManager);
     graphRoutes.registerRoutes(app);
     
     // Register messaging routes

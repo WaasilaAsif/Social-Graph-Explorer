@@ -7,15 +7,16 @@
 #include "../../analytics/Graphstats.h"
 #include "../../storage/JSONWriter.h"
 #include <iostream>
-#include <vector>  
+#include <vector>
 
-GraphRoutes::GraphRoutes(Graph& g) : graph(g) {}
-
-void GraphRoutes::registerRoutes(crow::SimpleApp& app) {
+GraphRoutes::GraphRoutes(Graph &g, UserManager &um) : graph(g), userManager(um) {}
+void GraphRoutes::registerRoutes(crow::SimpleApp &app)
+{
 
     // GET /graph/friends/:id
     CROW_ROUTE(app, "/graph/friends/<int>")
-    ([this](int id) {
+    ([this](int id)
+     {
         crow::json::wvalue response;
 
         try {
@@ -42,12 +43,11 @@ void GraphRoutes::registerRoutes(crow::SimpleApp& app) {
         crow::response res(response);
         res.add_header("Content-Type", "application/json");
         res.add_header("Access-Control-Allow-Origin", "*"); // CORS
-        return res;
-    });
+        return res; });
 
     // POST /graph/addFriend
-    CROW_ROUTE(app, "/graph/addFriend").methods(crow::HTTPMethod::Post)
-    ([this](const crow::request& req) {
+    CROW_ROUTE(app, "/graph/addFriend").methods(crow::HTTPMethod::Post)([this](const crow::request &req)
+                                                                        {
         crow::json::wvalue response;
         try {
             auto body = crow::json::load(req.body);
@@ -60,9 +60,24 @@ void GraphRoutes::registerRoutes(crow::SimpleApp& app) {
                 return res;
             }
             int u = body["u"].i();
-            int v = body["v"].i();
-            if (!graph.hasNode(u)) graph.addNode(u);
-            if (!graph.hasNode(v)) graph.addNode(v);
+int v = body["v"].i();
+
+// Check if users exist in UserManager
+User* userA = userManager.getUserById(u);
+User* userB = userManager.getUserById(v);
+
+if (!userA || !userB) {
+    response["success"] = false;
+    response["error"] = "One or both users do not exist";
+    crow::response res(404, response);
+    res.add_header("Content-Type", "application/json");
+    res.add_header("Access-Control-Allow-Origin", "*");
+    return res;
+}
+
+// Users exist, now create friendship
+if (!graph.hasNode(u)) graph.addNode(u);
+if (!graph.hasNode(v)) graph.addNode(v);
             if (!graph.hasEdge(u, v)) {
                 graph.addEdge(u, v, 1, true);
                 // Debug output: print neighbors of u
@@ -87,12 +102,11 @@ void GraphRoutes::registerRoutes(crow::SimpleApp& app) {
         crow::response res(response);
         res.add_header("Content-Type", "application/json");
         res.add_header("Access-Control-Allow-Origin", "*");
-        return res;
-    });
+        return res; });
 
     // POST /graph/removeFriend
-    CROW_ROUTE(app, "/graph/removeFriend").methods(crow::HTTPMethod::Post)
-    ([this](const crow::request& req) {
+    CROW_ROUTE(app, "/graph/removeFriend").methods(crow::HTTPMethod::Post)([this](const crow::request &req)
+                                                                           {
         crow::json::wvalue response;
         try {
             auto body = crow::json::load(req.body);
@@ -123,12 +137,12 @@ void GraphRoutes::registerRoutes(crow::SimpleApp& app) {
         crow::response res(response);
         res.add_header("Content-Type", "application/json");
         res.add_header("Access-Control-Allow-Origin", "*");
-        return res;
-    });
+        return res; });
 
     // GET /graph/stats
     CROW_ROUTE(app, "/graph/stats")
-    ([this]() {
+    ([this]()
+     {
         crow::json::wvalue response;
 
         try {
@@ -148,12 +162,12 @@ void GraphRoutes::registerRoutes(crow::SimpleApp& app) {
         crow::response res(response);
         res.add_header("Content-Type", "application/json");
         res.add_header("Access-Control-Allow-Origin", "*");
-        return res;
-    });
+        return res; });
 
     // GET /graph/connected/:u/:v
     CROW_ROUTE(app, "/graph/connected/<int>/<int>")
-    ([this](int u, int v) {
+    ([this](int u, int v)
+     {
         crow::json::wvalue response;
 
         try {
@@ -171,12 +185,12 @@ void GraphRoutes::registerRoutes(crow::SimpleApp& app) {
         crow::response res(response);
         res.add_header("Content-Type", "application/json");
         res.add_header("Access-Control-Allow-Origin", "*");
-        return res;
-    });
+        return res; });
 
     // GET /graph/components
     CROW_ROUTE(app, "/graph/components")
-    ([this]() {
+    ([this]()
+     {
         crow::json::wvalue response;
 
         try {
@@ -192,12 +206,12 @@ void GraphRoutes::registerRoutes(crow::SimpleApp& app) {
         crow::response res(response);
         res.add_header("Content-Type", "application/json");
         res.add_header("Access-Control-Allow-Origin", "*");
-        return res;
-    });
+        return res; });
 
     // GET /graph/bfs/:start - BFS traversal
     CROW_ROUTE(app, "/graph/bfs/<int>")
-    ([this](int start) {
+    ([this](int start)
+     {
         crow::json::wvalue response;
 
         try {
@@ -228,12 +242,12 @@ void GraphRoutes::registerRoutes(crow::SimpleApp& app) {
         crow::response res(response);
         res.add_header("Content-Type", "application/json");
         res.add_header("Access-Control-Allow-Origin", "*");
-        return res;
-    });
+        return res; });
 
     // GET /graph/dfs/:start - DFS traversal
     CROW_ROUTE(app, "/graph/dfs/<int>")
-    ([this](int start) {
+    ([this](int start)
+     {
         crow::json::wvalue response;
 
         try {
@@ -264,12 +278,12 @@ void GraphRoutes::registerRoutes(crow::SimpleApp& app) {
         crow::response res(response);
         res.add_header("Content-Type", "application/json");
         res.add_header("Access-Control-Allow-Origin", "*");
-        return res;
-    });
+        return res; });
 
     // GET /graph/shortest-path/:src/:dest - Find shortest path
     CROW_ROUTE(app, "/graph/shortest-path/<int>/<int>")
-    ([this](int src, int dest) {
+    ([this](int src, int dest)
+     {
         crow::json::wvalue response;
 
         try {
@@ -311,6 +325,5 @@ void GraphRoutes::registerRoutes(crow::SimpleApp& app) {
         crow::response res(response);
         res.add_header("Content-Type", "application/json");
         res.add_header("Access-Control-Allow-Origin", "*");
-        return res;
-    });
+        return res; });
 }

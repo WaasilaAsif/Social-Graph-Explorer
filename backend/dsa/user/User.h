@@ -15,7 +15,7 @@ public:
     // Constructor automatically assigns a unique ID
     User(const std::string& name, const std::string& password);
     User(); 
-    
+    User(const std::string& name, const std::string& password,int id) ;
     // Getters
     int getId() const;
     std::string getName() const;

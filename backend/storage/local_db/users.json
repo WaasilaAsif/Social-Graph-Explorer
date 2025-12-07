@@ -6,7 +6,6 @@
             "password": "pass123",
             "posts": [
                 "Just deployed my first C++ server!",
-                "Learning graph algorithms is fascinating",
                 "Coffee and code, the perfect combo",
                 "Just deployed my first C++ server!",
                 "Learning graph algorithms is fascinating",
@@ -61,8 +60,6 @@
             "password": "pass123",
             "posts": [
                 "Graph theory is so cool!",
-                "Working on data structures project",
-                "Anyone want to collaborate on DSA?",
                 "Graph theory is so cool!",
                 "Working on data structures project",
                 "Anyone want to collaborate on DSA?",
@@ -114,7 +111,6 @@
             "password": "pass123",
             "posts": [
                 "Finished implementing BFS algorithm",
-                "Social networks are interesting to model",
                 "Time for a coding break",
                 "Finished implementing BFS algorithm",
                 "Social networks are interesting to model",
@@ -2870,10 +2866,16 @@
             "username": "sam_lopez"
         },
         {
-            "id": 320,
-            "password": "pass123",
+            "id": 321,
+            "password": "messi",
             "posts": [],
-            "username": "tina_gonzalez"
+            "username": "ronaldo"
+        },
+        {
+            "id": 322,
+            "password": "ChocolateChipCookies",
+            "posts": [],
+            "username": "Hania"
         }
     ]
 }

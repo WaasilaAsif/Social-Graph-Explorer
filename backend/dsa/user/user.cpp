@@ -10,6 +10,12 @@ User::User(const std::string& name, const std::string& password)
 User::User() : name(""), password(""), id(0) {
     // Empty constructor doesn't get an ID
 }
+User::User(const std::string& name, const std::string& password,int id) 
+{
+      this->name=name;
+      this->id=id;
+      this->password=password;
+}
 
 int User::getId() const { return id; }
 std::string User::getName() const { return name; }
