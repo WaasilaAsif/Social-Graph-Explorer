@@ -12,6 +12,21 @@
 #include "../libs/crow/crow_all.h"
 #include <iostream>
 
+// Algorithm modules
+#include "../algorithms/MutualFriends.h"
+#include "../algorithms/ShortestPath.h"
+#include "../analytics/GraphStats.h"
+#include "../analytics/PopularityRanker.h"
+#include "../algorithms/FriendSuggestion.h"
+
+// Forward declaration
+void setupAlgoRoutes(crow::SimpleApp& app, Graph* graph, 
+                     MutualFriends* mutualFriends,
+                     ShortestPath* shortestPath,
+                     GraphStats* graphStats,
+                     PopularityRanker* popularityRanker,
+                     FriendSuggestion* friendSuggestion);
+
 int main() {
     crow::SimpleApp app;
 
@@ -31,6 +46,13 @@ int main() {
     // Create API instances
     MsgAPI msgApi(&userManager, &msgStore, &msgTrie, &convGraph);
 
+    // Initialize algorithm modules
+    MutualFriends mutualFriends(&userManager.constructGraph());
+    ShortestPath shortestPath(&userManager.constructGraph());
+    GraphStats graphStats;
+    PopularityRanker popularityRanker(&userManager.constructGraph());
+    FriendSuggestion friendSuggestion(&userManager.constructGraph(), &mutualFriends);
+
     // Register graph routes
     GraphRoutes graphRoutes(userManager.constructGraph(), userManager);
     graphRoutes.registerRoutes(app);
@@ -42,6 +64,10 @@ int main() {
     // Register user routes
     UserRouter userRouter(userManager);
     userRouter.setupRoutes(app);
+    
+    // Register algorithm routes
+    setupAlgoRoutes(app, &userManager.constructGraph(), &mutualFriends, &shortestPath, 
+                    &graphStats, &popularityRanker, &friendSuggestion);
 
     // Root - API Menu
     CROW_ROUTE(app, "/")
@@ -58,16 +84,19 @@ int main() {
         menu["endpoints"]["graph"]["stats"] = "GET /graph/stats";
         menu["endpoints"]["graph"]["connected"] = "GET /graph/connected/:u/:v";
         menu["endpoints"]["graph"]["components"] = "GET /graph/components";
+        menu["endpoints"]["graph"]["bfs"] = "GET /graph/bfs/:start - BFS traversal";
+        menu["endpoints"]["graph"]["dfs"] = "GET /graph/dfs/:start - DFS traversal";
+        menu["endpoints"]["graph"]["shortestPath"] = "GET /graph/shortest-path/:src/:dest - Shortest path";
         
         // Messaging endpoints
         menu["endpoints"]["messaging"]["send"] = "POST /msg/send - Body: {senderId, receiverId, text}";
-        menu["endpoints"]["messaging"]["search"] = "GET /msg/search/:word";
-        menu["endpoints"]["messaging"]["prefix"] = "GET /msg/prefix/:prefix";
-        menu["endpoints"]["messaging"]["topk"] = "GET /msg/topk/:userId/:k";
-        menu["endpoints"]["messaging"]["suggestions"] = "GET /msg/suggestions/:userId/:k";
-        menu["endpoints"]["messaging"]["mutual"] = "GET /msg/mutual/:userId";
-        menu["endpoints"]["messaging"]["rank"] = "GET /msg/rank/:topN";
-        menu["endpoints"]["messaging"]["path"] = "GET /msg/path/:src/:dest";
+        menu["endpoints"]["messaging"]["search"] = "GET /msg/search/:word - Search messages by word";
+        menu["endpoints"]["messaging"]["prefix"] = "GET /msg/prefix/:prefix - Search by prefix";
+        menu["endpoints"]["messaging"]["topk"] = "GET /msg/topk/:userId/:k - Top K conversations";
+        menu["endpoints"]["messaging"]["suggestions"] = "GET /msg/suggestions/:userId/:k - Friend suggestions";
+        menu["endpoints"]["messaging"]["mutual"] = "GET /msg/mutual/:userId - Mutual interactions";
+        menu["endpoints"]["messaging"]["rank"] = "GET /msg/rank/:topN - Top N active users";
+        menu["endpoints"]["messaging"]["path"] = "GET /msg/path/:src/:dest - Messaging path";
         
         // User endpoints
         menu["endpoints"]["users"]["register"] = "POST /api/users/register - Body: {username, password}";
@@ -78,6 +107,18 @@ int main() {
         menu["endpoints"]["users"]["createPost"] = "POST /api/users/:id/posts - Body: {content}";
         menu["endpoints"]["users"]["getPosts"] = "GET /api/users/:id/posts";
         menu["endpoints"]["users"]["deletePost"] = "DELETE /api/users/:id/posts/:postIndex";
+        
+        // Algorithm endpoints
+        menu["endpoints"]["algorithms"]["mutualFriends"] = "GET /api/algo/mutual-friends?user1=X&user2=Y - Find common friends";
+        menu["endpoints"]["algorithms"]["shortestPath"] = "GET /api/algo/shortest-path?start=X&end=Y - Find shortest connection path";
+        menu["endpoints"]["algorithms"]["usersWithinDistance"] = "GET /api/algo/users-within-distance?userId=X&distance=N - Find users N hops away";
+        menu["endpoints"]["algorithms"]["userDegree"] = "GET /api/algo/user-degree?userId=X - Get friend count";
+        menu["endpoints"]["algorithms"]["graphStats"] = "GET /api/algo/graph-stats - Network statistics & metrics";
+        menu["endpoints"]["algorithms"]["topPopular"] = "GET /api/algo/top-popular?n=10 - Most connected users";
+        menu["endpoints"]["algorithms"]["userRank"] = "GET /api/algo/user-rank?userId=X - User popularity ranking";
+        menu["endpoints"]["algorithms"]["friendSuggestions"] = "GET /api/algo/friend-suggestions?userId=X&limit=10 - AI friend recommendations";
+        menu["endpoints"]["algorithms"]["twoHopFriends"] = "GET /api/algo/two-hop-friends?userId=X - Friends of friends";
+        menu["endpoints"]["algorithms"]["unitTests"] = "GET /api/algo/unit-tests - Run algorithm test suite";
         
         // Health
         menu["endpoints"]["health"] = "GET /health";
@@ -129,6 +170,7 @@ int main() {
     std::cout << "Graph routes registered" << std::endl;
     std::cout << "Messaging routes registered" << std::endl;
     std::cout << "User routes registered" << std::endl;
+    std::cout << "Algorithm routes registered" << std::endl;
     std::cout << "Server ready!" << std::endl;
     std::cout << "========================================" << std::endl;
 
@@ -136,3 +178,6 @@ int main() {
 
     return 0;
 }
+
+// Include algorithm routes implementation
+#include "routes/algoRoutes.cpp"
