@@ -1,12 +1,13 @@
-#include "crow_all.h"
-#include "json.hpp"
-#include "MutualFriends.h"
-#include "ShortestPath.h"
-#include "GraphStats.h"
-#include "PopularityRanker.h"
-#include "FriendSuggestion.h"
-#include "PriorityQueue.h"
-#include "Graph.h"
+#include "../../libs/crow/crow_all.h"
+#include "../../libs/crow/nlohmann/json.hpp"
+#include <ctime>
+#include "../../algorithms/MutualFriends.h"
+#include "../../algorithms/ShortestPath.h"
+#include "../../analytics/GraphStats.h"
+#include "../../analytics/PopularityRanker.h"
+#include "../../algorithms/FriendSuggestion.h"
+#include "../../dsa/containers/PriorityQueue.h"
+#include "../../dsa/graph/Graph.h"
 #include <ctime>
 
 using json = nlohmann::json;
@@ -139,40 +140,12 @@ void setupAlgoRoutes(crow::SimpleApp& app, Graph* graph,
         }
     });
     
-    // ============================================
     // GRAPH STATISTICS ROUTES
-    // ============================================
-    
-    // GET /api/algo/graph-stats
-    CROW_ROUTE(app, "/api/algo/graph-stats")
-    .methods("GET"_method)
-    ([graphStats](const crow::request& req) {
-        try {
-            GraphMetrics metrics = graphStats->getGraphMetrics();
-            
-            json response;
-            response["totalUsers"] = metrics.totalUsers;
-            response["totalFriendships"] = metrics.totalFriendships;
-            response["averageDegree"] = metrics.averageDegree;
-            response["maxDegree"] = metrics.maxDegree;
-            response["minDegree"] = metrics.minDegree;
-            response["mostPopularUser"] = metrics.mostPopularUser;
-            response["clusteringCoefficient"] = metrics.clusteringCoefficient;
-            response["connectedComponents"] = metrics.connectedComponents;
-            response["density"] = metrics.density;
-            
-            return crow::response(200, response.dump());
-        } catch (const std::exception& e) {
-            json error;
-            error["error"] = e.what();
-            return crow::response(500, error.dump());
-        }
-    });
     
     // GET /api/algo/user-degree?userId={id}
     CROW_ROUTE(app, "/api/algo/user-degree")
     .methods("GET"_method)
-    ([graphStats](const crow::request& req) {
+    ([graph](const crow::request& req) {
         auto userIdStr = req.url_params.get("userId");
         
         if (!userIdStr) {
@@ -181,7 +154,7 @@ void setupAlgoRoutes(crow::SimpleApp& app, Graph* graph,
         
         try {
             int userId = std::stoi(userIdStr);
-            int degree = graphStats->getUserDegree(userId);
+            int degree = GraphStats::getDegree(*graph, userId);
             
             json response;
             response["userId"] = userId;
@@ -194,6 +167,39 @@ void setupAlgoRoutes(crow::SimpleApp& app, Graph* graph,
             return crow::response(500, error.dump());
         }
     });
+        // GET /api/algo/graph-stats
+        CROW_ROUTE(app, "/api/algo/graph-stats")
+        .methods("GET"_method)
+        ([graph](const crow::request& req) {
+            try {
+                int nodeCount = graph->nodeCount();
+                int edgeCount = GraphStats::countEdges(*graph, true);
+                float avgDegree = GraphStats::getAverageDegree(*graph);
+                float density = GraphStats::getDensity(*graph);
+                bool connected = GraphStats::isConnected(*graph);
+                int components = GraphStats::countComponents(*graph);
+                int diameter = GraphStats::getDiameter(*graph);
+                float avgClustering = GraphStats::getAverageClusteringCoefficient(*graph);
+                int mostConnected = GraphStats::findMostConnectedNode(*graph);
+            
+                json response;
+                response["nodeCount"] = nodeCount;
+                response["edgeCount"] = edgeCount;
+                response["averageDegree"] = avgDegree;
+                response["density"] = density;
+                response["connected"] = connected;
+                response["components"] = components;
+                response["diameter"] = diameter;
+                response["averageClusteringCoefficient"] = avgClustering;
+                response["mostConnectedNode"] = mostConnected;
+            
+                return crow::response(200, response.dump());
+            } catch (const std::exception& e) {
+                json error;
+                error["error"] = e.what();
+                return crow::response(500, error.dump());
+            }
+        });
     
     // ============================================
     // POPULARITY RANKING ROUTES
@@ -336,11 +342,6 @@ void setupAlgoRoutes(crow::SimpleApp& app, Graph* graph,
         }
     });
     
-    // ============================================
-    // UNIT TEST ENDPOINT (Member 3)
-    // Remove or comment out in production
-    // ============================================
-    
     CROW_ROUTE(app, "/api/algo/unit-tests")
     .methods("GET"_method)
     ([graph, mutualFriends, shortestPath, graphStats, popularityRanker, friendSuggestion]
@@ -351,9 +352,7 @@ void setupAlgoRoutes(crow::SimpleApp& app, Graph* graph,
         testResults["tester"] = "Member 3";
         
         try {
-            // ============================================
             // Test 1: PriorityQueue (Max-Heap)
-            // ============================================
             testResults["test1_priorityQueue"]["status"] = "Testing...";
             try {
                 PriorityQueue<int> pq;
@@ -379,10 +378,7 @@ void setupAlgoRoutes(crow::SimpleApp& app, Graph* graph,
                 testResults["test1_priorityQueue"]["status"] = "[FAIL]";
                 testResults["test1_priorityQueue"]["error"] = e.what();
             }
-            
-            // ============================================
             // Test 2: MutualFriends
-            // ============================================
             testResults["test2_mutualFriends"]["status"] = "Testing...";
             try {
                 LinkedList<int> allUsers = graph->getAllNodeIDs();
@@ -416,9 +412,7 @@ void setupAlgoRoutes(crow::SimpleApp& app, Graph* graph,
                 testResults["test2_mutualFriends"]["error"] = e.what();
             }
             
-            // ============================================
             // Test 3: ShortestPath (BFS)
-            // ============================================
             testResults["test3_shortestPath"]["status"] = "Testing...";
             try {
                 LinkedList<int> allUsers = graph->getAllNodeIDs();
@@ -454,29 +448,29 @@ void setupAlgoRoutes(crow::SimpleApp& app, Graph* graph,
                 testResults["test3_shortestPath"]["error"] = e.what();
             }
             
-            // ============================================
             // Test 4: GraphStats
-            // ============================================
             testResults["test4_graphStats"]["status"] = "Testing...";
             try {
-                GraphMetrics metrics = graphStats->getGraphMetrics();
-                int totalUsers = graphStats->getTotalUsers();
-                
-                bool userCountConsistent = (metrics.totalUsers == totalUsers);
-                bool avgDegreeValid = (metrics.averageDegree >= 0);
-                bool densityValid = (metrics.density >= 0 && metrics.density <= 1);
-                bool clusteringValid = (metrics.clusteringCoefficient >= 0 && 
-                                       metrics.clusteringCoefficient <= 1);
-                
-                if (userCountConsistent && avgDegreeValid && densityValid && clusteringValid) {
+                int totalUsers = graph->nodeCount();
+                int totalFriendships = GraphStats::countEdges(*graph, true);
+                float averageDegree = GraphStats::getAverageDegree(*graph);
+                float density = GraphStats::getDensity(*graph);
+                float clusteringCoefficient = GraphStats::getAverageClusteringCoefficient(*graph);
+                int connectedComponents = GraphStats::countComponents(*graph);
+
+                bool avgDegreeValid = (averageDegree >= 0);
+                bool densityValid = (density >= 0 && density <= 1);
+                bool clusteringValid = (clusteringCoefficient >= 0 && clusteringCoefficient <= 1);
+
+                if (avgDegreeValid && densityValid && clusteringValid) {
                     testResults["test4_graphStats"]["status"] = "[PASS]";
                     testResults["test4_graphStats"]["details"] = {
-                        {"totalUsers", metrics.totalUsers},
-                        {"totalFriendships", metrics.totalFriendships},
-                        {"averageDegree", metrics.averageDegree},
-                        {"density", metrics.density},
-                        {"clusteringCoefficient", metrics.clusteringCoefficient},
-                        {"connectedComponents", metrics.connectedComponents},
+                        {"totalUsers", totalUsers},
+                        {"totalFriendships", totalFriendships},
+                        {"averageDegree", averageDegree},
+                        {"density", density},
+                        {"clusteringCoefficient", clusteringCoefficient},
+                        {"connectedComponents", connectedComponents},
                         {"validation", "All metrics within valid ranges"}
                     };
                 } else {
@@ -488,9 +482,7 @@ void setupAlgoRoutes(crow::SimpleApp& app, Graph* graph,
                 testResults["test4_graphStats"]["error"] = e.what();
             }
             
-            // ============================================
             // Test 5: PopularityRanker (Uses PriorityQueue)
-            // ============================================
             testResults["test5_popularityRanker"]["status"] = "Testing...";
             try {
                 LinkedList<UserScore> topUsers = popularityRanker->getTopNPopularUsers(3);
@@ -531,10 +523,7 @@ void setupAlgoRoutes(crow::SimpleApp& app, Graph* graph,
                 testResults["test5_popularityRanker"]["status"] = "[FAIL]";
                 testResults["test5_popularityRanker"]["error"] = e.what();
             }
-            
-            // ============================================
             // Test 6: FriendSuggestion (2-hop algorithm)
-            // ============================================
             testResults["test6_friendSuggestion"]["status"] = "Testing...";
             try {
                 LinkedList<int> allUsers = graph->getAllNodeIDs();
@@ -579,10 +568,7 @@ void setupAlgoRoutes(crow::SimpleApp& app, Graph* graph,
                 testResults["test6_friendSuggestion"]["status"] = "[FAIL]";
                 testResults["test6_friendSuggestion"]["error"] = e.what();
             }
-            
-            // ============================================
             // Test Summary
-            // ============================================
             int passed = 0, failed = 0, skipped = 0;
             
             for (auto& [key, value] : testResults.items()) {
@@ -618,23 +604,16 @@ void setupAlgoRoutes(crow::SimpleApp& app, Graph* graph,
     });
 }
 
-
-// ============================================
 // STANDALONE TEST SERVER (Member 3 Only)
 // Compile with: -DSTANDALONE_TEST flag
 // For integration: compile WITHOUT this flag
-// ============================================
 
 #ifdef STANDALONE_TEST
 
-#include "Graph.h"
+#include "../../dsa/graph/Graph.h"
 
 int main() {
     crow::SimpleApp app;
-    
-    std::cout << "========================================" << std::endl;
-    std::cout << "  Member 3 - Unit Test Server" << std::endl;
-    std::cout << "========================================" << std::endl;
     
     // Initialize core graph
     Graph graph;
@@ -658,7 +637,7 @@ int main() {
     // Initialize Member 3's algorithm modules
     MutualFriends mutualFriends(&graph);
     ShortestPath shortestPath(&graph);
-    GraphStats graphStats(&graph);
+    GraphStats graphStats;
     PopularityRanker popularityRanker(&graph);
     FriendSuggestion friendSuggestion(&graph, &mutualFriends);
     
@@ -666,9 +645,7 @@ int main() {
     setupAlgoRoutes(app, &graph, &mutualFriends, &shortestPath, 
                     &graphStats, &popularityRanker, &friendSuggestion);
     
-    std::cout << "========================================" << std::endl;
     std::cout << "  Server: http://localhost:8080" << std::endl;
-    std::cout << "========================================" << std::endl;
     std::cout << "\nAPI TEST ENDPOINT:" << std::endl;
     std::cout << "   http://localhost:8080/api/algo/unit-tests" << std::endl;
     std::cout << "\nAPI Endpoints:" << std::endl;
@@ -685,7 +662,6 @@ int main() {
     std::cout << "   curl http://localhost:8080/api/algo/unit-tests" << std::endl;
     std::cout << "   curl http://localhost:8080/api/algo/graph-stats" << std::endl;
     std::cout << "\nPress Ctrl+C to stop server" << std::endl;
-    std::cout << "========================================\n" << std::endl;
     
     // Start server
     app.port(8080).multithreaded().run();

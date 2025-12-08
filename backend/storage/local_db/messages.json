@@ -356,6 +356,13 @@
             "senderId": 1,
             "text": "Hello World 🤡🤡🤡🤡🤡",
             "timestamp": 51
+        },
+        {
+            "id": 52,
+            "receiverId": 3,
+            "senderId": 1,
+            "text": "Wazzup",
+            "timestamp": 52
         }
     ]
 }

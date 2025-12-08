@@ -15,9 +15,6 @@
 int main() {
     crow::SimpleApp app;
 
-    // Graph instance
-    Graph graph;
-
     // Messaging instances
     UserManager userManager("storage/local_db/users.json");
     MessageStore msgStore;
@@ -26,8 +23,8 @@ int main() {
     
     // Load data from JSON files
     std::cout << "Loading data from JSON files..." << std::endl;
+    loadFriendshipsFromJSON(userManager.constructGraph(), "storage/local_db/friendships.json");
     // UserManager already loads users in its constructor, so no need to load again
-    loadFriendshipsFromJSON(graph, "storage/local_db/friendships.json");
     loadMessagesFromJSON(msgStore, msgTrie, convGraph, "storage/local_db/messages.json");
     std::cout << "Data loaded successfully!" << std::endl << std::endl;
     
@@ -35,7 +32,7 @@ int main() {
     MsgAPI msgApi(&userManager, &msgStore, &msgTrie, &convGraph);
 
     // Register graph routes
-    GraphRoutes graphRoutes(graph,userManager);
+    GraphRoutes graphRoutes(userManager.constructGraph(), userManager);
     graphRoutes.registerRoutes(app);
     
     // Register messaging routes
