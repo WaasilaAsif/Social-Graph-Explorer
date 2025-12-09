@@ -34,7 +34,7 @@ void UserManager::loadFromFile() {
                 int id = userJson["id"];
                 
                 // Create user (will auto-assign ID, but we'll use the saved one)
-                User user(username, password, id);
+                User user(username, password);
                 users.push_back(user);
                 usernameTrie.insert(username);
                 socialGraph.addNode(id);
@@ -45,6 +45,17 @@ void UserManager::loadFromFile() {
                     for (const auto& post : userJson["posts"]) {
                         loadedUser->createPost(post);
                     }
+                }
+            }
+        }
+        
+        // Load connections/friendships
+        if (data.contains("connections") && data["connections"].is_array()) {
+            for (const auto& conn : data["connections"]) {
+                int userA = conn["userA"];
+                int userB = conn["userB"];
+                if (socialGraph.hasNode(userA) && socialGraph.hasNode(userB)) {
+                    socialGraph.addEdge(userA, userB, 1, true);
                 }
             }
         }
@@ -64,6 +75,7 @@ void UserManager::saveToFile() {
     
     json data;
     json usersArray = json::array();
+    json connectionsArray = json::array();
     
     // Save users
     for (int i = 0; i < users.size(); i++) {
@@ -83,9 +95,25 @@ void UserManager::saveToFile() {
         userJson["posts"] = postsArray;
         
         usersArray.push_back(userJson);
+        
+        // Save connections (only save once per edge)
+        if (socialGraph.hasNode(user.getId())) {
+            const LinkedList<Edge>& neighbors = socialGraph.getNeighbors(user.getId());
+            for (int j = 0; j < neighbors.size(); j++) {
+                int friendId = neighbors[j].to;
+                // Only save if current user ID < friend ID (to avoid duplicates)
+                if (user.getId() < friendId) {
+                    json conn;
+                    conn["userA"] = user.getId();
+                    conn["userB"] = friendId;
+                    connectionsArray.push_back(conn);
+                }
+            }
+        }
     }
     
     data["users"] = usersArray;
+    data["connections"] = connectionsArray;
     
     // Write to file
     std::ofstream file(dbFilePath);
@@ -112,7 +140,7 @@ void UserManager::addUser(const std::string& name, const std::string& password) 
     users.push_back(newUser);
     usernameTrie.insert(name);
     
-    //Add user to social graph
+    // *** ADD: Add user to social graph ***
     socialGraph.addNode(newUser.getId());
     saveToFile();
 }
@@ -121,9 +149,7 @@ void UserManager::addUser(const std::string& name, const std::string& password) 
 const DynamicArray<User>& UserManager::getAllUsers() const {
     return users;
 }
-Graph& UserManager::constructGraph() {
-    return socialGraph;
-}
+
 // Construct and return the social graph
 const Graph& UserManager::constructGraph() const {
     return socialGraph;

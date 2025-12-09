@@ -8,14 +8,6 @@ using json = nlohmann::json;
 class UserRouter {
 private:
     UserManager& userManager;
-    
-    // Helper function to add CORS headers
-    void addCorsHeaders(crow::response& res) {
-        res.add_header("Access-Control-Allow-Origin", "*");
-        res.add_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        res.add_header("Access-Control-Allow-Headers", "Content-Type");
-        res.add_header("Content-Type", "application/json");
-    }
 
 public:
     UserRouter(UserManager& um) : userManager(um) {}
@@ -24,45 +16,31 @@ public:
         CROW_ROUTE(app, "/api/users/register")
             .methods(crow::HTTPMethod::Post)
             ([this](const crow::request& req) {
-                crow::response res;
-                addCorsHeaders(res);
-                
                 try {
                     auto body = json::parse(req.body);
                     std::string username = body["username"];
                     std::string password = body["password"];
                     
                     if (username.empty() || password.empty()) {
-                        res.code = 400;
-                        res.body = json{
+                        return crow::response(400, json{
                             {"success", false},
                             {"error", "Username and password required"}
-                        }.dump();
-                        return res;
+                        }.dump());
                     }
                     
                     userManager.addUser(username, password);
                     userManager.saveToFile();
                     
-                    // Get the newly created user to return their ID
-                    User* newUser = userManager.login(username, password);
-                    
-                    res.code = 201;
-                    res.body = json{
+                    return crow::response(201, json{
                         {"success", true},
-                        {"message", "User registered successfully"},
-                        {"userId", newUser ? newUser->getId() : -1},
-                        {"username", username}
-                    }.dump();
-                    return res;
+                        {"message", "User registered successfully"}
+                    }.dump());
                     
                 } catch (const std::exception& e) {
-                    res.code = 400;
-                    res.body = json{
+                    return crow::response(400, json{
                         {"success", false},
                         {"error", std::string(e.what())}
-                    }.dump();
-                    return res;
+                    }.dump());
                 }
             });
 
@@ -70,9 +48,6 @@ public:
         CROW_ROUTE(app, "/api/users/login")
             .methods(crow::HTTPMethod::Post)
             ([this](const crow::request& req) {
-                crow::response res;
-                addCorsHeaders(res);
-                
                 try {
                     auto body = json::parse(req.body);
                     std::string username = body["username"];
@@ -81,30 +56,26 @@ public:
                     User* user = userManager.login(username, password);
                     
                     if (user) {
-                        res.code = 200;
-                        res.body = json{
+                        return crow::response(200, json{
                             {"success", true},
                             {"message", "Login successful"},
-                            {"userId", user->getId()},
-                            {"username", user->getName()}
-                        }.dump();
-                        return res;
+                            {"user", {
+                                {"id", user->getId()},
+                                {"username", user->getName()}
+                            }}
+                        }.dump());
                     } else {
-                        res.code = 401;
-                        res.body = json{
+                        return crow::response(401, json{
                             {"success", false},
                             {"error", "Invalid username or password"}
-                        }.dump();
-                        return res;
+                        }.dump());
                     }
                     
                 } catch (const std::exception& e) {
-                    res.code = 400;
-                    res.body = json{
+                    return crow::response(400, json{
                         {"success", false},
                         {"error", std::string(e.what())}
-                    }.dump();
-                    return res;
+                    }.dump());
                 }
             });
 

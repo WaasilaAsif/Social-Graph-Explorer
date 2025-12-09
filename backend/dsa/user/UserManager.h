@@ -55,6 +55,5 @@ public:
 
     // Access methods
     const DynamicArray<User>& getAllUsers() const;
-    Graph& constructGraph();
     const Graph& constructGraph() const;
 };

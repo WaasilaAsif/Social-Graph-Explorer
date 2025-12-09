@@ -31,16 +31,16 @@ int main() {
     crow::SimpleApp app;
 
     // Messaging instances
-    UserManager userManager("storage/local_db/users.json");
+    UserManager userManager("../storage/local_db/users.json");
     MessageStore msgStore;
     MsgTrie msgTrie;
     ConversationGraph convGraph;
     
     // Load data from JSON files
     std::cout << "Loading data from JSON files..." << std::endl;
-    loadFriendshipsFromJSON(userManager.constructGraph(), "storage/local_db/friendships.json");
+    loadFriendshipsFromJSON(userManager.constructGraph(), "../storage/local_db/friendships.json");
     // UserManager already loads users in its constructor, so no need to load again
-    loadMessagesFromJSON(msgStore, msgTrie, convGraph, "storage/local_db/messages.json");
+    loadMessagesFromJSON(msgStore, msgTrie, convGraph, "../storage/local_db/messages.json");
     std::cout << "Data loaded successfully!" << std::endl << std::endl;
     
     // Create API instances
@@ -89,27 +89,6 @@ int main() {
         res.add_header("Access-Control-Allow-Origin", "*");
         res.add_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         res.add_header("Access-Control-Allow-Headers", "Content-Type");
-        return res;
-    });
-
-    // Add OPTIONS handlers for user endpoints BEFORE registering routes
-    CROW_ROUTE(app, "/api/users/login").methods(crow::HTTPMethod::Options)
-    ([]() {
-        crow::response res;
-        res.add_header("Access-Control-Allow-Origin", "*");
-        res.add_header("Access-Control-Allow-Methods", "POST, OPTIONS");
-        res.add_header("Access-Control-Allow-Headers", "Content-Type");
-        res.code = 204;
-        return res;
-    });
-
-    CROW_ROUTE(app, "/api/users/register").methods(crow::HTTPMethod::Options)
-    ([]() {
-        crow::response res;
-        res.add_header("Access-Control-Allow-Origin", "*");
-        res.add_header("Access-Control-Allow-Methods", "POST, OPTIONS");
-        res.add_header("Access-Control-Allow-Headers", "Content-Type");
-        res.code = 204;
         return res;
     });
 
@@ -219,6 +198,3 @@ int main() {
 
     return 0;
 }
-
-// Include algorithm routes implementation
-#include "routes/algoRoutes.cpp"
