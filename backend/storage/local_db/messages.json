@@ -384,6 +384,13 @@
             "senderId": 1,
             "text": "how are you",
             "timestamp": 55
+        },
+        {
+            "id": 56,
+            "receiverId": 3,
+            "senderId": 1,
+            "text": "Hello",
+            "timestamp": 56
         }
     ]
 }

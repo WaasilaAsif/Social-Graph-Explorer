@@ -68,7 +68,7 @@ std::string MsgAPI::handleGetAllMessages() {
         out << "\"id\": " << msg.id << ",";
         out << "\"senderId\": " << msg.senderId << ",";
         out << "\"receiverId\": " << msg.receiverId << ",";
-        out << "\"text\": \"" << msg.text << "\",";
+        out << "\"text\": \"" << msg.content << "\",";
         out << "\"timestamp\": " << msg.timestamp;
         out << "}";
         if (i + 1 < messages.size()) out << ",";
