@@ -1,6 +1,16 @@
 // API service for backend communication
 const API_BASE_URL = 'http://localhost:8082'; // Using CORS proxy
 
+// Health check
+export const healthCheck = async () => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/health`);
+    return response.ok;
+  } catch {
+    return false;
+  }
+};
+
 // User API endpoints
 export const userAPI = {
   // Register a new user
@@ -36,6 +46,15 @@ export const userAPI = {
   getUser: async (userId: number) => {
     const response = await fetch(`${API_BASE_URL}/api/users/${userId}`);
     if (!response.ok) throw new Error('Failed to get user');
+    return response.json();
+  },
+
+  // Delete user
+  deleteUser: async (userId: number) => {
+    const response = await fetch(`${API_BASE_URL}/api/users/${userId}`, {
+      method: 'DELETE'
+    });
+    if (!response.ok) throw new Error('Failed to delete user');
     return response.json();
   },
 
@@ -123,6 +142,20 @@ export const algoAPI = {
     const response = await fetch(`${API_BASE_URL}/api/algo/users-within-distance?userId=${userId}&distance=${distance}`);
     if (!response.ok) throw new Error('Failed to get users within distance');
     return response.json();
+  },
+
+  // Get shortest path between users
+  getShortestPath: async (start: number, end: number) => {
+    const response = await fetch(`${API_BASE_URL}/api/algo/shortest-path?start=${start}&end=${end}`);
+    if (!response.ok) throw new Error('Failed to get shortest path');
+    return response.json();
+  },
+
+  // Run unit tests
+  runUnitTests: async () => {
+    const response = await fetch(`${API_BASE_URL}/api/algo/unit-tests`);
+    if (!response.ok) throw new Error('Failed to run unit tests');
+    return response.json();
   }
 };
 
@@ -136,22 +169,45 @@ export const graphAPI = {
   },
 
   // Add friendship between two users
-  addFriend: async (user1: number, user2: number) => {
-    const response = await fetch(`${API_BASE_URL}/graph/add-friend`, {
+  addFriend: async (u: number, v: number) => {
+    const response = await fetch(`${API_BASE_URL}/graph/addFriend`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ user1, user2 })
+      body: JSON.stringify({ u, v })
     });
     if (!response.ok) throw new Error('Failed to add friend');
     return response.json();
   },
 
   // Remove friendship
-  removeFriend: async (user1: number, user2: number) => {
-    const response = await fetch(`${API_BASE_URL}/graph/remove-friend/${user1}/${user2}`, {
-      method: 'DELETE'
+  removeFriend: async (u: number, v: number) => {
+    const response = await fetch(`${API_BASE_URL}/graph/removeFriend`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ u, v })
     });
     if (!response.ok) throw new Error('Failed to remove friend');
+    return response.json();
+  },
+
+  // Get graph statistics
+  getStats: async () => {
+    const response = await fetch(`${API_BASE_URL}/graph/stats`);
+    if (!response.ok) throw new Error('Failed to get graph stats');
+    return response.json();
+  },
+
+  // Get connected components
+  getComponents: async () => {
+    const response = await fetch(`${API_BASE_URL}/graph/components`);
+    if (!response.ok) throw new Error('Failed to get graph components');
+    return response.json();
+  },
+
+  // Check if two users are connected
+  isConnected: async (u: number, v: number) => {
+    const response = await fetch(`${API_BASE_URL}/graph/connected/${u}/${v}`);
+    if (!response.ok) throw new Error('Failed to check connection');
     return response.json();
   },
 

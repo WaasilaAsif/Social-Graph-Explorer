@@ -1,76 +1,122 @@
-import { Users, GitBranch, FileText } from 'lucide-react';
-import { getPostsByUserId } from '../data/dummyPosts';
-import { getUserConnections } from '../data/dummyUsers';
+import { useState, useEffect } from 'react';
+import { Users, FileText } from 'lucide-react';
+import { userAPI, graphAPI } from '../services/api';
 import '../styles/UserProfileView.css';
 
 export default function UserProfileView({ user, onPostClick, onUserClick }) {
-  const userPosts = getPostsByUserId(user.id);
-  const connections = getUserConnections(user.id);
+  const [posts, setPosts] = useState([]);
+  const [friends, setFriends] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadUserData();
+  }, [user?.id]);
+
+  const loadUserData = async () => {
+    if (!user?.id) return;
+    
+    setLoading(true);
+    try {
+      const [postsData, friendsData] = await Promise.all([
+        userAPI.getPosts(user.id),
+        graphAPI.getFriends(user.id)
+      ]);
+      setPosts(postsData.posts || []);
+      setFriends(friendsData.friends || []);
+    } catch (error) {
+      console.error('Error loading user data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="user-profile">
+        <div style={{ textAlign: 'center', padding: '2rem' }}>Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="user-profile">
       <div className="profile-header">
         <div className="profile-info">
           <div className="profile-avatar">
-            {user.avatar}
+            {user.name?.charAt(0).toUpperCase() || user.username?.charAt(0).toUpperCase() || 'U'}
           </div>
           <div className="profile-details">
-            <h2 className="profile-name">{user.name}</h2>
-            <p className="profile-bio">{user.bio}</p>
+            <h2 className="profile-name">{user.name || user.username || `User ${user.id}`}</h2>
+            <p className="profile-bio">User ID: {user.id}</p>
           </div>
         </div>
         <div className="profile-stats">
           <div className="stat-box">
-            <div className="stat-number">{user.followers}</div>
-            <div className="stat-label">Followers</div>
+            <div className="stat-number">{friends.length}</div>
+            <div className="stat-label">Connections</div>
           </div>
           <div className="stat-box">
-            <div className="stat-number">{user.following}</div>
-            <div className="stat-label">Following</div>
-          </div>
-          <div className="stat-box">
-            <div className="stat-number">{user.posts}</div>
+            <div className="stat-number">{posts.length}</div>
             <div className="stat-label">Posts</div>
           </div>
         </div>
       </div>
 
       <div className="profile-content">
-        <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '1rem' }}>Connections</h3>
-        <div className="friends-grid">
-          {connections.map((conn) => (
-            <div
-              key={conn.id}
-              onClick={() => onUserClick(conn)}
-              className="friend-card"
-            >
-              <div className="friend-avatar">
-                {conn.avatar}
+        <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <Users size={20} /> Connections ({friends.length})
+        </h3>
+        {friends.length === 0 ? (
+          <p style={{ color: 'var(--text-secondary)', fontStyle: 'italic' }}>No connections yet</p>
+        ) : (
+          <div className="friends-grid">
+            {friends.slice(0, 12).map((friend) => (
+              <div
+                key={friend.id}
+                onClick={() => onUserClick({ id: friend.id, name: friend.username || `User ${friend.id}` })}
+                className="friend-card"
+              >
+                <div className="friend-avatar">
+                  {friend.username?.charAt(0).toUpperCase() || 'U'}
+                </div>
+                <div className="friend-name">{friend.username || `User ${friend.id}`}</div>
               </div>
-              <div className="friend-name">{conn.name}</div>
-              <div className="friend-username">{conn.followers} followers</div>
-            </div>
-          ))}
-        </div>
+            ))}
+            {friends.length > 12 && (
+              <div className="friend-card" style={{ opacity: 0.6, cursor: 'default' }}>
+                <div className="friend-avatar">+</div>
+                <div className="friend-name">{friends.length - 12} more</div>
+              </div>
+            )}
+          </div>
+        )}
 
-        <h3 style={{ fontSize: '1.125rem', fontWeight: '600', margin: '2rem 0 1rem' }}>Recent Posts</h3>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {userPosts.map((post) => (
-            <div
-              key={post.id}
-              onClick={() => onPostClick(post)}
-              className="post-card"
-              style={{ cursor: 'pointer' }}
-            >
-              <p className="post-content" style={{ marginBottom: '0.75rem' }}>{post.content}</p>
-              <div style={{ display: 'flex', gap: '1rem', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                <span>{new Date(post.timestamp).toLocaleDateString()}</span>
-                <span>{post.likes} likes</span>
-                <span>{post.comments} comments</span>
+        <h3 style={{ fontSize: '1.125rem', fontWeight: '600', margin: '2rem 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <FileText size={20} /> Recent Posts ({posts.length})
+        </h3>
+        {posts.length === 0 ? (
+          <p style={{ color: 'var(--text-secondary)', fontStyle: 'italic' }}>No posts yet</p>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {posts.slice(0, 10).map((post, index) => (
+              <div
+                key={index}
+                onClick={() => onPostClick && onPostClick({ id: index, content: typeof post === 'string' ? post : post.content || post })}
+                className="post-card"
+                style={{ cursor: onPostClick ? 'pointer' : 'default' }}
+              >
+                <p className="post-content" style={{ marginBottom: '0.5rem' }}>
+                  {typeof post === 'string' ? post : post.content || post}
+                </p>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+            {posts.length > 10 && (
+              <p style={{ textAlign: 'center', color: 'var(--text-secondary)', fontStyle: 'italic' }}>
+                + {posts.length - 10} more posts
+              </p>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

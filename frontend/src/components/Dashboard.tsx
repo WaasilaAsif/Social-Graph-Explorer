@@ -211,7 +211,7 @@ export default function Dashboard({ userId, username, onOpenTab }: DashboardProp
             ) : (
               <div className="friends-list">
                 {friends.slice(0, 8).map((friend) => (
-                  <div key={friend.id} className="friend-item" onClick={() => onOpenTab?.('user', { userId: friend.id })}>
+                  <div key={friend.id} className="friend-item" onClick={() => onOpenTab?.('user', { user: { id: friend.id, name: friend.username || `User ${friend.id}` } })}>
                     <div className="friend-avatar">{friend.username?.charAt(0).toUpperCase() || 'U'}</div>
                     <span className="friend-name">{friend.username || `User ${friend.id}`}</span>
                   </div>
@@ -316,7 +316,7 @@ export default function Dashboard({ userId, username, onOpenTab }: DashboardProp
             ) : (
               <div className="leaderboard">
                 {topPopular.slice(0, 10).map((user, index) => (
-                  <div key={user.userId} className="leaderboard-item" onClick={() => onOpenTab?.('user', { userId: user.userId })}>
+                  <div key={user.userId} className="leaderboard-item" onClick={() => onOpenTab?.('user', { user: { id: user.userId, name: user.username || `User ${user.userId}` } })}>
                     <span className="rank">#{index + 1}</span>
                     <div className="friend-avatar">{user.username?.charAt(0).toUpperCase() || 'U'}</div>
                     <span className="leaderboard-name">{user.username || `User ${user.userId}`}</span>

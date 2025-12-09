@@ -1,0 +1,48 @@
+/* Loading Spinner Styling */
+.loading-spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  min-height: 200px;
+}
+
+.loading-spinner {
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  border-style: solid;
+  border-color: var(--border-color, #2d3548);
+  border-top-color: var(--accent-purple, #9d4edd);
+}
+
+.loading-spinner.small {
+  width: 24px;
+  height: 24px;
+  border-width: 3px;
+}
+
+.loading-spinner.medium {
+  width: 50px;
+  height: 50px;
+  border-width: 4px;
+}
+
+.loading-spinner.large {
+  width: 80px;
+  height: 80px;
+  border-width: 6px;
+}
+
+.loading-message {
+  margin-top: 1rem;
+  color: var(--text-secondary, #a0a0a0);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

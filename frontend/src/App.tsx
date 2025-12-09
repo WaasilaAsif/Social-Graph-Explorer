@@ -1,7 +1,11 @@
 import { useState } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import AppLayout from './layouts/AppLayout';
 import MainUI from './pages/MainUI';
 import Login from './pages/Login';
+import GraphStats from './pages/GraphStats';
+import PopularUsers from './pages/PopularUsers';
+import UserProfile from './pages/UserProfile';
 import DebugPanel from './components/DebugPanel';
 
 interface UserData {
@@ -47,7 +51,12 @@ function App() {
   if (!user) {
     return (
       <>
-        <Login onLogin={handleLogin} />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<Login onLogin={handleLogin} />} />
+            <Route path="*" element={<Navigate to="/login" replace />} />
+          </Routes>
+        </BrowserRouter>
         <DebugPanel />
       </>
     );
@@ -55,9 +64,17 @@ function App() {
 
   return (
     <>
-      <AppLayout>
-        <MainUI user={user} onLogout={handleLogout} />
-      </AppLayout>
+      <BrowserRouter>
+        <AppLayout>
+          <Routes>
+            <Route path="/" element={<MainUI user={user} onLogout={handleLogout} />} />
+            <Route path="/stats" element={<GraphStats />} />
+            <Route path="/leaderboard" element={<PopularUsers />} />
+            <Route path="/users/:id" element={<UserProfile />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </AppLayout>
+      </BrowserRouter>
       <DebugPanel />
     </>
   );

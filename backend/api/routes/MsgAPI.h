@@ -30,6 +30,7 @@ public:
     std::string handleMutualInteractions(const std::unordered_map<std::string, std::string>& params);
     std::string handleRank(const std::unordered_map<std::string, std::string>& params);
     std::string handleShortestPath(const std::unordered_map<std::string, std::string>& params);
+    std::string handleGetAllMessages();
 
 private:
     UserManager* userManager;

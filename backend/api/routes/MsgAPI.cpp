@@ -29,7 +29,7 @@ std::string MsgAPI::handleSendMessage(const std::unordered_map<std::string, std:
     graph->addInteraction(sender, receiver);
 
     // Save to JSON database
-    saveMessagesToJSON(*store, "storage/local_db/messages.json");
+    saveMessagesToJSON(*store, "../storage/local_db/messages.json");
 
     std::ostringstream out;
     out << "{ \"status\": \"success\", \"messageId\": " << msgId << " }";
@@ -49,7 +49,32 @@ std::string MsgAPI::handleSearchWord(const std::unordered_map<std::string, std::
         out << results.get(i);
         if (i + 1 < results.size()) out << ",";
     }
-    out << "] }";
+    out << " ] }";
+    return out.str();
+}
+
+// ---------------------------------------------------
+// 9. GET ALL MESSAGES
+// ---------------------------------------------------
+std::string MsgAPI::handleGetAllMessages() {
+    const DynamicArray<Message>& messages = store->getAllMessages();
+    
+    std::ostringstream out;
+    out << "{ \"messages\": [";
+    
+    for (int i = 0; i < messages.size(); i++) {
+        const Message& msg = messages.get(i);
+        out << "{";
+        out << "\"id\": " << msg.id << ",";
+        out << "\"senderId\": " << msg.senderId << ",";
+        out << "\"receiverId\": " << msg.receiverId << ",";
+        out << "\"text\": \"" << msg.text << "\",";
+        out << "\"timestamp\": " << msg.timestamp;
+        out << "}";
+        if (i + 1 < messages.size()) out << ",";
+    }
+    
+    out << " ] }";
     return out.str();
 }
 

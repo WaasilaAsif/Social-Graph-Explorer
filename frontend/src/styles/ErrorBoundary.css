@@ -1,0 +1,78 @@
+/* Error Boundary Styling */
+.error-boundary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: var(--bg-primary, #1a1a2e);
+  padding: 2rem;
+}
+
+.error-content {
+  max-width: 600px;
+  text-align: center;
+  padding: 3rem;
+  background: var(--bg-secondary, #16213e);
+  border: 1px solid var(--border-color, #2d3548);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.error-content h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ff6b6b;
+  margin-bottom: 1rem;
+}
+
+.error-content p {
+  font-size: 1rem;
+  color: var(--text-secondary, #a0a0a0);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.error-details {
+  text-align: left;
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: var(--bg-tertiary, #0f1419);
+  border-radius: 8px;
+  border: 1px solid var(--border-color, #2d3548);
+}
+
+.error-details summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text-primary, #e0e0e0);
+  margin-bottom: 0.5rem;
+}
+
+.error-details pre {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  color: #ff6b6b;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.error-reload-btn {
+  padding: 0.75rem 2rem;
+  background: var(--accent-purple, #9d4edd);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.error-reload-btn:hover {
+  background: var(--accent-purple-dark, #7b2cbf);
+  transform: scale(1.05);
+}

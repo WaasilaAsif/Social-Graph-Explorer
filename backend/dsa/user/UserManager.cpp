@@ -34,7 +34,7 @@ void UserManager::loadFromFile() {
                 int id = userJson["id"];
                 
                 // Create user (will auto-assign ID, but we'll use the saved one)
-                User user(username, password);
+                User user(username, password, id);
                 users.push_back(user);
                 usernameTrie.insert(username);
                 socialGraph.addNode(id);
