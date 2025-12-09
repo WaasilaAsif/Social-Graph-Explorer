@@ -9,6 +9,7 @@ import PostView from '../components/PostView';
 import RightInfoPane from '../components/RightInfoPane';
 import GraphExplorer from './GraphExplorer';
 import MessagingHub from './MessagingHub';
+import Dashboard from '../components/Dashboard';
 import { getRecentPosts } from '../data/dummyPosts';
 import { Network, User, FileText, Home, Activity, MessageSquare } from 'lucide-react';
 import '../styles/MainUI.css';
@@ -132,7 +133,13 @@ export default function MainUI({ user, onLogout }: MainUIProps) {
 
     switch (currentTab.type) {
       case 'home':
-        return <HomeView onPostClick={handlePostClick} onUserClick={handleUserClick} />;
+        return (
+          <Dashboard 
+            userId={user.userId} 
+            username={user.username}
+            onOpenTab={openTab}
+          />
+        );
       case 'user':
         return (
           <UserProfileView

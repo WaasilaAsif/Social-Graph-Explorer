@@ -1,5 +1,5 @@
 // API service for backend communication
-const API_BASE_URL = 'http://localhost:8081';
+const API_BASE_URL = 'http://localhost:8082'; // Using CORS proxy
 
 // User API endpoints
 export const userAPI = {
@@ -54,6 +54,74 @@ export const userAPI = {
   getPosts: async (userId: number) => {
     const response = await fetch(`${API_BASE_URL}/api/users/${userId}/posts`);
     if (!response.ok) throw new Error('Failed to get posts');
+    return response.json();
+  },
+
+  // Delete post
+  deletePost: async (userId: number, postIndex: number) => {
+    const response = await fetch(`${API_BASE_URL}/api/users/${userId}/posts/${postIndex}`, {
+      method: 'DELETE'
+    });
+    if (!response.ok) throw new Error('Failed to delete post');
+    return response.json();
+  }
+};
+
+// Algorithm API endpoints
+export const algoAPI = {
+  // Get user's degree (number of connections)
+  getUserDegree: async (userId: number) => {
+    const response = await fetch(`${API_BASE_URL}/api/algo/user-degree?userId=${userId}`);
+    if (!response.ok) throw new Error('Failed to get user degree');
+    return response.json();
+  },
+
+  // Get user's popularity rank
+  getUserRank: async (userId: number) => {
+    const response = await fetch(`${API_BASE_URL}/api/algo/user-rank?userId=${userId}`);
+    if (!response.ok) throw new Error('Failed to get user rank');
+    return response.json();
+  },
+
+  // Get graph statistics
+  getGraphStats: async () => {
+    const response = await fetch(`${API_BASE_URL}/api/algo/graph-stats`);
+    if (!response.ok) throw new Error('Failed to get graph stats');
+    return response.json();
+  },
+
+  // Get top N most popular users
+  getTopPopular: async (n: number = 10) => {
+    const response = await fetch(`${API_BASE_URL}/api/algo/top-popular?n=${n}`);
+    if (!response.ok) throw new Error('Failed to get top popular users');
+    return response.json();
+  },
+
+  // Get two-hop friends (friends of friends)
+  getTwoHopFriends: async (userId: number) => {
+    const response = await fetch(`${API_BASE_URL}/api/algo/two-hop-friends?userId=${userId}`);
+    if (!response.ok) throw new Error('Failed to get two-hop friends');
+    return response.json();
+  },
+
+  // Get mutual friends between two users
+  getMutualFriends: async (user1: number, user2: number) => {
+    const response = await fetch(`${API_BASE_URL}/api/algo/mutual-friends?user1=${user1}&user2=${user2}`);
+    if (!response.ok) throw new Error('Failed to get mutual friends');
+    return response.json();
+  },
+
+  // Get friend suggestions for a user
+  getFriendSuggestions: async (userId: number, limit: number = 10) => {
+    const response = await fetch(`${API_BASE_URL}/api/algo/friend-suggestions?userId=${userId}&limit=${limit}`);
+    if (!response.ok) throw new Error('Failed to get friend suggestions');
+    return response.json();
+  },
+
+  // Get users within N hops/distance
+  getUsersWithinDistance: async (userId: number, distance: number) => {
+    const response = await fetch(`${API_BASE_URL}/api/algo/users-within-distance?userId=${userId}&distance=${distance}`);
+    if (!response.ok) throw new Error('Failed to get users within distance');
     return response.json();
   }
 };
