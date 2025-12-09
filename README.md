@@ -50,22 +50,23 @@ Modern social networks are complex systems with users, posts, friendships, and i
 
 ### Recent Updates (December 2024)
 
-  **Complete Data Persistence System**
+✅ **Complete Data Persistence System**
 - All user operations (registration, posts, deletion) now persist to JSON database
 - Messaging APIs read/write from local JSON database
 - Graph operations (add/remove friends) persist automatically
 - Server loads 320 users, 61 friendships, and 51 messages at startup
 - Optimized startup: eliminated duplicate loading for instant server start
 - All data structures (MessageStore, MsgTrie, ConversationGraph, UserManager) initialized from JSON
-- **8 Messaging APIs + 8 User APIs + 6 Graph APIs** fully operational
-- See [backend/MESSAGING_API_GUIDE.md](backend/MESSAGING_API_GUIDE.md) for complete API documentation
+- **8 Messaging APIs + 8 User APIs + 6 Graph APIs + 10 Algorithm APIs = 32 Total Endpoints** fully operational
+- See [backend/MESSAGING_API_GUIDE.md](backend/MESSAGING_API_GUIDE.md) and [backend/ALGORITHM_API_GUIDE.md](backend/ALGORITHM_API_GUIDE.md) for complete documentation
 
-  **Backend Enhancements**
+✅ **Backend Enhancements**
 - Added `UserRouter` with complete user management endpoints
 - Fixed path inconsistencies in file loading
 - Added `getAllUsers()` and `constructGraph()` methods to UserManager
 - Implemented automatic `saveToFile()` after all data modifications
 - Resolved merge conflicts and integrated graph algorithm endpoints (BFS, DFS, shortest-path)
+- **NEW**: Integrated 10 advanced algorithm APIs (mutual friends, friend suggestions, popularity ranking, network statistics)
 - CORS headers properly configured for all endpoints
 
 ### Prerequisites
@@ -178,8 +179,8 @@ curl http://localhost:8081/graph/friends/1
 # Navigate to backend
 cd backend
 
-# Compile
-g++ api/server.cpp api/routes/graphRoutes.cpp api/routes/MsgRoutes.cpp api/routes/MsgAPI.cpp dsa/user/UserManager.cpp dsa/user/user.cpp dsa/utils/idGenerator.cpp messaging/MessageStore.cpp dsa/messaging_ds/MsgTrie.cpp dsa/messaging_ds/ConversationGraph.cpp algorithms/MsgTopKMessage.cpp algorithms/MsgFriendSuggestion.cpp algorithms/MsgMutualInteractions.cpp algorithms/MsgPopularityRanker.cpp algorithms/MsgShortestPatch.cpp storage/JSONLoader.cpp storage/JSONWriter.cpp -I. -Ilibs -Ilibs/asio -std=c++17 -DASIO_STANDALONE -lws2_32 -lwsock32 -o server.exe
+# Compile (with all algorithm modules)
+g++ api/server.cpp api/routes/graphRoutes.cpp api/routes/MsgRoutes.cpp api/routes/MsgAPI.cpp dsa/user/UserManager.cpp dsa/user/user.cpp dsa/utils/idGenerator.cpp messaging/MessageStore.cpp dsa/messaging_ds/MsgTrie.cpp dsa/messaging_ds/ConversationGraph.cpp algorithms/MsgTopKMessage.cpp algorithms/MsgFriendSuggestion.cpp algorithms/MsgMutualInteractions.cpp algorithms/MsgPopularityRanker.cpp algorithms/MsgShortestPatch.cpp algorithms/MutualFriends.cpp algorithms/ShortestPath.cpp algorithms/FriendSuggestion.cpp analytics/PopularityRanker.cpp storage/JSONLoader.cpp storage/JSONWriter.cpp -I. -Ilibs -Ilibs/asio -std=c++17 -DASIO_STANDALONE -lws2_32 -lwsock32 -o server.exe
 
 # Run
 .\server.exe
@@ -447,7 +448,10 @@ SocialGraphExplorer/
 │   │   ├── integration/        # Integration tests
 │   │   ├── run_all_messaging_tests.ps1
 │   │   └── run_all_msg_algorithm_tests.ps1
+│   ├── GRAPH_API_GUIDE.md      # Complete graph/friendship API documentation (NEW)
+│   ├── USER_API_GUIDE.md       # Complete user management API documentation (NEW)
 │   ├── MESSAGING_API_GUIDE.md  # Complete messaging API documentation
+│   ├── ALGORITHM_API_GUIDE.md  # Complete algorithm API documentation
 │   ├── main.cpp
 │   └── server.exe              # Compiled server binary
 ├── frontend/
@@ -514,7 +518,7 @@ While SocialGraphExplorer currently provides a robust backend framework and demo
 
 ### Available API Endpoints
 
-The backend server exposes **32+ REST API endpoints** across three categories:
+The backend server exposes **35+ REST API endpoints** across four categories:
 
 #### 1. Graph APIs (9 endpoints)
 - `GET /graph/friends/:id` - Get all friends of a user
@@ -544,23 +548,135 @@ The backend server exposes **32+ REST API endpoints** across three categories:
 - `GET /api/users/:id/posts` - Get all posts for a user
 - `DELETE /api/users/:id/posts/:postIndex` - Delete a post (with auto-save)
 
-**All modifications now persist to JSON database automatically!**s (8+ endpoints)
-- User registration, login, profile management
-- Post creation and retrieval
-- User search and discovery
+#### 4. Advanced Algorithm APIs (10 endpoints)
+**Social Network Analysis & Recommendations**
 
-### Complete Messaging API Guide
+- `GET /api/algo/mutual-friends?user1={id}&user2={id}` - Find common friends between two users
+  - **Use Case**: Display mutual connections, friend comparison
+  - **Algorithm**: Hash-set intersection on adjacency lists
+  
+- `GET /api/algo/shortest-path?start={id}&end={id}` - Find shortest connection path
+  - **Use Case**: "How do you know X?" feature, connection degrees
+  - **Algorithm**: BFS-based shortest path with parent tracking
+  
+- `GET /api/algo/users-within-distance?userId={id}&distance={n}` - Find users N hops away
+  - **Use Case**: "Discover people near your network", expand social circle
+  - **Algorithm**: BFS with distance limiting
+  
+- `GET /api/algo/user-degree?userId={id}` - Get friend count
+  - **Use Case**: User statistics, profile metrics
+### Quick API Test
 
-For detailed documentation with examples, expected outputs, and testing instructions, see:
+```bash
+# Get API menu (now includes algorithm endpoints)
+curl http://localhost:8081/
 
+# Test user registration (persists to database)
+curl -X POST http://localhost:8081/api/users/register \
+  -H "Content-Type: application/json" \
+  -d '{"username":"newuser","password":"pass123"}'
+# Expected: {"success":true,"message":"User registered successfully"}
+
+# Get mutual friends between two users
+curl "http://localhost:8081/api/algo/mutual-friends?user1=1&user2=5"
+# Expected: {"user1":1,"user2":5,"mutualFriends":[2,3,7],"count":3}
+
+# Find shortest path between users (degrees of separation)
+curl "http://localhost:8081/api/algo/shortest-path?start=1&end=10"
+# Expected: {"start":1,"end":10,"path":[1,3,7,10],"distance":3,"exists":true}
+
+# Get top 5 most popular users (influencers)
+curl "http://localhost:8081/api/algo/top-popular?n=5"
+# Expected: {"topUsers":[{"userId":5,"score":45},{"userId":2,"score":38}...],"count":5}
+
+# Get AI-powered friend suggestions
+curl "http://localhost:8081/api/algo/friend-suggestions?userId=1&limit=10"
+# Expected: {"userId":1,"suggestions":[{"userId":15,"mutualFriends":5,"frequencyScore":8}...],"count":10}
+
+# Get complete network statistics
+curl http://localhost:8081/api/algo/graph-stats
+# Expected: {"nodeCount":320,"edgeCount":61,"averageDegree":2.1,"density":0.0012,"diameter":8,...}
+
+# Run algorithm unit tests
+curl http://localhost:8081/api/algo/unit-tests
+# Expected: Detailed test results with pass/fail for all algorithms
+
+# Search for word "project" in messages
+curl http://localhost:8081/msg/search/project
+# Expected: {"results":[1,5,12,23,34,42]}
+
+# Get user with posts
+curl http://localhost:8081/api/users/1
+# Expected: {"success":true,"user":{"id":1,"username":"alice_smith","posts":[...]}}
+
+# BFS traversal from user 1
+curl http://localhost:8081/graph/bfs/1
+# Expected: {"success":true,"start":1,"traversal":[1,2,3,5,7,10,...]}
+```
+
+**Note:** All POST/DELETE operations now persist changes to the JSON database automatically!
+
+---
+
+## Complete API Documentation
+
+### 📚 All API Guides
+
+We provide comprehensive documentation for all 32+ endpoints across 4 categories:
+
+#### 1. **Graph API Guide** (9 endpoints)
+📖 **[backend/GRAPH_API_GUIDE.md](backend/GRAPH_API_GUIDE.md)**
+
+Covers friendship management and network analysis:
+- Get/Add/Remove friends with auto-persistence
+- BFS/DFS traversal algorithms
+- Shortest path finding
+- Network statistics (density, components, connectivity)
+- Real-time graph analytics
+
+#### 2. **User API Guide** (8 endpoints)  
+📖 **[backend/USER_API_GUIDE.md](backend/USER_API_GUIDE.md)**
+
+Covers user management and posts:
+- User registration and authentication
+- Trie-based user search/autocomplete
+- Post creation and management
+- Profile management with auto-persistence
+- Complete CRUD operations
+
+#### 3. **Messaging API Guide** (8 endpoints)
 📖 **[backend/MESSAGING_API_GUIDE.md](backend/MESSAGING_API_GUIDE.md)**
 
-The guide includes:
-- Real cURL and PowerShell examples
-- Expected JSON responses
-- Sample data from the database
-- Performance metrics
-- Troubleshooting tips
+Covers message operations and analysis:
+- Send messages with auto-save
+- Word/prefix search using Trie
+- Top-K conversations and rankings
+- Friend suggestions based on messages
+- Shortest messaging path (BFS)
+
+#### 4. **Algorithm API Guide** (10 endpoints)
+📖 **[backend/ALGORITHM_API_GUIDE.md](backend/ALGORITHM_API_GUIDE.md)**
+
+Covers advanced social network algorithms:
+- Mutual friends (hash-set intersection)
+- Friend suggestions (2-hop algorithm)
+- Popularity ranking (max-heap)
+- Network metrics (clustering, diameter)
+- Users within distance (BFS variants)
+
+### 📊 What's in Each Guide
+
+All guides include:
+- ✅ Real cURL and PowerShell examples
+- ✅ Expected JSON responses with sample data
+- ✅ Algorithm explanations with complexity analysis
+- ✅ Error handling and troubleshooting
+- ✅ Performance metrics and optimization tips
+- ✅ Testing workflows and validation suites
+- ✅ Integration examples (React components)
+- ✅ Use cases and real-world applications
+
+---
 ### Quick API Test
 
 ```bash

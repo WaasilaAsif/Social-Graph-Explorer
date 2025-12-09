@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronRight, Users, Network, Home, MessageSquare, Activity } from 'lucide-react';
+import { ChevronDown, ChevronRight, Users, Network, Home, MessageSquare, Activity, LogOut } from 'lucide-react';
 import { dummyUsers } from '../data/dummyUsers';
 import '../styles/Sidebar.css';
 
-export default function Sidebar({ onUserClick, onNavigate }) {
+export default function Sidebar({ onUserClick, onNavigate, user, onLogout }) {
   const [usersExpanded, setUsersExpanded] = useState(true);
   const [graphsExpanded, setGraphsExpanded] = useState(true);
   const [apiExpanded, setApiExpanded] = useState(true);
@@ -12,6 +12,37 @@ export default function Sidebar({ onUserClick, onNavigate }) {
     <div className="sidebar">
       <div className="sidebar-header">
         <h2>Social Graph Explorer</h2>
+        {user && (
+          <div style={{ marginTop: '8px', padding: '8px', background: 'rgba(99, 102, 241, 0.1)', borderRadius: '6px' }}>
+            <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
+              Logged in as:
+            </div>
+            <div style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>
+              {user.username}
+            </div>
+            <button
+              onClick={onLogout}
+              style={{
+                marginTop: '8px',
+                width: '100%',
+                padding: '6px',
+                background: '#ef4444',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '6px'
+              }}
+            >
+              <LogOut size={14} />
+              Logout
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="sidebar-content">

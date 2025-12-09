@@ -53,6 +53,66 @@ int main() {
     PopularityRanker popularityRanker(&userManager.constructGraph());
     FriendSuggestion friendSuggestion(&userManager.constructGraph(), &mutualFriends);
 
+    // CORS preflight handlers MUST be registered BEFORE the actual routes
+    CROW_ROUTE(app, "/api/users/register").methods(crow::HTTPMethod::Options)
+    ([]() {
+        crow::response res;
+        res.add_header("Access-Control-Allow-Origin", "*");
+        res.add_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        res.add_header("Access-Control-Allow-Headers", "Content-Type");
+        res.code = 204;
+        return res;
+    });
+
+    CROW_ROUTE(app, "/api/users/login").methods(crow::HTTPMethod::Options)
+    ([]() {
+        crow::response res;
+        res.add_header("Access-Control-Allow-Origin", "*");
+        res.add_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        res.add_header("Access-Control-Allow-Headers", "Content-Type");
+        res.code = 204;
+        return res;
+    });
+
+    CROW_ROUTE(app, "/graph/addFriend").methods(crow::HTTPMethod::Options)
+    ([]() {
+        crow::response res;
+        res.add_header("Access-Control-Allow-Origin", "*");
+        res.add_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        res.add_header("Access-Control-Allow-Headers", "Content-Type");
+        return res;
+    });
+
+    CROW_ROUTE(app, "/graph/removeFriend").methods(crow::HTTPMethod::Options)
+    ([]() {
+        crow::response res;
+        res.add_header("Access-Control-Allow-Origin", "*");
+        res.add_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        res.add_header("Access-Control-Allow-Headers", "Content-Type");
+        return res;
+    });
+
+    // Add OPTIONS handlers for user endpoints BEFORE registering routes
+    CROW_ROUTE(app, "/api/users/login").methods(crow::HTTPMethod::Options)
+    ([]() {
+        crow::response res;
+        res.add_header("Access-Control-Allow-Origin", "*");
+        res.add_header("Access-Control-Allow-Methods", "POST, OPTIONS");
+        res.add_header("Access-Control-Allow-Headers", "Content-Type");
+        res.code = 204;
+        return res;
+    });
+
+    CROW_ROUTE(app, "/api/users/register").methods(crow::HTTPMethod::Options)
+    ([]() {
+        crow::response res;
+        res.add_header("Access-Control-Allow-Origin", "*");
+        res.add_header("Access-Control-Allow-Methods", "POST, OPTIONS");
+        res.add_header("Access-Control-Allow-Headers", "Content-Type");
+        res.code = 204;
+        return res;
+    });
+
     // Register graph routes
     GraphRoutes graphRoutes(userManager.constructGraph(), userManager);
     graphRoutes.registerRoutes(app);
@@ -138,25 +198,6 @@ int main() {
         crow::response res(response);
         res.add_header("Content-Type", "application/json");
         res.add_header("Access-Control-Allow-Origin", "*");
-        return res;
-    });
-
-    // CORS preflight for specific endpoints
-    CROW_ROUTE(app, "/graph/addFriend").methods(crow::HTTPMethod::Options)
-    ([]() {
-        crow::response res;
-        res.add_header("Access-Control-Allow-Origin", "*");
-        res.add_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        res.add_header("Access-Control-Allow-Headers", "Content-Type");
-        return res;
-    });
-
-    CROW_ROUTE(app, "/graph/removeFriend").methods(crow::HTTPMethod::Options)
-    ([]() {
-        crow::response res;
-        res.add_header("Access-Control-Allow-Origin", "*");
-        res.add_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        res.add_header("Access-Control-Allow-Headers", "Content-Type");
         return res;
     });
 

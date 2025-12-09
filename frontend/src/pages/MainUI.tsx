@@ -13,7 +13,17 @@ import { getRecentPosts } from '../data/dummyPosts';
 import { Network, User, FileText, Home, Activity, MessageSquare } from 'lucide-react';
 import '../styles/MainUI.css';
 
-export default function MainUI() {
+interface UserData {
+  userId: number;
+  username: string;
+}
+
+interface MainUIProps {
+  user: UserData;
+  onLogout: () => void;
+}
+
+export default function MainUI({ user, onLogout }: MainUIProps) {
   const [tabs, setTabs] = useState([
     { id: 'home', title: 'Home', type: 'home', icon: <Home size={14} /> }
   ]);
@@ -157,7 +167,7 @@ export default function MainUI() {
   return (
     <div className="main-ui">
       <div className="layout-section" style={{ width: leftWidth, minWidth: 200 }}>
-        <Sidebar onUserClick={handleUserClick} onNavigate={handleNavigate} />
+        <Sidebar onUserClick={handleUserClick} onNavigate={handleNavigate} user={user} onLogout={onLogout} />
       </div>
 
       <Splitter onDrag={handleLeftDrag} />

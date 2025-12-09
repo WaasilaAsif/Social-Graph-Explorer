@@ -1,6 +1,63 @@
 // API service for backend communication
 const API_BASE_URL = 'http://localhost:8081';
 
+// User API endpoints
+export const userAPI = {
+  // Register a new user
+  register: async (username: string, password: string) => {
+    const response = await fetch(`${API_BASE_URL}/api/users/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+    if (!response.ok) throw new Error('Failed to register user');
+    return response.json();
+  },
+
+  // Login user
+  login: async (username: string, password: string) => {
+    const response = await fetch(`${API_BASE_URL}/api/users/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+    if (!response.ok) throw new Error('Failed to login');
+    return response.json();
+  },
+
+  // Search users by prefix
+  searchUsers: async (prefix: string) => {
+    const response = await fetch(`${API_BASE_URL}/api/users/search?prefix=${encodeURIComponent(prefix)}`);
+    if (!response.ok) throw new Error('Failed to search users');
+    return response.json();
+  },
+
+  // Get user profile
+  getUser: async (userId: number) => {
+    const response = await fetch(`${API_BASE_URL}/api/users/${userId}`);
+    if (!response.ok) throw new Error('Failed to get user');
+    return response.json();
+  },
+
+  // Create post
+  createPost: async (userId: number, content: string) => {
+    const response = await fetch(`${API_BASE_URL}/api/users/${userId}/posts`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content })
+    });
+    if (!response.ok) throw new Error('Failed to create post');
+    return response.json();
+  },
+
+  // Get user posts
+  getPosts: async (userId: number) => {
+    const response = await fetch(`${API_BASE_URL}/api/users/${userId}/posts`);
+    if (!response.ok) throw new Error('Failed to get posts');
+    return response.json();
+  }
+};
+
 // Graph API endpoints
 export const graphAPI = {
   // Get all friends of a user

@@ -3,7 +3,8 @@
 #include <iostream>
 
 int main() {
-    crow::SimpleApp app;
+    crow::App<CORS> app;
+;
     
     CROW_ROUTE(app, "/")
     ([](){

@@ -150,17 +150,46 @@ SocialGraphExplorer/
 
 **Files:**
 - `MutualFriends.cpp`: Compute mutual friends, hash/set-based optimization.
-- `FriendSuggestion.cpp`: Suggest friends based on graph traversal & ranking.
+- `FriendSuggestion.cpp`: Suggest friends based on graph traversal & ranking (2-hop algorithm).
+- `ShortestPath.cpp`: BFS-based shortest path with parent tracking.
+- `PopularityRanker.cpp`: Rank users by degree centrality using max-heap (PriorityQueue).
+- `GraphStats.cpp`: Network analysis metrics (density, diameter, clustering coefficient).
 - `utils/Pair.h`: Simple pair class for function returns.
 - `utils/Vector2.h`: Graph layout, coordinates, and distance calculations.
 - `utils/Errors.h`: Custom error handling (InvalidNode, DuplicateEdge, etc.).
 - Sorting & Searching algorithms (add to `algorithms/` as needed): bubble, selection, insertion, merge, quick, heap sort; linear, binary search.
+- `api/routes/algoRoutes.cpp`: REST API endpoints exposing all algorithm functionality.
+
+**Algorithm API Endpoints (10 routes):**
+1. `/api/algo/mutual-friends?user1=X&user2=Y` - Hash-set intersection for common friends
+2. `/api/algo/shortest-path?start=X&end=Y` - BFS shortest path with distance
+3. `/api/algo/users-within-distance?userId=X&distance=N` - BFS with hop limiting
+4. `/api/algo/user-degree?userId=X` - Adjacency list size (friend count)
+5. `/api/algo/graph-stats` - Complete network metrics (traversal-based)
+6. `/api/algo/top-popular?n=10` - Max-heap extraction of top N users
+7. `/api/algo/user-rank?userId=X` - Popularity ranking & percentile
+8. `/api/algo/friend-suggestions?userId=X&limit=10` - 2-hop + mutual friends scoring
+9. `/api/algo/two-hop-friends?userId=X` - Friends of friends (BFS 2-level)
+10. `/api/algo/unit-tests` - Automated test suite for all algorithms
+
+**Use Cases:**
+- **Mutual Friends**: "You and Alice have 12 friends in common" - Social proof feature
+- **Shortest Path**: "You are connected to Bob through 3 mutual friends" - Connection degrees
+- **Users Within Distance**: "Discover 45 people 2 connections away" - Network expansion
+- **Top Popular**: Influencer leaderboards, trending users dashboard
+- **Friend Suggestions**: AI-powered "People you may know" recommendations
+- **Graph Stats**: Admin analytics, network health monitoring, engagement metrics
+- **User Rank**: "You're more connected than 85% of users" - Gamification
 
 **DSA Concepts:**
 - Sorting & searching algorithms
-- Set/hash-based computations
+- Set/hash-based computations (mutual friends)
 - Utility structures & functions
 - Graph analytics & ranking algorithms
+- BFS traversal variants (shortest path, 2-hop, distance-limited)
+- Max-heap for priority ranking (PriorityQueue)
+- Percentile calculations & statistical ranking
+- Network metrics (density, clustering coefficient, diameter)
 
 ---
 
@@ -173,12 +202,14 @@ SocialGraphExplorer/
 
 ## **DSA Coverage Summary**
 
-| Team Member | Files | DSA Concepts Covered |
-|------------|-------|--------------------|
-| 1 | Graph.h/.cpp, Node.h, Edge.h, BFS, DFS, ShortestPath | Graphs, BFS/DFS, shortest paths, connected components |
-| 2 | User.h, UserManager.cpp, Trie (optional) | Trees, Trie, recursive search, hierarchical user management |
-| 3 | LinkedList, Stack, Queue, HashMap, DynamicArray | Linked lists, stacks, queues, heaps, hash maps, dynamic arrays |
-| 4 | MutualFriends, FriendSuggestion, utils/*.h, Sorting/Searching | Sorting, searching, hash/set operations, graph analytics, utility structures |
+| Team Member | Files | DSA Concepts Covered | API Routes |
+|------------|-------|----------------------|------------|
+| 1 | Graph.h/.cpp, Node.h, Edge.h, BFS, DFS, ShortestPath | Graphs, BFS/DFS, shortest paths, connected components | `/graph/*` (9 endpoints) |
+| 2 | User.h, UserManager.cpp, Trie (optional) | Trees, Trie, recursive search, hierarchical user management | `/api/users/*` (8 endpoints) |
+| 3 | LinkedList, Stack, Queue, HashMap, DynamicArray, PriorityQueue | Linked lists, stacks, queues, heaps, hash maps, dynamic arrays | Used internally by all routes |
+| 4 | MutualFriends, FriendSuggestion, PopularityRanker, GraphStats, utils/*.h, algoRoutes | Sorting, searching, hash/set operations, graph analytics, heap-based ranking, network metrics | `/api/algo/*` (10 endpoints) |
+
+**Total API Coverage**: 35+ endpoints across Graph, Messaging, User Management, and Advanced Algorithms
 
 ---
 

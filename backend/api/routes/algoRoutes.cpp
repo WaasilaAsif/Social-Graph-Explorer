@@ -613,7 +613,8 @@ void setupAlgoRoutes(crow::SimpleApp& app, Graph* graph,
 #include "../../dsa/graph/Graph.h"
 
 int main() {
-    crow::SimpleApp app;
+    crow::App<CORS> app;
+;
     
     // Initialize core graph
     Graph graph;
