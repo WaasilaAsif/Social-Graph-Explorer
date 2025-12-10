@@ -4,13 +4,17 @@ import TabBar from '../components/TabBar';
 import Pane from '../components/Pane';
 import Splitter from '../components/Splitter';
 import GraphView from '../components/GraphView';
+import NetworkOverview from '../components/NetworkOverview';
 import UserProfileView from '../components/UserProfileView';
 import PostView from '../components/PostView';
 import RightInfoPane from '../components/RightInfoPane';
 import GraphExplorer from './GraphExplorer';
 import MessagingHub from './MessagingHub';
-import { getRecentPosts } from '../data/dummyPosts';
-import { Network, User, FileText, Home, Activity, MessageSquare } from 'lucide-react';
+import GraphStats from './GraphStats';
+import PopularUsers from './PopularUsers';
+import ShortestPath from '../components/ShortestPath';
+import Dashboard from '../components/Dashboard';
+import { Network, User, FileText, Home, Activity, MessageSquare, BarChart3, Trophy, Navigation, Globe } from 'lucide-react';
 import '../styles/MainUI.css';
 
 interface UserData {
@@ -55,6 +59,10 @@ export default function MainUI({ user, onLogout }: MainUIProps) {
         title = data.graphId === 'main' ? 'Main Network' : 'Communities';
         icon = <Network size={14} />;
         break;
+      case 'network-overview':
+        title = 'Network Overview';
+        icon = <Globe size={14} />;
+        break;
       case 'post':
         title = 'Post';
         icon = <FileText size={14} />;
@@ -66,6 +74,18 @@ export default function MainUI({ user, onLogout }: MainUIProps) {
       case 'messaging-hub':
         title = 'Messaging Hub';
         icon = <MessageSquare size={14} />;
+        break;
+      case 'graph-stats':
+        title = 'Network Analytics';
+        icon = <BarChart3 size={14} />;
+        break;
+      case 'leaderboard':
+        title = 'Leaderboard';
+        icon = <Trophy size={14} />;
+        break;
+      case 'shortest-path':
+        title = 'Shortest Path';
+        icon = <Navigation size={14} />;
         break;
       default:
         title = 'New Tab';
@@ -132,7 +152,13 @@ export default function MainUI({ user, onLogout }: MainUIProps) {
 
     switch (currentTab.type) {
       case 'home':
-        return <HomeView onPostClick={handlePostClick} onUserClick={handleUserClick} />;
+        return (
+          <Dashboard 
+            userId={user.userId} 
+            username={user.username}
+            onOpenTab={openTab}
+          />
+        );
       case 'user':
         return (
           <UserProfileView
@@ -148,6 +174,8 @@ export default function MainUI({ user, onLogout }: MainUIProps) {
             onNodeClick={handleNodeClick}
           />
         );
+      case 'network-overview':
+        return <NetworkOverview />;
       case 'post':
         return (
           <PostView
@@ -159,6 +187,12 @@ export default function MainUI({ user, onLogout }: MainUIProps) {
         return <GraphExplorer />;
       case 'messaging-hub':
         return <MessagingHub />;
+      case 'graph-stats':
+        return <GraphStats />;
+      case 'leaderboard':
+        return <PopularUsers />;
+      case 'shortest-path':
+        return <ShortestPath />;
       default:
         return <div style={{ padding: '1.5rem', color: 'var(--text-secondary)' }}>Unknown view type</div>;
     }

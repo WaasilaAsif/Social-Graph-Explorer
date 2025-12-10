@@ -34,7 +34,7 @@ void UserManager::loadFromFile() {
                 int id = userJson["id"];
                 
                 // Create user (will auto-assign ID, but we'll use the saved one)
-                User user(username, password,id);
+                User user(username, password, id);
                 users.push_back(user);
                 usernameTrie.insert(username);
                 socialGraph.addNode(id);
@@ -60,9 +60,20 @@ void UserManager::loadFromFile() {
 
 // Save users to JSON file
 void UserManager::saveToFile() {
-    // Create directory if it doesn't exist
-    _mkdir("storage");
-    _mkdir("storage/local_db");
+    // Extract directory path from dbFilePath and create directories if they don't exist
+    std::string path = dbFilePath;
+    size_t lastSlash = path.find_last_of("/\\");
+    if (lastSlash != std::string::npos) {
+        std::string dirPath = path.substr(0, lastSlash);
+        // Create parent directories recursively
+        size_t pos = 0;
+        while ((pos = dirPath.find_first_of("/\\", pos)) != std::string::npos) {
+            std::string subDir = dirPath.substr(0, pos);
+            _mkdir(subDir.c_str());
+            pos++;
+        }
+        _mkdir(dirPath.c_str());
+    }
     
     json data;
     json usersArray = json::array();
@@ -125,7 +136,12 @@ const DynamicArray<User>& UserManager::getAllUsers() const {
     return users;
 }
 
-// Construct and return the social graph
+// Construct and return the social graph (non-const version)
+Graph& UserManager::constructGraph() {
+    return socialGraph;
+}
+
+// Construct and return the social graph (const version)
 const Graph& UserManager::constructGraph() const {
     return socialGraph;
 }

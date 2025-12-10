@@ -363,6 +363,41 @@
             "senderId": 1,
             "text": "Wazzup",
             "timestamp": 52
+        },
+        {
+            "id": 53,
+            "receiverId": 3,
+            "senderId": 1,
+            "text": "Hello How are you",
+            "timestamp": 53
+        },
+        {
+            "id": 54,
+            "receiverId": 3,
+            "senderId": 1,
+            "text": "Hello Charlie",
+            "timestamp": 54
+        },
+        {
+            "id": 55,
+            "receiverId": 3,
+            "senderId": 1,
+            "text": "how are you",
+            "timestamp": 55
+        },
+        {
+            "id": 56,
+            "receiverId": 3,
+            "senderId": 1,
+            "text": "Hello",
+            "timestamp": 56
+        },
+        {
+            "id": 57,
+            "receiverId": 12,
+            "senderId": 1,
+            "text": "Hello",
+            "timestamp": 57
         }
     ]
 }

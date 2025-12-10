@@ -126,6 +126,31 @@ void MsgRoutes::registerRoutes(crow::SimpleApp& app) {
         return res;
     });
 
+    // 9. Get All Messages
+    CROW_ROUTE(app, "/api/messages")
+    ([this]() {
+        std::string result = msgApi->handleGetAllMessages();
+        
+        crow::response res(result);
+        res.add_header("Content-Type", "application/json");
+        res.add_header("Access-Control-Allow-Origin", "*");
+        return res;
+    });
+
+    // 10. Get Message By ID
+    CROW_ROUTE(app, "/api/messages/<int>")
+    ([this](int id) {
+        std::unordered_map<std::string, std::string> params;
+        params["id"] = std::to_string(id);
+        
+        std::string result = msgApi->handleGetMessageById(params);
+        
+        crow::response res(result);
+        res.add_header("Content-Type", "application/json");
+        res.add_header("Access-Control-Allow-Origin", "*");
+        return res;
+    });
+
     // CORS preflight handlers
     CROW_ROUTE(app, "/msg/send").methods(crow::HTTPMethod::Options)
     ([]() {

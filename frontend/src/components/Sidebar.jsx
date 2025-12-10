@@ -1,12 +1,11 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronRight, Users, Network, Home, MessageSquare, Activity, LogOut } from 'lucide-react';
-import { dummyUsers } from '../data/dummyUsers';
+import { ChevronDown, ChevronRight, Network, Home, MessageSquare, Activity, LogOut, BarChart3, Trophy, Navigation, Globe } from 'lucide-react';
 import '../styles/Sidebar.css';
 
 export default function Sidebar({ onUserClick, onNavigate, user, onLogout }) {
-  const [usersExpanded, setUsersExpanded] = useState(true);
   const [graphsExpanded, setGraphsExpanded] = useState(true);
   const [apiExpanded, setApiExpanded] = useState(true);
+  const [analyticsExpanded, setAnalyticsExpanded] = useState(true);
 
   return (
     <div className="sidebar">
@@ -60,43 +59,45 @@ export default function Sidebar({ onUserClick, onNavigate, user, onLogout }) {
 
         <div className="sidebar-section">
           <div
-            onClick={() => setUsersExpanded(!usersExpanded)}
+            onClick={() => setAnalyticsExpanded(!analyticsExpanded)}
             className="section-header"
           >
             <div className="section-title">
-              {usersExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
-              <Users size={16} />
-              <span>Users</span>
+              {analyticsExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+              <BarChart3 size={16} />
+              <span>Analytics</span>
             </div>
           </div>
 
-          {usersExpanded && (
+          {analyticsExpanded && (
             <div>
-              {dummyUsers.map(user => (
-                <div
-                  key={user.id}
-                  onClick={() => onUserClick(user)}
-                  className="sidebar-item"
-                >
-                  <div className="item-left">
-                    <div style={{
-                      width: '24px',
-                      height: '24px',
-                      borderRadius: '50%',
-                      background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '0.75rem',
-                      fontWeight: '600',
-                      color: 'white'
-                    }}>
-                      {user.avatar}
-                    </div>
-                    <span>{user.name}</span>
-                  </div>
+              <div
+                onClick={() => onNavigate('graph-stats')}
+                className="sidebar-item"
+              >
+                <div className="item-left">
+                  <BarChart3 size={14} />
+                  <span>Network Stats</span>
                 </div>
-              ))}
+              </div>
+              <div
+                onClick={() => onNavigate('leaderboard')}
+                className="sidebar-item"
+              >
+                <div className="item-left">
+                  <Trophy size={14} />
+                  <span>Leaderboard</span>
+                </div>
+              </div>
+              <div
+                onClick={() => onNavigate('shortest-path')}
+                className="sidebar-item"
+              >
+                <div className="item-left">
+                  <Navigation size={14} />
+                  <span>Shortest Path</span>
+                </div>
+              </div>
             </div>
           )}
         </div>
@@ -115,6 +116,16 @@ export default function Sidebar({ onUserClick, onNavigate, user, onLogout }) {
 
           {graphsExpanded && (
             <div>
+              <div
+                onClick={() => onNavigate('network-overview', {})}
+                className="sidebar-item"
+                style={{ background: 'rgba(157, 78, 221, 0.1)', borderLeft: '3px solid #9d4edd' }}
+              >
+                <div className="item-left">
+                  <Globe size={14} />
+                  <span>Complete Overview</span>
+                </div>
+              </div>
               <div
                 onClick={() => onNavigate('graph', { graphId: 'main' })}
                 className="sidebar-item"

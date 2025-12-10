@@ -35,14 +35,15 @@ function Login({ onLogin }: LoginProps) {
 
       if (data.success) {
         // Store user info and call parent's onLogin
+        // Backend returns: { success: true, user: { id: 1, username: "alice_smith" } }
         const userData: UserData = {
-          userId: data.userId,
-          username: data.username || username
+          userId: data.user?.id || data.userId,
+          username: data.user?.username || data.username || username
         };
         localStorage.setItem('user', JSON.stringify(userData));
         onLogin(userData);
       } else {
-        setError(data.error || 'Authentication failed');
+        setError(data.error || data.message || 'Authentication failed');
       }
     } catch {
       setError('Server connection failed. Please ensure backend is running on port 8081.');

@@ -1,39 +1,40 @@
 import { useState } from 'react';
 import { Heart, MessageCircle, Share2 } from 'lucide-react';
-import { getUserById } from '../data/dummyUsers';
 import '../styles/PostView.css';
 
 export default function PostView({ post, onUserClick }) {
   const [liked, setLiked] = useState(false);
-  const [likes, setLikes] = useState(post.likes);
-  const author = getUserById(post.userId);
+  const [likes, setLikes] = useState(post.likes || 0);
 
   const handleLike = () => {
     setLiked(!liked);
     setLikes(liked ? likes - 1 : likes + 1);
   };
 
+  const postContent = typeof post === 'string' ? post : (post.content || post.text || 'No content');
+  const authorName = post.username || post.authorName || `User ${post.userId || 'Unknown'}`;
+
   return (
     <div className="post-view">
       <div className="post-detail">
         <div
-          onClick={() => onUserClick(author)}
+          onClick={() => onUserClick && post.userId && onUserClick({ id: post.userId, name: authorName })}
           className="post-detail-header"
-          style={{ cursor: 'pointer' }}
+          style={{ cursor: onUserClick && post.userId ? 'pointer' : 'default' }}
         >
           <div className="post-detail-avatar">
-            {author.avatar}
+            {authorName.charAt(0).toUpperCase()}
           </div>
           <div className="post-detail-author-info">
-            <div className="post-detail-author">{author.name}</div>
+            <div className="post-detail-author">{authorName}</div>
             <div className="post-detail-meta">
-              <span>{new Date(post.timestamp).toLocaleString()}</span>
+              <span>{post.timestamp ? new Date(post.timestamp).toLocaleString() : 'Recently'}</span>
             </div>
           </div>
         </div>
 
         <div className="post-detail-content">
-          {post.content}
+          {postContent}
         </div>
 
         <div className="post-detail-actions">
@@ -46,7 +47,7 @@ export default function PostView({ post, onUserClick }) {
           </button>
           <button className="post-detail-action">
             <MessageCircle size={20} />
-            <span>{post.comments}</span>
+            <span>{post.comments || 0}</span>
           </button>
           <button className="post-detail-action">
             <Share2 size={20} />
