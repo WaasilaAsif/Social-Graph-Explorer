@@ -35,10 +35,10 @@ int main() {
     MessageStore msgStore;
     MsgTrie msgTrie;
     ConversationGraph convGraph;
-    
+    Graph &graph = const_cast<Graph&>(userManager.constructGraph());
     // Load data from JSON files
     std::cout << "Loading data from JSON files..." << std::endl;
-    loadFriendshipsFromJSON(userManager.constructGraph(), "../storage/local_db/friendships.json");
+    loadFriendshipsFromJSON(graph, "../storage/local_db/friendships.json");
     // UserManager already loads users in its constructor, so no need to load again
     loadMessagesFromJSON(msgStore, msgTrie, convGraph, "../storage/local_db/messages.json");
     std::cout << "Data loaded successfully!" << std::endl << std::endl;
@@ -47,11 +47,11 @@ int main() {
     MsgAPI msgApi(&userManager, &msgStore, &msgTrie, &convGraph);
 
     // Initialize algorithm modules
-    MutualFriends mutualFriends(&userManager.constructGraph());
-    ShortestPath shortestPath(&userManager.constructGraph());
+    MutualFriends mutualFriends(&graph);
+    ShortestPath shortestPath(&graph);
     GraphStats graphStats;
-    PopularityRanker popularityRanker(&userManager.constructGraph());
-    FriendSuggestion friendSuggestion(&userManager.constructGraph(), &mutualFriends);
+    PopularityRanker popularityRanker(&graph);
+    FriendSuggestion friendSuggestion(&graph, &mutualFriends);
 
     // CORS preflight handlers MUST be registered BEFORE the actual routes
     CROW_ROUTE(app, "/api/users/register").methods(crow::HTTPMethod::Options)
@@ -93,7 +93,7 @@ int main() {
     });
 
     // Register graph routes
-    GraphRoutes graphRoutes(userManager.constructGraph(), userManager);
+    GraphRoutes graphRoutes(graph, userManager);
     graphRoutes.registerRoutes(app);
     
     // Register messaging routes
@@ -105,7 +105,7 @@ int main() {
     userRouter.setupRoutes(app);
     
     // Register algorithm routes
-    setupAlgoRoutes(app, &userManager.constructGraph(), &mutualFriends, &shortestPath, 
+    setupAlgoRoutes(app, &graph, &mutualFriends, &shortestPath, 
                     &graphStats, &popularityRanker, &friendSuggestion);
 
     // Root - API Menu

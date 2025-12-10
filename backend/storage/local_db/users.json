@@ -1,5 +1,4 @@
 {
-    "connections": [],
     "users": [
         {
             "id": 1,
@@ -2866,13 +2865,13 @@
             "username": "sam_lopez"
         },
         {
-            "id": 321,
+            "id": 320,
             "password": "messi",
             "posts": [],
             "username": "ronaldo"
         },
         {
-            "id": 322,
+            "id": 321,
             "password": "ChocolateChipCookies",
             "posts": [],
             "username": "Hania"

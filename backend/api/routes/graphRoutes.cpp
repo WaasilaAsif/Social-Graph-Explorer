@@ -89,7 +89,7 @@ if (!graph.hasNode(v)) graph.addNode(v);
                 std::cout << std::endl;
                 response["success"] = true;
                 response["message"] = "Friendship created";
-                saveFriendshipsToJSON(graph, "storage/local_db/friendships.json");
+                saveFriendshipsToJSON(graph, "../storage/local_db/friendships.json");
             } else {
                 response["success"] = true;
                 response["message"] = "Friendship already exists";
@@ -127,7 +127,7 @@ if (!graph.hasNode(v)) graph.addNode(v);
                 graph.removeEdge(u, v, true);
                 response["success"] = true;
                 response["message"] = "Friendship removed";
-                saveFriendshipsToJSON(graph, "storage/local_db/friendships.json");
+                saveFriendshipsToJSON(graph, "../storage/local_db/friendships.json");
             }
         }
         catch (const std::exception& e) {
