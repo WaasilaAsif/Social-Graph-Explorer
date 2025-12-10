@@ -293,5 +293,19 @@ export const messagingAPI = {
     const response = await fetch(`${API_BASE_URL}/msg/path/${srcUserId}/${destUserId}`);
     if (!response.ok) throw new Error('Failed to find shortest path');
     return response.json();
+  },
+
+  // Get message by ID
+  getMessageById: async (messageId: number) => {
+    const response = await fetch(`${API_BASE_URL}/api/messages/${messageId}`);
+    if (!response.ok) throw new Error('Failed to get message');
+    return response.json();
   }
+};
+
+// Additional helper - Get user by ID with proper endpoint
+export const getUserById = async (userId: number) => {
+  const response = await fetch(`${API_BASE_URL}/api/users/${userId}`);
+  if (!response.ok) throw new Error('Failed to get user');
+  return response.json();
 };

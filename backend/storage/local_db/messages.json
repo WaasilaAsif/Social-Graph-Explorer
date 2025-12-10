@@ -391,6 +391,13 @@
             "senderId": 1,
             "text": "Hello",
             "timestamp": 56
+        },
+        {
+            "id": 57,
+            "receiverId": 12,
+            "senderId": 1,
+            "text": "Hello",
+            "timestamp": 57
         }
     ]
 }

@@ -203,3 +203,26 @@ std::string MsgAPI::handleShortestPath(const std::unordered_map<std::string, std
 
     return out.str();
 }
+
+// ---------------------------------------------------
+// 10. GET MESSAGE BY ID
+// ---------------------------------------------------
+std::string MsgAPI::handleGetMessageById(const std::unordered_map<std::string, std::string>& params) {
+    int messageId = stoi(params.at("id"));
+    Message* msg = store->getMessage(messageId);
+    
+    if (!msg) {
+        return "{ \"error\": \"Message not found\" }";
+    }
+    
+    std::ostringstream out;
+    out << "{";
+    out << "\"id\": " << msg->id << ",";
+    out << "\"senderId\": " << msg->senderId << ",";
+    out << "\"receiverId\": " << msg->receiverId << ",";
+    out << "\"text\": \"" << msg->content << "\",";
+    out << "\"timestamp\": " << msg->timestamp;
+    out << "}";
+    
+    return out.str();
+}

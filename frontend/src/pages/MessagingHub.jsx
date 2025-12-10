@@ -19,6 +19,7 @@ export default function MessagingHub() {
   const [suggestions, setSuggestions] = useState([]);
   const [popularUsers, setPopularUsers] = useState([]);
   const [mutualInteractions, setMutualInteractions] = useState([]);
+  const [searchMessagesDetails, setSearchMessagesDetails] = useState([]);
 
   // Load analytics data on mount and when user changes
   useEffect(() => {
@@ -181,6 +182,35 @@ export default function MessagingHub() {
         results: data.results || [],
         count: (data.results || []).length
       });
+      
+      // Fetch full message details for each message ID
+      if (data.results && data.results.length > 0) {
+        const messageDetailsPromises = data.results.map(async (msgId) => {
+          try {
+            const response = await fetch(`http://localhost:8081/api/messages/${msgId}`);
+            if (response.ok) {
+              const msgData = await response.json();
+              // Enrich with usernames
+              const senderName = await getUserDetails(parseInt(msgData.senderId));
+              const receiverName = await getUserDetails(parseInt(msgData.receiverId));
+              return {
+                ...msgData,
+                senderName,
+                receiverName
+              };
+            }
+            return null;
+          } catch (err) {
+            console.error(`Failed to fetch message ${msgId}:`, err);
+            return null;
+          }
+        });
+        
+        const messagesDetails = await Promise.all(messageDetailsPromises);
+        setSearchMessagesDetails(messagesDetails.filter(m => m !== null));
+      } else {
+        setSearchMessagesDetails([]);
+      }
     } catch (err) {
       setError('Search failed: ' + err.message);
       console.error(err);
@@ -415,14 +445,28 @@ export default function MessagingHub() {
                 <h3>Results for "{searchResults.query}" ({searchResults.type})</h3>
                 <p className="results-count">{searchResults.count} message(s) found</p>
                 <div className="results-list">
-                  {searchResults.results.length > 0 ? (
-                    searchResults.results.map((msgId) => (
-                      <div key={msgId} className="result-item">
-                        Message ID: {msgId}
+                  {searchMessagesDetails.length > 0 ? (
+                    searchMessagesDetails.map((msg) => (
+                      <div key={msg.id} className="result-item">
+                        <div className="result-header">
+                          <span className="result-sender">{msg.senderName}</span>
+                          <span className="result-arrow">→</span>
+                          <span className="result-receiver">{msg.receiverName}</span>
+                        </div>
+                        <div className="result-text">{msg.text}</div>
+                        <div className="result-meta">
+                          <span className="result-id">ID: {msg.id}</span>
+                          <span className="result-time">{new Date(msg.timestamp * 1000).toLocaleString()}</span>
+                        </div>
                       </div>
                     ))
-                  ) : (
+                  ) : searchResults.results.length === 0 ? (
                     <p className="no-results">No messages found</p>
+                  ) : (
+                    <div className="loading-state">
+                      <div className="spinner"></div>
+                      <p>Loading message details...</p>
+                    </div>
                   )}
                 </div>
               </div>

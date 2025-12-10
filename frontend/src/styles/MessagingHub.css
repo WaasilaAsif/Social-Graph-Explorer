@@ -648,6 +648,49 @@
   color: #e0e0e0;
 }
 
+.result-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+.result-sender {
+  color: #9d4edd;
+}
+
+.result-arrow {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.result-receiver {
+  color: #7b2cbf;
+}
+
+.result-text {
+  color: #e0e0e0;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  background: rgba(157, 78, 221, 0.05);
+  border-radius: 4px;
+}
+
+.result-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.result-id {
+  font-family: monospace;
+}
+
+.result-time {
+  font-style: italic;
+}
+
 .no-results {
   text-align: center;
   color: rgba(255, 255, 255, 0.4);
