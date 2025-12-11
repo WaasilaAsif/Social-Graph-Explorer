@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { messagingAPI, userAPI } from '../services/api';
+import { messagingAPI, userAPI, algoAPI } from '../services/api';
 import { MessageSquare, Send, Search, Users, Clock, TrendingUp, Users2, Route } from 'lucide-react';
 import '../styles/MessagingHub.css';
 
@@ -32,13 +32,15 @@ export default function MessagingHub() {
       return userCache.get(userId);
     }
     try {
-      const response = await userAPI.getUserById(userId);
-      const username = response.username || `User ${userId}`;
+      const response = await userAPI.getUser(userId);
+      const username = response.user?.username || response.username || `User ${userId}`;
       setUserCache(prev => new Map(prev).set(userId, username));
       return username;
     } catch (err) {
       console.error(`Failed to fetch user ${userId}:`, err);
-      return `User ${userId}`;
+      const fallback = `User ${userId}`;
+      setUserCache(prev => new Map(prev).set(userId, fallback));
+      return fallback;
     }
   };
 
@@ -86,13 +88,17 @@ export default function MessagingHub() {
       );
       setSuggestions(suggestionsList);
 
-      // Load popular users
-      const popularData = await messagingAPI.getPopularityRank(10);
+      // Load popular users - use algorithm API which is working
+      const popularData = await algoAPI.getTopPopular(10);
       const popularList = await Promise.all(
-        (popularData.rank || []).map(async (user) => ({
-          ...user,
-          username: await getUserDetails(user.userId)
-        }))
+        (popularData.topUsers || []).map(async (user) => {
+          const username = await getUserDetails(user.userId);
+          return {
+            userId: user.userId,
+            username: username,
+            popularity: user.score // Use score as popularity count
+          };
+        })
       );
       setPopularUsers(popularList);
 
@@ -487,13 +493,17 @@ export default function MessagingHub() {
                 Most Popular Users
               </h3>
               <div className="user-list">
-                {popularUsers.map((user, idx) => (
-                  <div key={user.userId} className="user-item">
-                    <span className="rank">#{idx + 1}</span>
-                    <span className="user-name">{user.username}</span>
-                    <span className="popularity-score">{user.popularity} interactions</span>
-                  </div>
-                ))}
+                {popularUsers.length === 0 ? (
+                  <p className="no-data">No popular users found</p>
+                ) : (
+                  popularUsers.map((user, idx) => (
+                    <div key={user.userId} className="user-item">
+                      <span className="rank">#{idx + 1}</span>
+                      <span className="user-name">{user.username}</span>
+                      <span className="popularity-score">{user.popularity} friends</span>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
 
