@@ -163,10 +163,9 @@ public:
     }
 
     void clear() {
-        for (int i = 0; i < numBuckets; i++) {
-            while (buckets[i].size() > 0)
-                buckets[i].pop_back();
-        }
-        entryCount = 0;
+    for (int i = 0; i < numBuckets; i++) {
+        buckets[i].clear();  // Single O(1) operation per bucket
     }
+    entryCount = 0;
+}
 };
