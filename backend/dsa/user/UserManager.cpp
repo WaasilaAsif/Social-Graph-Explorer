@@ -4,6 +4,7 @@
 #include "../../algorithms/BFS.h"
 #include "../../algorithms/DFS.h"
 #include "../../analytics/Graphstats.h"  
+#include "../../storage/JSONWriter.h"
 #include <iostream>
 #include "../../libs/crow/nlohmann/json.hpp"
 #include <fstream>
@@ -154,6 +155,8 @@ bool UserManager::removeUserById(int id) {
     // Remove from social graph
     if (socialGraph.hasNode(id)) {
         socialGraph.removeNode(id);
+        // Save friendships after removing user's edges
+        saveFriendshipsToJSON(socialGraph, "../storage/local_db/friendships.json");
     }
     // REMOVE FROM TRIE
     usernameTrie.remove(username);
