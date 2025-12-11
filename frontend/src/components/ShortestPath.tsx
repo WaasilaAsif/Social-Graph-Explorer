@@ -33,14 +33,23 @@ const ShortestPath = () => {
     try {
       const result = await algoAPI.getShortestPath(start, end);
       
-      if (result.path && result.path.length > 0) {
+      // Check if path exists (either by exists field or by path length)
+      if (result.exists === false || (result.distance === -1 && (!result.path || result.path.length === 0))) {
+        setError('No path found between these users');
+        setPath([]);
+        setDistance(null);
+      } else if (result.path && result.path.length > 0) {
         setPath(result.path);
-        setDistance(result.distance || result.path.length - 1);
+        setDistance(result.distance !== undefined && result.distance >= 0 ? result.distance : result.path.length - 1);
       } else {
         setError('No path found between these users');
+        setPath([]);
+        setDistance(null);
       }
     } catch (err: any) {
       setError(err.message || 'Failed to find path');
+      setPath([]);
+      setDistance(null);
     } finally {
       setLoading(false);
     }

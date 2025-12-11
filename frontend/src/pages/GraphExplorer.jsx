@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { graphAPI } from '../services/api';
-import { Network, Users, ArrowRight, Search } from 'lucide-react';
+import { Network, Users, Search } from 'lucide-react';
 import '../styles/GraphExplorer.css';
 
 export default function GraphExplorer() {
@@ -84,22 +84,6 @@ export default function GraphExplorer() {
     }
   };
 
-  const handleShortestPath = async () => {
-    if (!user2Id) {
-      setError('Please enter destination user ID');
-      return;
-    }
-    setLoading(true);
-    setError(null);
-    try {
-      const data = await graphAPI.shortestPath(parseInt(userId), parseInt(user2Id));
-      setResult(data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="graph-explorer">
@@ -123,13 +107,6 @@ export default function GraphExplorer() {
         >
           <Search size={16} />
           Graph Traversal
-        </button>
-        <button
-          className={`section-btn ${activeSection === 'path' ? 'active' : ''}`}
-          onClick={() => setActiveSection('path')}
-        >
-          <ArrowRight size={16} />
-          Shortest Path
         </button>
       </div>
 
@@ -205,39 +182,6 @@ export default function GraphExplorer() {
           </div>
         )}
 
-        {activeSection === 'path' && (
-          <div className="section-content">
-            <h2>Shortest Path Finder</h2>
-            
-            <div className="input-group">
-              <label>Source User ID</label>
-              <input
-                type="number"
-                value={userId}
-                onChange={(e) => setUserId(e.target.value)}
-                placeholder="Enter source user ID"
-              />
-            </div>
-
-            <div className="input-group">
-              <label>Destination User ID</label>
-              <input
-                type="number"
-                value={user2Id}
-                onChange={(e) => setUser2Id(e.target.value)}
-                placeholder="Enter destination user ID"
-              />
-            </div>
-
-            <button className="action-btn primary" onClick={handleShortestPath}>
-              Find Shortest Path
-            </button>
-
-            <div className="info-box">
-              <p>Finds the shortest connection path between two users in the social network.</p>
-            </div>
-          </div>
-        )}
 
         {loading && (
           <div className="result-box loading">

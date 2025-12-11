@@ -129,6 +129,12 @@ export default function MainUI({ user, onLogout }: MainUIProps) {
       openTab('graph-explorer', {});
     } else if (type === 'messaging-hub') {
       openTab('messaging-hub', {});
+    } else if (type === 'shortest-path') {
+      openTab('shortest-path', {});
+    } else if (type === 'graph-stats') {
+      openTab('graph-stats', {});
+    } else if (type === 'leaderboard') {
+      openTab('leaderboard', {});
     }
   };
 
