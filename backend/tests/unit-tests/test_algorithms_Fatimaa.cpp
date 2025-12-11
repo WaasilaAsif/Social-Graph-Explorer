@@ -66,7 +66,8 @@ void testMutualFriends() {
     assert(count == 0);
     cout << "  ✓ PASSED\n" << endl;
     
-    cout << "✅ All Mutual Friends tests passed!" << endl;
+    cout << "[x]
+ All Mutual Friends tests passed!" << endl;
 }
 
 void testShortestPath() {
@@ -145,7 +146,8 @@ void testShortestPath() {
     assert(distance == 1);
     cout << "  ✓ PASSED\n" << endl;
     
-    cout << "✅ All Shortest Path tests passed!" << endl;
+    cout << "[x]
+ All Shortest Path tests passed!" << endl;
 }
 
 void testPopularityRanker() {
@@ -209,7 +211,8 @@ void testPopularityRanker() {
     assert(percentile1 >= 75.0); // Should be in top quartile
     cout << "  ✓ PASSED\n" << endl;
     
-    cout << "✅ All Popularity Ranker tests passed!" << endl;
+    cout << "[x]
+ All Popularity Ranker tests passed!" << endl;
 }
 
 int main() {
@@ -223,17 +226,20 @@ int main() {
         testPopularityRanker();
         
         cout << "\n========================================" << endl;
-        cout << "  ✅ ALL TESTS PASSED SUCCESSFULLY!" << endl;
+        cout << "  [x]
+ ALL TESTS PASSED SUCCESSFULLY!" << endl;
         cout << "========================================" << endl;
         cout << "\nAll algorithms validated with 3+ test cases each." << endl;
         cout << "Ready for benchmarking phase." << endl;
         
         return 0;
     } catch (const exception& e) {
-        cout << "\n❌ TEST FAILED: " << e.what() << endl;
+        cout << "\nX
+ TEST FAILED: " << e.what() << endl;
         return 1;
     } catch (...) {
-        cout << "\n❌ TEST FAILED: Unknown error" << endl;
+        cout << "\nX
+ TEST FAILED: Unknown error" << endl;
         return 1;
     }
 }

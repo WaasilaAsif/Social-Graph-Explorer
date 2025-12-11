@@ -595,39 +595,14 @@ export default function MessagingHub() {
                   type="number"
                   placeholder="Enter User ID"
                   min="1"
-                  value={pathDestId}
-                  onChange={(e) => setPathDestId(e.target.value)}
-                />
-                <button 
-                  className="action-btn"
-                  onClick={() => {
-                    const destId = parseInt(pathDestId);
+                  onChange={(e) => {
+                    const destId = parseInt(e.target.value);
                     if (destId && destId !== currentUserId) {
                       findShortestPath(destId);
                     }
                   }}
-                  disabled={!pathDestId || parseInt(pathDestId) === currentUserId}
-                >
-                  Find Path
-                </button>
+                />
               </div>
-              
-              {pathResult && (
-                <div className="path-result">
-                  {pathResult.length === 0 ? (
-                    <p className="no-data">No path found to this user</p>
-                  ) : (
-                    <div className="path-chain">
-                      {pathResult.map((user, idx) => (
-                        <span key={user.id} className="path-node">
-                          <span className="path-user">{user.username}</span>
-                          {idx < pathResult.length - 1 && <span className="path-arrow">→</span>}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
             </div>
           </div>
         </div>

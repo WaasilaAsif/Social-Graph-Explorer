@@ -388,11 +388,11 @@ export default function GraphView({ graphId, onNodeClick }) {
           </h2>
           <div className="graph-meta">
             <span className="meta-badge">
-              <span className="meta-icon">👥</span>
+              <span className="meta-icon"></span>
               {graphData.nodes.length} Users
             </span>
             <span className="meta-badge">
-              <span className="meta-icon">🔗</span>
+              <span className="meta-icon"></span>
               {graphData.edges.length} Connections
             </span>
           </div>
@@ -408,7 +408,8 @@ export default function GraphView({ graphId, onNodeClick }) {
                 disabled={!selectedNode}
                 title="Run BFS from selected node"
               >
-                🔍 BFS
+                
+ BFS
               </button>
               <button 
                 className="modern-btn btn-primary"
@@ -416,14 +417,15 @@ export default function GraphView({ graphId, onNodeClick }) {
                 disabled={!selectedNode}
                 title="Run DFS from selected node"
               >
-                🌲 DFS
+                
+ DFS
               </button>
               <button 
                 className="modern-btn btn-primary"
                 onClick={() => setAlgorithm('path')}
                 title="Find shortest path between two nodes"
               >
-                🎯 Path
+                 Path
               </button>
             </>
           )}
@@ -454,7 +456,7 @@ export default function GraphView({ graphId, onNodeClick }) {
 
       {algorithm === 'path' && !pathEnd && (
         <div className="algorithm-banner">
-          <div className="banner-icon">🎯</div>
+          <div className="banner-icon"></div>
           <div className="banner-text">
             {!pathStart ? 'Click a node to select start point' : `Start: ${graphData.nodes.find(n => n.id === pathStart)?.label} → Click another node for destination`}
           </div>
@@ -464,9 +466,9 @@ export default function GraphView({ graphId, onNodeClick }) {
       {algorithmResult && (
         <div className="algorithm-result-modern">
           <div className="result-header">
-            {algorithm === 'bfs' && '🔍 Breadth-First Traversal'}
-            {algorithm === 'dfs' && '🌲 Depth-First Traversal'}
-            {algorithm === 'path' && '🎯 Shortest Path'}
+            {algorithm === 'bfs' && 'Breadth-First Traversal'}
+            {algorithm === 'dfs' && 'Depth-First Traversal'}
+            {algorithm === 'path' && 'Shortest Path'}
           </div>
           <div className="result-path">
             {algorithmResult.map((nodeId, idx) => {
