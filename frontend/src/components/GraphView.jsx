@@ -14,6 +14,7 @@ export default function GraphView({ graphId, onNodeClick }) {
   const [hoveredNode, setHoveredNode] = useState(null);
   const animationRef = useRef(null);
   const [nodePositions, setNodePositions] = useState({});
+  const [graphDimensions, setGraphDimensions] = useState({ width: 2000, height: 1400 });
 
   // Fetch graph data from backend
   useEffect(() => {
@@ -111,16 +112,28 @@ export default function GraphView({ graphId, onNodeClick }) {
   useEffect(() => {
     if (graphData.nodes.length === 0) return;
 
-    const width = 1200;
-    const height = 800;
+    // Use window dimensions for maximum space utilization
+    const container = document.querySelector('.graph-canvas-modern');
+    const statsPanel = document.querySelector('.graph-stats-modern');
+    const statsWidth = statsPanel ? statsPanel.offsetWidth + 40 : 280;
+    
+    // Calculate available space (window width minus sidebar, stats panel, and padding)
+    const availableWidth = window.innerWidth - 250 - statsWidth - 20; // sidebar ~250px, stats ~220px, padding
+    const availableHeight = window.innerHeight - 120; // header ~100px, padding
+    
+    const width = Math.max(availableWidth, 1800);
+    const height = Math.max(availableHeight, 1000);
     const centerX = width / 2;
     const centerY = height / 2;
+    
+    // Update graph dimensions for viewBox
+    setGraphDimensions({ width, height });
 
     // Initialize positions in a circle with better spacing
     const initialPositions = {};
     graphData.nodes.forEach((node, idx) => {
       const angle = (2 * Math.PI * idx) / graphData.nodes.length;
-      const radius = Math.min(width, height) * 0.35;
+      const radius = Math.min(width, height) * 0.45;
       initialPositions[node.id] = {
         x: centerX + radius * Math.cos(angle),
         y: centerY + radius * Math.sin(angle),
@@ -132,8 +145,8 @@ export default function GraphView({ graphId, onNodeClick }) {
     setNodePositions(initialPositions);
 
     // Force-directed layout parameters
-    const repulsionStrength = 8000;
-    const attractionStrength = 0.001;
+    const repulsionStrength = 12000;
+    const attractionStrength = 0.0015;
     const damping = 0.85;
     const iterations = 300;
 
@@ -157,7 +170,7 @@ export default function GraphView({ graphId, onNodeClick }) {
           const dy = currentPositions[node1.id].y - currentPositions[node2.id].y;
           const distance = Math.sqrt(dx * dx + dy * dy) || 1;
           
-          if (distance < 200) {
+          if (distance < 300) {
             const force = repulsionStrength / (distance * distance);
             fx += (dx / distance) * force;
             fy += (dy / distance) * force;
@@ -195,8 +208,8 @@ export default function GraphView({ graphId, onNodeClick }) {
         currentPositions[node.id].y += currentPositions[node.id].vy;
 
         // Keep within bounds
-        currentPositions[node.id].x = Math.max(100, Math.min(width - 100, currentPositions[node.id].x));
-        currentPositions[node.id].y = Math.max(100, Math.min(height - 100, currentPositions[node.id].y));
+        currentPositions[node.id].x = Math.max(150, Math.min(width - 150, currentPositions[node.id].x));
+        currentPositions[node.id].y = Math.max(150, Math.min(height - 150, currentPositions[node.id].y));
       });
 
       setNodePositions({ ...currentPositions });
@@ -288,7 +301,7 @@ export default function GraphView({ graphId, onNodeClick }) {
 
   // Get node position from force-directed layout
   const getNodePosition = (nodeId) => {
-    return nodePositions[nodeId] || { x: 600, y: 400 };
+    return nodePositions[nodeId] || { x: 900, y: 600 };
   };
 
   // Check if node is in algorithm result
@@ -412,7 +425,12 @@ export default function GraphView({ graphId, onNodeClick }) {
       )}
 
       <div className="graph-canvas-modern">
-        <svg className="graph-svg-modern" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid meet">
+        <svg 
+          className="graph-svg-modern" 
+          viewBox={`0 0 ${graphDimensions.width} ${graphDimensions.height}`}
+          preserveAspectRatio="xMidYMid meet"
+          style={{ width: '100%', height: '100%' }}
+        >
           <defs>
             <filter id="glow">
               <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
@@ -465,7 +483,7 @@ export default function GraphView({ graphId, onNodeClick }) {
               const isPathNode = pathStart === node.id || pathEnd === node.id;
               const isHovered = hoveredNode === node.id;
 
-              const nodeRadius = isSelected ? 40 : isHovered ? 38 : isHighlighted || isPathNode ? 36 : 32;
+              const nodeRadius = isSelected ? 55 : isHovered ? 53 : isHighlighted || isPathNode ? 51 : 48;
               
               const getNodeColor = () => {
                 if (isPathNode) return '#ef4444';
@@ -520,32 +538,39 @@ export default function GraphView({ graphId, onNodeClick }) {
                     />
                   )}
 
-                  {/* Node label with background */}
+                  {/* Username inside node - split into two lines if needed */}
                   <text
                     x={pos.x}
-                    y={pos.y - nodeRadius - 12}
+                    y={pos.y - 8}
                     className="node-label-modern"
                     textAnchor="middle"
                     fill="white"
-                    fontSize="13"
+                    fontSize="11"
                     fontWeight="600"
+                    style={{ pointerEvents: 'none' }}
                   >
-                    <tspan x={pos.x} className="label-bg">
-                      {node.label}
-                    </tspan>
+                    {node.label.length > 12 ? (
+                      <>
+                        <tspan x={pos.x} dy="0">{node.label.substring(0, 12)}</tspan>
+                        <tspan x={pos.x} dy="14">{node.label.substring(12)}</tspan>
+                      </>
+                    ) : (
+                      <tspan x={pos.x}>{node.label}</tspan>
+                    )}
                   </text>
                   
-                  {/* ID badge inside node */}
+                  {/* ID badge at bottom of node */}
                   <text
                     x={pos.x}
-                    y={pos.y + 5}
+                    y={pos.y + nodeRadius - 8}
                     className="node-id-badge"
                     textAnchor="middle"
-                    fill="white"
-                    fontSize="14"
-                    fontWeight="700"
+                    fill="rgba(255, 255, 255, 0.8)"
+                    fontSize="10"
+                    fontWeight="600"
+                    style={{ pointerEvents: 'none' }}
                   >
-                    {node.id}
+                    ID: {node.id}
                   </text>
                 </g>
               );
