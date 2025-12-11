@@ -79,7 +79,30 @@ export default function Dashboard({ userId, username, onOpenTab }: DashboardProp
       if (degreeData.status === 'fulfilled') setFriendCount(degreeData.value.degree || 0);
       if (rankData.status === 'fulfilled') setUserRank(rankData.value.rank);
       if (statsData.status === 'fulfilled') setGraphStats(statsData.value);
-      if (popularData.status === 'fulfilled') setTopPopular(popularData.value.users || []);
+      
+      // Handle top popular users - fetch usernames for each user
+      if (popularData.status === 'fulfilled' && popularData.value.topUsers) {
+        const topUsersWithDetails = await Promise.all(
+          popularData.value.topUsers.map(async (user: any) => {
+            try {
+              const userDetails = await userAPI.getUser(user.userId);
+              return {
+                userId: user.userId,
+                username: userDetails.user?.username || userDetails.username || `User ${user.userId}`,
+                score: user.score
+              };
+            } catch (error) {
+              return {
+                userId: user.userId,
+                username: `User ${user.userId}`,
+                score: user.score
+              };
+            }
+          })
+        );
+        setTopPopular(topUsersWithDetails);
+      }
+      
       if (suggestionsData.status === 'fulfilled') setFriendSuggestions(suggestionsData.value.suggestions || []);
       if (twoHopData.status === 'fulfilled') setTwoHopFriends(twoHopData.value.twoHopFriends || []);
       if (postsData.status === 'fulfilled') setPosts(postsData.value.posts || []);
@@ -320,7 +343,7 @@ export default function Dashboard({ userId, username, onOpenTab }: DashboardProp
                     <span className="rank">#{index + 1}</span>
                     <div className="friend-avatar">{user.username?.charAt(0).toUpperCase() || 'U'}</div>
                     <span className="leaderboard-name">{user.username || `User ${user.userId}`}</span>
-                    <span className="leaderboard-score">{user.degree || 0} friends</span>
+                    <span className="leaderboard-score">{user.score || 0} friends</span>
                   </div>
                 ))}
               </div>
