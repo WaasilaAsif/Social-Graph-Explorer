@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { algoAPI } from '../services/api';
 import { MapPin, ArrowRight, Search, Navigation } from 'lucide-react';
+import { useUserNames } from '../hooks/useUserNames';
 import '../styles/ShortestPath.css';
 
 const ShortestPath = () => {
@@ -10,6 +11,7 @@ const ShortestPath = () => {
   const [distance, setDistance] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { usernames } = useUserNames(path);
 
   const findPath = async () => {
     if (!startUser || !endUser) {
@@ -128,26 +130,29 @@ const ShortestPath = () => {
           </div>
 
           <div className="path-visualization">
-            {path.map((userId, index) => (
-              <div key={index} className="path-segment">
-                <div className="path-node">
-                  <div className="node-circle">
-                    <span>{userId}</span>
+            {path.map((userId, index) => {
+              const username = usernames.get(userId) || `User ${userId}`;
+              return (
+                <div key={index} className="path-segment">
+                  <div className="path-node">
+                    <div className="node-circle">
+                      <span>{username.charAt(0).toUpperCase()}</span>
+                    </div>
+                    <div className="node-label">{username}</div>
                   </div>
-                  <div className="node-label">User {userId}</div>
+                  {index < path.length - 1 && (
+                    <div className="path-connector">
+                      <ArrowRight size={24} />
+                    </div>
+                  )}
                 </div>
-                {index < path.length - 1 && (
-                  <div className="path-connector">
-                    <ArrowRight size={24} />
-                  </div>
-                )}
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           <div className="path-description">
             <p>
-              The shortest path from <strong>User {path[0]}</strong> to <strong>User {path[path.length - 1]}</strong> is {distance} {distance === 1 ? 'connection' : 'connections'} away.
+              The shortest path from <strong>{usernames.get(path[0]) || `User ${path[0]}`}</strong> to <strong>{usernames.get(path[path.length - 1]) || `User ${path[path.length - 1]}`}</strong> is {distance} {distance === 1 ? 'connection' : 'connections'} away.
             </p>
           </div>
         </div>

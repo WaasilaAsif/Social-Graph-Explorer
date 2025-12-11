@@ -32,13 +32,15 @@ export default function MessagingHub() {
       return userCache.get(userId);
     }
     try {
-      const response = await userAPI.getUserById(userId);
-      const username = response.username || `User ${userId}`;
+      const response = await userAPI.getUser(userId);
+      const username = response.user?.username || response.username || `User ${userId}`;
       setUserCache(prev => new Map(prev).set(userId, username));
       return username;
     } catch (err) {
       console.error(`Failed to fetch user ${userId}:`, err);
-      return `User ${userId}`;
+      const fallback = `User ${userId}`;
+      setUserCache(prev => new Map(prev).set(userId, fallback));
+      return fallback;
     }
   };
 

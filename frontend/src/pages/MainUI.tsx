@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import TabBar from '../components/TabBar';
 import Pane from '../components/Pane';
@@ -14,6 +14,7 @@ import GraphStats from './GraphStats';
 import PopularUsers from './PopularUsers';
 import ShortestPath from '../components/ShortestPath';
 import Dashboard from '../components/Dashboard';
+import { userAPI } from '../services/api';
 import { Network, User, FileText, Home, Activity, MessageSquare, BarChart3, Trophy, Navigation, Globe } from 'lucide-react';
 import '../styles/MainUI.css';
 
@@ -240,8 +241,54 @@ export default function MainUI({ user, onLogout }: MainUIProps) {
   );
 }
 
-function HomeView({ onPostClick, onUserClick }) {
-  const recentPosts = getRecentPosts(10);
+function HomeView({ onPostClick, onUserClick }: any) {
+  const [recentPosts, setRecentPosts] = useState<any[]>([]);
+  const [postAuthors, setPostAuthors] = useState(new Map<number, string>());
+
+  useEffect(() => {
+    const loadPosts = async () => {
+      // Fetch posts from multiple users (1-10) to show recent activity
+      const userIds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+      
+      const postPromises = userIds.map(async (userId) => {
+        try {
+          const response = await userAPI.getPosts(userId);
+          const posts = response.posts || [];
+          return posts.map((post: any, index: number) => ({
+            id: `${userId}-${index}`,
+            userId,
+            content: typeof post === 'string' ? post : post.content || post,
+            timestamp: Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000 // Random time in last week
+          }));
+        } catch (error) {
+          return [];
+        }
+      });
+      
+      const postsArrays = await Promise.all(postPromises);
+      const posts = postsArrays.flat().sort((a, b) => b.timestamp - a.timestamp).slice(0, 10);
+      setRecentPosts(posts);
+      
+      // Fetch usernames for all post authors
+      const uniqueUserIds = [...new Set(posts.map((p: any) => p.userId))];
+      const authorsMap = new Map();
+      
+      const namePromises = uniqueUserIds.map(async (userId: number) => {
+        try {
+          const response = await userAPI.getUser(userId);
+          const username = response.user?.username || response.username || `User ${userId}`;
+          authorsMap.set(userId, username);
+        } catch (error) {
+          authorsMap.set(userId, `User ${userId}`);
+        }
+      });
+      
+      await Promise.all(namePromises);
+      setPostAuthors(authorsMap);
+    };
+    
+    loadPosts();
+  }, []);
 
   return (
     <div style={{ height: '100%', overflow: 'auto' }}>
@@ -287,7 +334,8 @@ function HomeView({ onPostClick, onUserClick }) {
         <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem' }}>Recent Activity</h2>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {recentPosts.map((post) => {
-            const author = { id: post.userId, name: `User ${post.userId}`, avatar: `U${post.userId}` };
+            const username = postAuthors.get(post.userId) || `User ${post.userId}`;
+            const author = { id: post.userId, name: username, avatar: username.charAt(0).toUpperCase() };
             return (
               <div
                 key={post.id}

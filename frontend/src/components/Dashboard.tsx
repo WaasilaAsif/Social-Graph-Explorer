@@ -75,7 +75,28 @@ export default function Dashboard({ userId, username, onOpenTab }: DashboardProp
       ]);
 
       if (profileData.status === 'fulfilled') setProfile(profileData.value);
-      if (friendsData.status === 'fulfilled') setFriends(friendsData.value.friends || []);
+      
+      // Handle friends - fetch usernames for each friend
+      if (friendsData.status === 'fulfilled' && friendsData.value.friends) {
+        const friendsWithDetails = await Promise.all(
+          friendsData.value.friends.map(async (friend: any) => {
+            try {
+              const userDetails = await userAPI.getUser(friend.id);
+              return {
+                id: friend.id,
+                username: userDetails.user?.username || userDetails.username || `User ${friend.id}`
+              };
+            } catch (error) {
+              return {
+                id: friend.id,
+                username: `User ${friend.id}`
+              };
+            }
+          })
+        );
+        setFriends(friendsWithDetails);
+      }
+      
       if (degreeData.status === 'fulfilled') setFriendCount(degreeData.value.degree || 0);
       if (rankData.status === 'fulfilled') setUserRank(rankData.value.rank);
       if (statsData.status === 'fulfilled') setGraphStats(statsData.value);
@@ -103,7 +124,28 @@ export default function Dashboard({ userId, username, onOpenTab }: DashboardProp
         setTopPopular(topUsersWithDetails);
       }
       
-      if (suggestionsData.status === 'fulfilled') setFriendSuggestions(suggestionsData.value.suggestions || []);
+      // Handle friend suggestions - fetch usernames for each suggestion
+      if (suggestionsData.status === 'fulfilled' && suggestionsData.value.suggestions) {
+        const suggestionsWithDetails = await Promise.all(
+          suggestionsData.value.suggestions.map(async (suggestion: any) => {
+            try {
+              const userDetails = await userAPI.getUser(suggestion.userId);
+              return {
+                userId: suggestion.userId,
+                username: userDetails.user?.username || userDetails.username || `User ${suggestion.userId}`,
+                mutualFriends: suggestion.mutualFriends || 0
+              };
+            } catch (error) {
+              return {
+                userId: suggestion.userId,
+                username: `User ${suggestion.userId}`,
+                mutualFriends: suggestion.mutualFriends || 0
+              };
+            }
+          })
+        );
+        setFriendSuggestions(suggestionsWithDetails);
+      }
       if (twoHopData.status === 'fulfilled') setTwoHopFriends(twoHopData.value.twoHopFriends || []);
       if (postsData.status === 'fulfilled') setPosts(postsData.value.posts || []);
       if (topKData.status === 'fulfilled') setTopConversations(topKData.value.conversations || []);

@@ -72,15 +72,6 @@ export default function Sidebar({ onUserClick, onNavigate, user, onLogout }) {
           {analyticsExpanded && (
             <div>
               <div
-                onClick={() => onNavigate('graph-stats')}
-                className="sidebar-item"
-              >
-                <div className="item-left">
-                  <BarChart3 size={14} />
-                  <span>Network Stats</span>
-                </div>
-              </div>
-              <div
                 onClick={() => onNavigate('leaderboard')}
                 className="sidebar-item"
               >
