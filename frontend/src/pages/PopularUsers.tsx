@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
-import { algoAPI } from '../services/api';
+import { algoAPI, userAPI } from '../services/api';
 import { Trophy, Users, TrendingUp, Crown } from 'lucide-react';
 import '../styles/PopularUsers.css';
 
 interface PopularUser {
   userId: number;
   username: string;
-  degree: number;
-  rank: number;
+  score: number;
 }
 
 const PopularUsers = () => {
@@ -25,7 +24,29 @@ const PopularUsers = () => {
     setError(null);
     try {
       const data = await algoAPI.getTopPopular(limit);
-      setTopUsers(data.topUsers || []);
+      const topUsersList = data.topUsers || [];
+      
+      // Fetch usernames for each user
+      const topUsersWithDetails = await Promise.all(
+        topUsersList.map(async (user: any) => {
+          try {
+            const userDetails = await userAPI.getUser(user.userId);
+            return {
+              userId: user.userId,
+              username: userDetails.user?.username || userDetails.username || `User ${user.userId}`,
+              score: user.score
+            };
+          } catch (error) {
+            return {
+              userId: user.userId,
+              username: `User ${user.userId}`,
+              score: user.score
+            };
+          }
+        })
+      );
+      
+      setTopUsers(topUsersWithDetails);
     } catch (err: any) {
       setError(err.message || 'Failed to load popular users');
     } finally {
@@ -113,16 +134,16 @@ const PopularUsers = () => {
                 <div className="user-stats">
                   <div className="stat">
                     <Users size={18} />
-                    <span className="stat-value">{user.degree}</span>
+                    <span className="stat-value">{user.score}</span>
                     <span className="stat-label">friends</span>
                   </div>
                 </div>
 
-                {isTopThree && (
+                {/* {isTopThree && (
                   <div className="trophy-decoration">
                     <Trophy size={20} />
                   </div>
-                )}
+                )} */}
               </div>
             );
           })}

@@ -9,6 +9,32 @@ cd d:\SocialGraphExplorer\backend\api; .\server.exe
 ```pwsh
 cd d:\SocialGraphExplorer\backend; node cors-proxy.js
 ```
+
+// Fatimaaa:
+Using msys ucrt 64 terminal (not powershell)
+
+cd backend\api
+# Compile the project
+g++ -std=c++17 \
+  -I /d/VS_Crow/Crow/vcpkg/installed/x64-windows/include \
+  -I ../include -I ../libs -I .. \
+  server.cpp routes/algoRoutes.cpp routes/graphRoutes.cpp routes/MsgAPI.cpp routes/MsgRoutes.cpp \
+  ../dsa/user/User.cpp ../dsa/user/UserManager.cpp ../dsa/utils/idGenerator.cpp \
+  ../dsa/messaging_ds/MsgTrie.cpp ../dsa/messaging_ds/MsgStack.cpp ../dsa/messaging_ds/MsgHeap.cpp ../dsa/messaging_ds/ConversationGraph.cpp \
+  ../storage/JSONLoader.cpp ../storage/JSONWriter.cpp \
+  ../algorithms/ShortestPath.cpp ../algorithms/MutualFriends.cpp ../algorithms/FriendSuggestion.cpp \
+  ../analytics/PopularityRanker.cpp \
+  ../messaging/MessageStore.cpp ../messaging/MessageQueue.cpp ../messaging/MessagingSystem.cpp ../messaging/UndoStack.cpp ../messaging/ScheduledMessages.cpp ../messaging/MessageAnalytics.cpp ../messaging/TopKConversations.cpp \
+  ../algorithms/MsgShortestPatch.cpp ../algorithms/MsgMutualInteractions.cpp ../algorithms/MsgPopularityRanker.cpp ../algorithms/MsgFriendSuggestion.cpp ../algorithms/MsgTopKMessage.cpp \
+  -o server.exe -lws2_32 -lwsock32 -DASIO_STANDALONE
+
+  ./server.exe
+
+  then in powershell terminal
+  cd backend
+  node cors-proxy.js
+
+  
 **SocialGraphExplorer** is a modular backend framework for exploring and interacting with a social graph, designed as a **mini Instagram-like social network**. The system emphasizes **Data Structures and Algorithms (DSA)** while providing a fully functional prototype for managing users, friendships, posts, and analytics.
 
 This project is both a **learning-focused DSA implementation** and a **practical social network backend prototype**.
@@ -59,7 +85,8 @@ Modern social networks are complex systems with users, posts, friendships, and i
 
 ### Recent Updates (December 2024)
 
-✅ **Complete Data Persistence System**
+[x]
+ **Complete Data Persistence System**
 - All user operations (registration, posts, deletion) now persist to JSON database
 - Messaging APIs read/write from local JSON database
 - Graph operations (add/remove friends) persist automatically
@@ -69,7 +96,8 @@ Modern social networks are complex systems with users, posts, friendships, and i
 - **8 Messaging APIs + 8 User APIs + 6 Graph APIs + 10 Algorithm APIs = 32 Total Endpoints** fully operational
 - See [backend/MESSAGING_API_GUIDE.md](backend/MESSAGING_API_GUIDE.md) and [backend/ALGORITHM_API_GUIDE.md](backend/ALGORITHM_API_GUIDE.md) for complete documentation
 
-✅ **Backend Enhancements**
+[x]
+ **Backend Enhancements**
 - Added `UserRouter` with complete user management endpoints
 - Fixed path inconsistencies in file loading
 - Added `getAllUsers()` and `constructGraph()` methods to UserManager
@@ -690,14 +718,22 @@ Covers advanced social network algorithms:
 ### 📊 What's in Each Guide
 
 All guides include:
-- ✅ Real cURL and PowerShell examples
-- ✅ Expected JSON responses with sample data
-- ✅ Algorithm explanations with complexity analysis
-- ✅ Error handling and troubleshooting
-- ✅ Performance metrics and optimization tips
-- ✅ Testing workflows and validation suites
-- ✅ Integration examples (React components)
-- ✅ Use cases and real-world applications
+- [x]
+ Real cURL and PowerShell examples
+- [x]
+ Expected JSON responses with sample data
+- [x]
+ Algorithm explanations with complexity analysis
+- [x]
+ Error handling and troubleshooting
+- [x]
+ Performance metrics and optimization tips
+- [x]
+ Testing workflows and validation suites
+- [x]
+ Integration examples (React components)
+- [x]
+ Use cases and real-world applications
 
 ---
 ### Quick API Test

@@ -48,7 +48,8 @@ npm run dev
 
 ---
 
-## ✅ Testing Login
+## [x]
+ Testing Login
 
 1. Open Chrome and go to http://localhost:5174/
 2. If you see a cached page, press F12 and run in Console:

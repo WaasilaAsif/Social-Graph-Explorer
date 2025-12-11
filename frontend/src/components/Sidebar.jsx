@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronRight, Network, Home, MessageSquare, Activity, LogOut, BarChart3, Trophy, Navigation, Globe } from 'lucide-react';
+import { ChevronDown, ChevronRight, Network, Home, MessageSquare, Activity, LogOut, BarChart3, Trophy, Navigation } from 'lucide-react';
 import '../styles/Sidebar.css';
 
 export default function Sidebar({ onUserClick, onNavigate, user, onLogout }) {
@@ -72,15 +72,6 @@ export default function Sidebar({ onUserClick, onNavigate, user, onLogout }) {
           {analyticsExpanded && (
             <div>
               <div
-                onClick={() => onNavigate('graph-stats')}
-                className="sidebar-item"
-              >
-                <div className="item-left">
-                  <BarChart3 size={14} />
-                  <span>Network Stats</span>
-                </div>
-              </div>
-              <div
                 onClick={() => onNavigate('leaderboard')}
                 className="sidebar-item"
               >
@@ -116,25 +107,6 @@ export default function Sidebar({ onUserClick, onNavigate, user, onLogout }) {
 
           {graphsExpanded && (
             <div>
-              <div
-                onClick={() => onNavigate('network-overview', {})}
-                className="sidebar-item"
-                style={{ background: 'rgba(157, 78, 221, 0.1)', borderLeft: '3px solid #9d4edd' }}
-              >
-                <div className="item-left">
-                  <Globe size={14} />
-                  <span>Complete Overview</span>
-                </div>
-              </div>
-              <div
-                onClick={() => onNavigate('graph', { graphId: 'main' })}
-                className="sidebar-item"
-              >
-                <div className="item-left">
-                  <Network size={14} />
-                  <span>Main Network</span>
-                </div>
-              </div>
               <div
                 onClick={() => onNavigate('graph', { graphId: 'communities' })}
                 className="sidebar-item"

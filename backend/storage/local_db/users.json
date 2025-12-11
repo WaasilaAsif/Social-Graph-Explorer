@@ -277,7 +277,6 @@
                 "Just deployed my first C++ server!",
                 "Coffee and code, the perfect combo",
                 "Just deployed my first C++ server!",
-                "Learning graph algorithms is fascinating",
                 "Coffee and code, the perfect combo",
                 "Just deployed my first C++ server!",
                 "Learning graph algorithms is fascinating",
@@ -3169,7 +3168,13 @@
             "id": 325,
             "password": "123456",
             "posts": [],
-            "username": "waa"
+            "username": "waasila"
+        },
+        {
+            "id": 326,
+            "password": "orange",
+            "posts": [],
+            "username": "peace"
         }
     ]
 }

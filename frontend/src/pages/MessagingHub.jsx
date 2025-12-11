@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { messagingAPI, userAPI } from '../services/api';
+import { messagingAPI, userAPI, algoAPI } from '../services/api';
 import { MessageSquare, Send, Search, Users, Clock, TrendingUp, Users2, Route } from 'lucide-react';
 import '../styles/MessagingHub.css';
 
@@ -20,6 +20,8 @@ export default function MessagingHub() {
   const [popularUsers, setPopularUsers] = useState([]);
   const [mutualInteractions, setMutualInteractions] = useState([]);
   const [searchMessagesDetails, setSearchMessagesDetails] = useState([]);
+  const [pathResult, setPathResult] = useState(null);
+  const [pathDestId, setPathDestId] = useState('');
 
   // Load analytics data on mount and when user changes
   useEffect(() => {
@@ -32,13 +34,15 @@ export default function MessagingHub() {
       return userCache.get(userId);
     }
     try {
-      const response = await userAPI.getUserById(userId);
-      const username = response.username || `User ${userId}`;
+      const response = await userAPI.getUser(userId);
+      const username = response.user?.username || response.username || `User ${userId}`;
       setUserCache(prev => new Map(prev).set(userId, username));
       return username;
     } catch (err) {
       console.error(`Failed to fetch user ${userId}:`, err);
-      return `User ${userId}`;
+      const fallback = `User ${userId}`;
+      setUserCache(prev => new Map(prev).set(userId, fallback));
+      return fallback;
     }
   };
 
@@ -86,15 +90,22 @@ export default function MessagingHub() {
       );
       setSuggestions(suggestionsList);
 
-      // Load popular users
-      const popularData = await messagingAPI.getPopularityRank(10);
-      const popularList = await Promise.all(
-        (popularData.rank || []).map(async (user) => ({
-          ...user,
-          username: await getUserDetails(user.userId)
-        }))
-      );
-      setPopularUsers(popularList);
+      // Load popular users - use messaging rank API
+      const popularResponse = await fetch(`http://localhost:8082/msg/rank/10`);
+      if (popularResponse.ok) {
+        const popularData = await popularResponse.json();
+        const popularList = await Promise.all(
+          (popularData.rank || []).map(async (user) => {
+            const username = await getUserDetails(user.userId);
+            return {
+              userId: user.userId,
+              username: username,
+              popularity: user.popularity
+            };
+          })
+        );
+        setPopularUsers(popularList);
+      }
 
       // Load mutual interactions
       const mutualData = await messagingAPI.getMutualInteractions(currentUserId);
@@ -220,23 +231,34 @@ export default function MessagingHub() {
   };
 
   const findShortestPath = async (destUserId) => {
+    if (!destUserId || destUserId === currentUserId) {
+      setPathResult(null);
+      return null;
+    }
+    
     setLoading(true);
     setError(null);
     
     try {
       const data = await messagingAPI.getShortestPath(currentUserId, destUserId);
       
-      const pathWithNames = await Promise.all(
-        (data.path || []).map(async (userId) => ({
-          id: userId,
-          username: await getUserDetails(userId)
-        }))
-      );
-      
-      return pathWithNames;
+      if (data.path && data.path.length > 0) {
+        const pathWithNames = await Promise.all(
+          data.path.map(async (userId) => ({
+            id: userId,
+            username: await getUserDetails(userId)
+          }))
+        );
+        setPathResult(pathWithNames);
+        return pathWithNames;
+      } else {
+        setPathResult([]);
+        return [];
+      }
     } catch (err) {
       setError('Failed to find path: ' + err.message);
       console.error(err);
+      setPathResult(null);
       return null;
     } finally {
       setLoading(false);
@@ -487,13 +509,17 @@ export default function MessagingHub() {
                 Most Popular Users
               </h3>
               <div className="user-list">
-                {popularUsers.map((user, idx) => (
-                  <div key={user.userId} className="user-item">
-                    <span className="rank">#{idx + 1}</span>
-                    <span className="user-name">{user.username}</span>
-                    <span className="popularity-score">{user.popularity} interactions</span>
-                  </div>
-                ))}
+                {popularUsers.length === 0 ? (
+                  <p className="no-data">No popular users found</p>
+                ) : (
+                  popularUsers.map((user, idx) => (
+                    <div key={user.userId} className="user-item">
+                      <span className="rank">#{idx + 1}</span>
+                      <span className="user-name">{user.username}</span>
+                      <span className="popularity-score">{user.popularity} interactions</span>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
 

@@ -8,7 +8,8 @@ Chrome has cached an old version of the app or has corrupted localStorage data.
 
 ---
 
-## ✅ Solutions (Try in Order)
+## [x]
+ Solutions (Try in Order)
 
 ### Solution 1: Clear localStorage via DevTools
 1. Open Chrome and navigate to `http://localhost:5174/`
@@ -28,8 +29,10 @@ location.reload();
 ### Solution 3: Clear Chrome Cache
 1. Press **Ctrl+Shift+Delete**
 2. Select:
-   - ✅ Cached images and files
-   - ✅ Cookies and other site data
+   - [x]
+ Cached images and files
+   - [x]
+ Cookies and other site data
 3. Time range: **Last hour**
 4. Click **Clear data**
 5. Navigate to `http://localhost:5174/`
@@ -41,7 +44,8 @@ location.reload();
 
 ---
 
-## 🔍 Verification Steps
+## 
+ Verification Steps
 
 1. **Check Console for Errors**
    - Press F12 → Console tab
