@@ -5,6 +5,7 @@
 #include "routes/UserRouter.h"
 #include "../dsa/graph/Graph.h"
 #include "../dsa/user/UserManager.h"
+#include "../dsa/utils/idGenerator.h"
 #include "../messaging/MessageStore.h"
 #include "../dsa/messaging_ds/MsgTrie.h"
 #include "../dsa/messaging_ds/ConversationGraph.h"
@@ -29,6 +30,9 @@ void setupAlgoRoutes(crow::SimpleApp& app, Graph* graph,
 
 int main() {
     crow::SimpleApp app;
+
+    // Initialize ID Generator from persistent storage
+    IDGenerator::initialize();
 
     // Messaging instances
     UserManager userManager("../storage/local_db/users.json");
