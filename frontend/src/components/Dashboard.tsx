@@ -19,10 +19,13 @@ interface UserProfile {
 }
 
 interface GraphStats {
-  totalNodes: number;
-  totalEdges: number;
-  avgDegree: number;
+  nodeCount: number;
+  edgeCount: number;
+  averageDegree: number;
   components: number;
+  density: number;
+  connected: boolean;
+  diameter: number;
 }
 
 export default function Dashboard({ userId, username, onOpenTab }: DashboardProps) {
@@ -250,7 +253,7 @@ export default function Dashboard({ userId, username, onOpenTab }: DashboardProp
           </div>
         </div>
 
-        <div className="stat-card">
+        {/* <div className="stat-card">
           <div className="stat-icon">
             <Network size={24} />
           </div>
@@ -259,7 +262,7 @@ export default function Dashboard({ userId, username, onOpenTab }: DashboardProp
             <p className="stat-value">{graphStats?.totalNodes || 0}</p>
             <span className="stat-label">Total users</span>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Main Content Grid */}
@@ -403,15 +406,15 @@ export default function Dashboard({ userId, username, onOpenTab }: DashboardProp
             <div className="insights-grid">
               <div className="insight-item">
                 <span className="insight-label">Total Users</span>
-                <span className="insight-value">{graphStats?.totalNodes || 0}</span>
+                <span className="insight-value">{graphStats?.nodeCount || 0}</span>
               </div>
               <div className="insight-item">
                 <span className="insight-label">Total Connections</span>
-                <span className="insight-value">{graphStats?.totalEdges || 0}</span>
+                <span className="insight-value">{graphStats?.edgeCount || 0}</span>
               </div>
               <div className="insight-item">
                 <span className="insight-label">Avg. Connections</span>
-                <span className="insight-value">{graphStats?.avgDegree?.toFixed(1) || 0}</span>
+                <span className="insight-value">{graphStats?.averageDegree?.toFixed(1) || 0}</span>
               </div>
               <div className="insight-item">
                 <span className="insight-label">Network Components</span>

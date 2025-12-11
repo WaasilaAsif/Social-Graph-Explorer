@@ -22,7 +22,25 @@ export default function UserProfileView({ user, onPostClick, onUserClick }) {
         graphAPI.getFriends(user.id)
       ]);
       setPosts(postsData.posts || []);
-      setFriends(friendsData.friends || []);
+      
+      // Fetch usernames for each friend
+      const friendsList = friendsData.friends || [];
+      const friendsWithNames = await Promise.all(
+        friendsList.map(async (friend) => {
+          try {
+            const friendId = typeof friend === 'object' ? friend.id : friend;
+            const userData = await userAPI.getUser(friendId);
+            return {
+              id: friendId,
+              username: userData.user?.username || userData.username || `User ${friendId}`
+            };
+          } catch (error) {
+            const friendId = typeof friend === 'object' ? friend.id : friend;
+            return { id: friendId, username: `User ${friendId}` };
+          }
+        })
+      );
+      setFriends(friendsWithNames);
     } catch (error) {
       console.error('Error loading user data:', error);
     } finally {

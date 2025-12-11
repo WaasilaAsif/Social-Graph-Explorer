@@ -139,11 +139,11 @@ const PopularUsers = () => {
                   </div>
                 </div>
 
-                {isTopThree && (
+                {/* {isTopThree && (
                   <div className="trophy-decoration">
                     <Trophy size={20} />
                   </div>
-                )}
+                )} */}
               </div>
             );
           })}

@@ -181,8 +181,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-} white-space: nowrap;
-}
+} 
+
 
 .unread-badge {
   background: #9d4edd;
@@ -376,6 +376,10 @@
   cursor: pointer;
   transition: all 0.2s;
   flex-shrink: 0;
+}
+.textarea{
+  width: 90%;
+  padding: 0.5rem;
 }
 
 .send-button:hover:not(:disabled) {

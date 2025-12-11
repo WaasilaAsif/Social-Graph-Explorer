@@ -15,6 +15,50 @@ export default function GraphView({ graphId, onNodeClick }) {
   const animationRef = useRef(null);
   const [nodePositions, setNodePositions] = useState({});
   const [graphDimensions, setGraphDimensions] = useState({ width: 2000, height: 1400 });
+  const [zoom, setZoom] = useState(1);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [isPanning, setIsPanning] = useState(false);
+  const [panStart, setPanStart] = useState({ x: 0, y: 0 });
+  const svgRef = useRef(null);
+
+  // Zoom handlers
+  const handleZoomIn = () => {
+    setZoom(prev => Math.min(prev * 1.2, 5));
+  };
+
+  const handleZoomOut = () => {
+    setZoom(prev => Math.max(prev / 1.2, 0.2));
+  };
+
+  const handleResetZoom = () => {
+    setZoom(1);
+    setPan({ x: 0, y: 0 });
+  };
+
+  // Mouse wheel zoom
+  const handleWheel = (e) => {
+    e.preventDefault();
+    const delta = e.deltaY > 0 ? 0.9 : 1.1;
+    setZoom(prev => Math.max(0.2, Math.min(5, prev * delta)));
+  };
+
+  // Pan handlers
+  const handleMouseDown = (e) => {
+    if (e.button === 0 && !e.target.closest('.graph-node-modern')) {
+      setIsPanning(true);
+      setPanStart({ x: e.clientX - pan.x, y: e.clientY - pan.y });
+    }
+  };
+
+  const handleMouseMove = (e) => {
+    if (isPanning) {
+      setPan({ x: e.clientX - panStart.x, y: e.clientY - panStart.y });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsPanning(false);
+  };
 
   // Fetch graph data from backend
   useEffect(() => {
@@ -392,6 +436,20 @@ export default function GraphView({ graphId, onNodeClick }) {
             </button>
           )}
         </div>
+
+        {/* Zoom Controls in Header */}
+        <div className="zoom-controls-header">
+          <button className="zoom-btn-header" onClick={handleZoomOut} title="Zoom Out">
+            <span>−</span>
+          </button>
+          <span className="zoom-level-header">{Math.round(zoom * 100)}%</span>
+          <button className="zoom-btn-header" onClick={handleZoomIn} title="Zoom In">
+            <span>+</span>
+          </button>
+          <button className="zoom-btn-header reset" onClick={handleResetZoom} title="Reset View">
+            <span>⟲</span>
+          </button>
+        </div>
       </div>
 
       {algorithm === 'path' && !pathEnd && (
@@ -424,8 +482,17 @@ export default function GraphView({ graphId, onNodeClick }) {
         </div>
       )}
 
-      <div className="graph-canvas-modern">
+      <div 
+        className="graph-canvas-modern"
+        onWheel={handleWheel}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        style={{ cursor: isPanning ? 'grabbing' : 'grab' }}
+      >
         <svg 
+          ref={svgRef}
           className="graph-svg-modern" 
           viewBox={`0 0 ${graphDimensions.width} ${graphDimensions.height}`}
           preserveAspectRatio="xMidYMid meet"
@@ -445,9 +512,11 @@ export default function GraphView({ graphId, onNodeClick }) {
             </linearGradient>
           </defs>
 
-          {/* Draw edges with improved styling */}
-          <g className="edges-layer">
-            {graphData.edges.map((edge, idx) => {
+          {/* Transform group for zoom and pan */}
+          <g transform={`translate(${pan.x}, ${pan.y}) scale(${zoom})`}>
+            {/* Draw edges with improved styling */}
+            <g className="edges-layer">
+              {graphData.edges.map((edge, idx) => {
               const sourceNode = graphData.nodes.find(n => n.id === edge.source);
               const targetNode = graphData.nodes.find(n => n.id === edge.target);
               if (!sourceNode || !targetNode) return null;
@@ -576,13 +645,14 @@ export default function GraphView({ graphId, onNodeClick }) {
               );
             })}
           </g>
+          </g>
         </svg>
 
         {/* Side Stats Panel */}
         <div className="graph-stats-modern">
           <div className="stats-header">
-            <span className="stats-icon">📊</span>
-            <h3>Network Stats</h3>
+            <span className="stats-icon"></span>
+            <h2>Network Stats</h2>
           </div>
           
           <div className="stat-card">

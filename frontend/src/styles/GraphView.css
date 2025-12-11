@@ -236,18 +236,18 @@
   transition: all 0.3s ease;
 }
 
-.node-circle {
+/* .node-circle {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .node-glow-ring {
   animation: glow-pulse 1.5s ease-in-out infinite;
-}
+} */
 
-@keyframes glow-pulse {
+/* @keyframes glow-pulse {
   0%, 100% { opacity: 0.3; transform: scale(1); }
   50% { opacity: 0.6; transform: scale(1.1); }
-}
+} */
 
 .node-label-modern {
   pointer-events: none;
@@ -267,14 +267,16 @@
 
 .graph-stats-modern {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 220px;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 225px;
+  max-height: calc(100vh - 180px);
+  overflow-y: auto;
   background: rgba(26, 26, 46, 0.95);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(157, 78, 221, 0.3);
-  border-radius: 16px;
-  padding: 1rem;
+  border-radius: 10px;
+  padding: 0.5rem;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   z-index: 10;
 }
@@ -282,67 +284,67 @@
 .stats-header {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.25rem;
-  padding-bottom: 1rem;
-  border-bottom: 2px solid rgba(157, 78, 221, 0.2);
+  gap: 0.35rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid rgba(157, 78, 221, 0.2);
 }
 
 .stats-icon {
-  font-size: 1.5rem;
+  font-size: 0.85rem;
 }
 
 .stats-header h3 {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.95);
 }
 
 .stat-card {
-  padding: 0.875rem;
+  padding: 0.3rem 0.4rem;
   background: rgba(157, 78, 221, 0.1);
   border: 1px solid rgba(157, 78, 221, 0.2);
-  border-radius: 10px;
-  margin-bottom: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 0.3rem;
   transition: all 0.3s ease;
 }
 
 .stat-card:hover {
   background: rgba(157, 78, 221, 0.15);
   border-color: rgba(157, 78, 221, 0.4);
-  transform: translateX(4px);
+  transform: translateX(2px);
 }
 
 .stat-label {
-  font-size: 0.75rem;
+  font-size: 0.55rem;
   color: rgba(255, 255, 255, 0.6);
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 0.4rem;
+  letter-spacing: 0.2px;
+  margin-bottom: 0.1rem;
   display: block;
 }
 
 .stat-value {
-  font-size: 1.5rem;
+  font-size: 0.85rem;
   font-weight: 700;
   color: rgba(255, 255, 255, 0.95);
   display: block;
 }
 
 .stats-divider {
-  height: 2px;
+  height: 1px;
   background: linear-gradient(90deg, transparent 0%, rgba(157, 78, 221, 0.3) 50%, transparent 100%);
-  margin: 1.25rem 0;
+  margin: 0.4rem 0;
 }
 
 .selected-node-info,
 .hovered-node-info {
-  padding: 1rem;
+  padding: 0.4rem;
   background: rgba(59, 130, 246, 0.1);
   border: 1px solid rgba(59, 130, 246, 0.3);
-  border-radius: 10px;
+  border-radius: 6px;
   animation: fadeIn 0.3s ease;
 }
 
@@ -353,24 +355,25 @@
 
 .selected-badge,
 .hovered-badge {
-  font-size: 0.7rem;
+  font-size: 0.5rem;
   color: rgba(255, 255, 255, 0.6);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.2px;
   font-weight: 600;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.15rem;
 }
 
 .selected-name,
 .hovered-name {
-  font-size: 1.1rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.95);
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.1rem;
+  word-break: break-word;
 }
 
 .selected-id {
-  font-size: 0.85rem;
+  font-size: 0.6rem;
   color: rgba(255, 255, 255, 0.7);
 }
 
@@ -519,4 +522,102 @@
 
 .algorithm-btn:active:not(:disabled) {
   transform: translateY(0);
+}
+
+/* Zoom Controls */
+.zoom-controls-modern {
+  position: absolute;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(26, 26, 46, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 0.5rem 0.75rem;
+  border-radius: 12px;
+  border: 1px solid rgba(157, 78, 221, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  z-index: 100;
+}
+
+.zoom-controls-modern button {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(157, 78, 221, 0.2);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.25rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.zoom-controls-modern button:hover {
+  background: rgba(157, 78, 221, 0.4);
+  transform: scale(1.05);
+}
+
+.zoom-controls-modern button:active {
+  transform: scale(0.95);
+}
+
+.zoom-controls-modern span {
+  min-width: 50px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Header Zoom Controls */
+.zoom-controls-header {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(157, 78, 221, 0.1);
+  padding: 0.35rem 0.5rem;
+  border-radius: 8px;
+  border: 1px solid rgba(157, 78, 221, 0.25);
+}
+
+.zoom-btn-header {
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 6px;
+  background: rgba(157, 78, 221, 0.2);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.zoom-btn-header:hover {
+  background: rgba(157, 78, 221, 0.4);
+  transform: scale(1.05);
+}
+
+.zoom-btn-header:active {
+  transform: scale(0.95);
+}
+
+.zoom-btn-header.reset {
+  font-size: 0.9rem;
+}
+
+.zoom-level-header {
+  min-width: 42px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.75rem;
+  font-weight: 500;
 }
