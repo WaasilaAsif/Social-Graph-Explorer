@@ -636,14 +636,39 @@ export default function MessagingHub() {
                   type="number"
                   placeholder="Enter User ID"
                   min="1"
+                  value={pathDestId}
                   onChange={(e) => {
+                    setPathDestId(e.target.value);
                     const destId = parseInt(e.target.value);
                     if (destId && destId !== currentUserId) {
                       findShortestPath(destId);
+                    } else {
+                      setPathResult(null);
                     }
                   }}
                 />
               </div>
+              
+              {/* Display path result */}
+              {pathResult !== null && (
+                <div className="path-result">
+                  {pathResult.length > 0 ? (
+                    <>
+                      <p className="path-label">Shortest messaging path ({pathResult.length} hops):</p>
+                      <div className="path-chain">
+                        {pathResult.map((node, idx) => (
+                          <span key={node.id} className="path-node">
+                            <span className="path-user">{node.username}</span>
+                            {idx < pathResult.length - 1 && <span className="path-arrow">→</span>}
+                          </span>
+                        ))}
+                      </div>
+                    </>
+                  ) : (
+                    <p className="no-path">No messaging path found to this user</p>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>

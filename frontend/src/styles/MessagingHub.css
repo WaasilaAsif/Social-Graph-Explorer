@@ -951,6 +951,17 @@
   margin: 0 0.25rem;
 }
 
+.path-label {
+  color: #a0a0a0;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.no-path {
+  color: #ff6b6b;
+  font-style: italic;
+}
+
 .contact-weight {
   color: rgba(255, 255, 255, 0.4);
   font-size: 0.875rem;
