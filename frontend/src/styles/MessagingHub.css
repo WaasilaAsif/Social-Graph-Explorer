@@ -896,10 +896,12 @@
 
 .path-input {
   margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
 }
 
 .path-input input {
-  width: 100%;
+  flex: 1;
   padding: 0.875rem 1rem;
   background: #14141a;
   border: 1px solid rgba(157, 78, 221, 0.2);
@@ -911,6 +913,42 @@
 .path-input input:focus {
   outline: none;
   border-color: #9d4edd;
+}
+
+.path-result {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: rgba(157, 78, 221, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(157, 78, 221, 0.2);
+}
+
+.path-chain {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.path-node {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.path-user {
+  padding: 0.35rem 0.75rem;
+  background: linear-gradient(135deg, #9d4edd 0%, #7b2cbf 100%);
+  border-radius: 16px;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.path-arrow {
+  color: #9d4edd;
+  font-size: 1rem;
+  margin: 0 0.25rem;
 }
 
 .contact-weight {

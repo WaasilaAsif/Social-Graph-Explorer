@@ -6,13 +6,34 @@ MsgPopularityRanker::MsgPopularityRanker(ConversationGraph* graph)
 DynamicArray<Pair<int, int>> MsgPopularityRanker::rankUsersByMessagePopularity(int topN) {
     DynamicArray<Pair<int, int>> rankings; // (userId, totalInteractions)
     
-    // We need to collect all users and their total interaction counts
-    // Since we don't have getAllUsers(), we'll need to track users as we find them
-    HashMap<int, int> userPopularity; // userId -> total interaction weight
+    // Get all users from the conversation graph
+    DynamicArray<int> allUsers = convGraph->getAllUsers();
     
-    // This is a limitation - we can't easily iterate all users in the graph
-    // without a getAllUsers() method. For now, return empty.
-    // In a real implementation, ConversationGraph should provide getAllUsers()
+    // Build a list of (userId, totalInteractions)
+    DynamicArray<Pair<int, int>> userScores;
+    for (int i = 0; i < allUsers.size(); i++) {
+        int userId = allUsers.get(i);
+        int totalInteractions = convGraph->getTotalInteractions(userId);
+        userScores.push_back(Pair<int, int>(userId, totalInteractions));
+    }
+    
+    // Sort by interactions (descending) using simple bubble sort
+    for (int i = 0; i < userScores.size() - 1; i++) {
+        for (int j = 0; j < userScores.size() - i - 1; j++) {
+            if (userScores.get(j).second < userScores.get(j + 1).second) {
+                // Swap
+                Pair<int, int> temp = userScores.get(j);
+                userScores.get(j) = userScores.get(j + 1);
+                userScores.get(j + 1) = temp;
+            }
+        }
+    }
+    
+    // Take top N
+    int count = (topN < userScores.size()) ? topN : userScores.size();
+    for (int i = 0; i < count; i++) {
+        rankings.push_back(userScores.get(i));
+    }
     
     return rankings;
 }

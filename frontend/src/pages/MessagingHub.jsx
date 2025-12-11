@@ -20,6 +20,8 @@ export default function MessagingHub() {
   const [popularUsers, setPopularUsers] = useState([]);
   const [mutualInteractions, setMutualInteractions] = useState([]);
   const [searchMessagesDetails, setSearchMessagesDetails] = useState([]);
+  const [pathResult, setPathResult] = useState(null);
+  const [pathDestId, setPathDestId] = useState('');
 
   // Load analytics data on mount and when user changes
   useEffect(() => {
@@ -88,19 +90,22 @@ export default function MessagingHub() {
       );
       setSuggestions(suggestionsList);
 
-      // Load popular users - use algorithm API which is working
-      const popularData = await algoAPI.getTopPopular(10);
-      const popularList = await Promise.all(
-        (popularData.topUsers || []).map(async (user) => {
-          const username = await getUserDetails(user.userId);
-          return {
-            userId: user.userId,
-            username: username,
-            popularity: user.score // Use score as popularity count
-          };
-        })
-      );
-      setPopularUsers(popularList);
+      // Load popular users - use messaging rank API
+      const popularResponse = await fetch(`http://localhost:8082/msg/rank/10`);
+      if (popularResponse.ok) {
+        const popularData = await popularResponse.json();
+        const popularList = await Promise.all(
+          (popularData.rank || []).map(async (user) => {
+            const username = await getUserDetails(user.userId);
+            return {
+              userId: user.userId,
+              username: username,
+              popularity: user.popularity
+            };
+          })
+        );
+        setPopularUsers(popularList);
+      }
 
       // Load mutual interactions
       const mutualData = await messagingAPI.getMutualInteractions(currentUserId);
@@ -226,23 +231,34 @@ export default function MessagingHub() {
   };
 
   const findShortestPath = async (destUserId) => {
+    if (!destUserId || destUserId === currentUserId) {
+      setPathResult(null);
+      return null;
+    }
+    
     setLoading(true);
     setError(null);
     
     try {
       const data = await messagingAPI.getShortestPath(currentUserId, destUserId);
       
-      const pathWithNames = await Promise.all(
-        (data.path || []).map(async (userId) => ({
-          id: userId,
-          username: await getUserDetails(userId)
-        }))
-      );
-      
-      return pathWithNames;
+      if (data.path && data.path.length > 0) {
+        const pathWithNames = await Promise.all(
+          data.path.map(async (userId) => ({
+            id: userId,
+            username: await getUserDetails(userId)
+          }))
+        );
+        setPathResult(pathWithNames);
+        return pathWithNames;
+      } else {
+        setPathResult([]);
+        return [];
+      }
     } catch (err) {
       setError('Failed to find path: ' + err.message);
       console.error(err);
+      setPathResult(null);
       return null;
     } finally {
       setLoading(false);
@@ -500,7 +516,7 @@ export default function MessagingHub() {
                     <div key={user.userId} className="user-item">
                       <span className="rank">#{idx + 1}</span>
                       <span className="user-name">{user.username}</span>
-                      <span className="popularity-score">{user.popularity} friends</span>
+                      <span className="popularity-score">{user.popularity} interactions</span>
                     </div>
                   ))
                 )}
@@ -579,14 +595,39 @@ export default function MessagingHub() {
                   type="number"
                   placeholder="Enter User ID"
                   min="1"
-                  onChange={(e) => {
-                    const destId = parseInt(e.target.value);
+                  value={pathDestId}
+                  onChange={(e) => setPathDestId(e.target.value)}
+                />
+                <button 
+                  className="action-btn"
+                  onClick={() => {
+                    const destId = parseInt(pathDestId);
                     if (destId && destId !== currentUserId) {
                       findShortestPath(destId);
                     }
                   }}
-                />
+                  disabled={!pathDestId || parseInt(pathDestId) === currentUserId}
+                >
+                  Find Path
+                </button>
               </div>
+              
+              {pathResult && (
+                <div className="path-result">
+                  {pathResult.length === 0 ? (
+                    <p className="no-data">No path found to this user</p>
+                  ) : (
+                    <div className="path-chain">
+                      {pathResult.map((user, idx) => (
+                        <span key={user.id} className="path-node">
+                          <span className="path-user">{user.username}</span>
+                          {idx < pathResult.length - 1 && <span className="path-arrow">→</span>}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>

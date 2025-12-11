@@ -19,6 +19,8 @@ public:
     DynamicArray<int> getNeighbors(int user) const;
     int getInteractionWeight(int userA, int userB) const;
     bool userExists(int user) const;
+    DynamicArray<int> getAllUsers() const;
+    int getTotalInteractions(int user) const;
 };
 
 #endif

@@ -74,3 +74,20 @@ int ConversationGraph::getInteractionWeight(int userA, int userB) const {
 bool ConversationGraph::userExists(int user) const {
     return adj.contains(user);
 }
+
+DynamicArray<int> ConversationGraph::getAllUsers() const {
+    return adj.keys();
+}
+
+int ConversationGraph::getTotalInteractions(int user) const {
+    if (!adj.contains(user)) {
+        return 0;
+    }
+
+    int total = 0;
+    DynamicArray<Pair<int, int>> neighbors = adj.get(user);
+    for (int i = 0; i < neighbors.size(); i++) {
+        total += neighbors.get(i).second;
+    }
+    return total;
+}
