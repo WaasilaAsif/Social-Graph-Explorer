@@ -4,7 +4,19 @@ import { MessageSquare, Send, Search, Users, Clock, TrendingUp, Users2, Route } 
 import '../styles/MessagingHub.css';
 
 export default function MessagingHub() {
-  const [currentUserId, setCurrentUserId] = useState(1); // Default logged-in user
+  // Get logged-in user from localStorage
+  const [currentUserId, setCurrentUserId] = useState(() => {
+    try {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        const parsed = JSON.parse(storedUser);
+        return parsed.userId || 1;
+      }
+    } catch (err) {
+      console.error('Error reading user from localStorage:', err);
+    }
+    return 1; // Fallback to user 1
+  });
   const [selectedContact, setSelectedContact] = useState(null);
   const [contacts, setContacts] = useState([]);
   const [allMessages, setAllMessages] = useState([]);
@@ -45,6 +57,7 @@ export default function MessagingHub() {
       return fallback;
     }
   };
+  
 
   const loadMessages = async () => {
     try {
@@ -348,7 +361,6 @@ export default function MessagingHub() {
                 contacts.map((contact) => (
                   <div
                     key={contact.userId}
-                    className={`contact-item ${selectedContact?.userId === contact.userId ? 'active' : ''}`}
                     onClick={() => setSelectedContact(contact)}
                   >
                     <div className="contact-avatar">

@@ -4,6 +4,7 @@
 #include "../../algorithms/BFS.h"
 #include "../../algorithms/DFS.h"
 #include "../../analytics/Graphstats.h"  
+#include "../../storage/JSONWriter.h"
 #include <iostream>
 #include "../../libs/crow/nlohmann/json.hpp"
 #include <fstream>
@@ -49,16 +50,7 @@ void UserManager::loadFromFile() {
             }
         }
         
-        // Load connections/friendships
-        if (data.contains("connections") && data["connections"].is_array()) {
-            for (const auto& conn : data["connections"]) {
-                int userA = conn["userA"];
-                int userB = conn["userB"];
-                if (socialGraph.hasNode(userA) && socialGraph.hasNode(userB)) {
-                    socialGraph.addEdge(userA, userB, 1, true);
-                }
-            }
-        }
+        
         
         std::cout << "Loaded " << users.size() << " users from database." << std::endl;
         
@@ -86,7 +78,6 @@ void UserManager::saveToFile() {
     
     json data;
     json usersArray = json::array();
-    json connectionsArray = json::array();
     
     // Save users
     for (int i = 0; i < users.size(); i++) {
@@ -107,24 +98,9 @@ void UserManager::saveToFile() {
         
         usersArray.push_back(userJson);
         
-        // Save connections (only save once per edge)
-        if (socialGraph.hasNode(user.getId())) {
-            const LinkedList<Edge>& neighbors = socialGraph.getNeighbors(user.getId());
-            for (int j = 0; j < neighbors.size(); j++) {
-                int friendId = neighbors[j].to;
-                // Only save if current user ID < friend ID (to avoid duplicates)
-                if (user.getId() < friendId) {
-                    json conn;
-                    conn["userA"] = user.getId();
-                    conn["userB"] = friendId;
-                    connectionsArray.push_back(conn);
-                }
-            }
-        }
     }
     
     data["users"] = usersArray;
-    data["connections"] = connectionsArray;
     
     // Write to file
     std::ofstream file(dbFilePath);
@@ -150,10 +126,10 @@ void UserManager::addUser(const std::string& name, const std::string& password) 
     User newUser(name, password);
     users.push_back(newUser);
     usernameTrie.insert(name);
-    
+    saveToFile();
     // *** ADD: Add user to social graph ***
     socialGraph.addNode(newUser.getId());
-    saveToFile();
+    
 }
 
 // Get all users (const access)
@@ -179,6 +155,8 @@ bool UserManager::removeUserById(int id) {
     // Remove from social graph
     if (socialGraph.hasNode(id)) {
         socialGraph.removeNode(id);
+        // Save friendships after removing user's edges
+        saveFriendshipsToJSON(socialGraph, "../storage/local_db/friendships.json");
     }
     // REMOVE FROM TRIE
     usernameTrie.remove(username);
