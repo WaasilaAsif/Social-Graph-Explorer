@@ -41,12 +41,24 @@ export default function MessagingHub() {
     loadMessages();
   }, [currentUserId]);
 
+  // Cache for deleted user status
+  const [deletedUsers, setDeletedUsers] = useState(new Set());
+
   const getUserDetails = async (userId) => {
     if (userCache.has(userId)) {
       return userCache.get(userId);
     }
     try {
       const response = await userAPI.getUser(userId);
+      
+      // Check if user is deleted
+      if (response.deleted) {
+        const deletedName = 'Deleted User';
+        setUserCache(prev => new Map(prev).set(userId, deletedName));
+        setDeletedUsers(prev => new Set(prev).add(userId));
+        return deletedName;
+      }
+      
       const username = response.user?.username || response.username || `User ${userId}`;
       setUserCache(prev => new Map(prev).set(userId, username));
       return username;
@@ -57,6 +69,9 @@ export default function MessagingHub() {
       return fallback;
     }
   };
+
+  // Check if selected contact is a deleted user
+  const isSelectedContactDeleted = selectedContact && deletedUsers.has(selectedContact.userId);
   
 
   const loadMessages = async () => {
@@ -361,14 +376,17 @@ export default function MessagingHub() {
                 contacts.map((contact) => (
                   <div
                     key={contact.userId}
+                    className={`contact-item ${selectedContact?.userId === contact.userId ? 'active' : ''} ${deletedUsers.has(contact.userId) ? 'deleted-user' : ''}`}
                     onClick={() => setSelectedContact(contact)}
                   >
-                    <div className="contact-avatar">
-                      {contact.username.charAt(0).toUpperCase()}
+                    <div className={`contact-avatar ${deletedUsers.has(contact.userId) ? 'deleted-avatar' : ''}`}>
+                      {deletedUsers.has(contact.userId) ? '?' : contact.username.charAt(0).toUpperCase()}
                     </div>
                     <div className="contact-info">
                       <div className="contact-header">
-                        <span className="contact-name">{contact.username}</span>
+                        <span className={`contact-name ${deletedUsers.has(contact.userId) ? 'deleted-name' : ''}`}>
+                          {contact.username}
+                        </span>
                         <span className="contact-weight">({contact.weight} msgs)</span>
                       </div>
                     </div>
@@ -383,12 +401,18 @@ export default function MessagingHub() {
               <>
                 <div className="chat-header">
                   <div className="chat-header-info">
-                    <div className="chat-avatar">
-                      {selectedContact.username.charAt(0).toUpperCase()}
+                    <div className={`chat-avatar ${isSelectedContactDeleted ? 'deleted-avatar' : ''}`}>
+                      {isSelectedContactDeleted ? '?' : selectedContact.username.charAt(0).toUpperCase()}
                     </div>
                     <div>
-                      <h3>{selectedContact.username}</h3>
-                      <span className="status-indicator">{selectedContact.weight} messages exchanged</span>
+                      <h3 className={isSelectedContactDeleted ? 'deleted-name' : ''}>
+                        {selectedContact.username}
+                      </h3>
+                      <span className="status-indicator">
+                        {isSelectedContactDeleted 
+                          ? 'This user no longer exists' 
+                          : `${selectedContact.weight} messages exchanged`}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -408,10 +432,10 @@ export default function MessagingHub() {
                       >
                         <div className="message-bubble">
                           <p>{msg.text}</p>
-                          <span className="message-time">
+                          {/* <span className="message-time">
                             <Clock size={12} />
                             {formatTime(msg.timestamp)}
-                          </span>
+                          </span> */}
                         </div>
                       </div>
                     ))
@@ -419,22 +443,27 @@ export default function MessagingHub() {
                 </div>
 
                 <div className="chat-input-container">
+                  {isSelectedContactDeleted && (
+                    <div className="deleted-user-banner">
+                      <span> You can no longer send messages because this user no longer exists.</span>
+                    </div>
+                  )}
                   {error && (
                     <div className="error-banner">{error}</div>
                   )}
-                  <div className="chat-input">
+                  <div className={`chat-input ${isSelectedContactDeleted ? 'disabled' : ''}`}>
                     <textarea
                       value={messageText}
                       onChange={(e) => setMessageText(e.target.value)}
                       onKeyPress={handleKeyPress}
-                      placeholder="Type a message..."
+                      placeholder={isSelectedContactDeleted ? 'Cannot send messages to deleted user' : 'Type a message...'}
                       rows={1}
-                      disabled={loading}
+                      disabled={loading || isSelectedContactDeleted}
                     />
                     <button
-                      className="send-button"
+                      className={`send-button ${isSelectedContactDeleted ? 'disabled' : ''}`}
                       onClick={handleSendMessage}
-                      disabled={loading || !messageText.trim()}
+                      disabled={loading || !messageText.trim() || isSelectedContactDeleted}
                     >
                       <Send size={20} />
                     </button>

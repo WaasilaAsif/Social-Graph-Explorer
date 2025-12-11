@@ -974,3 +974,47 @@
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
+
+/* Deleted User Styles */
+.deleted-avatar {
+  background: #3a3a4a !important;
+  color: #888 !important;
+}
+
+.deleted-name {
+  color: #888 !important;
+  font-style: italic;
+}
+
+.deleted-user {
+  opacity: 0.7;
+}
+
+.deleted-user-banner {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+  color: #f87171;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.chat-input.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.chat-input.disabled textarea {
+  background: #1a1a24;
+  cursor: not-allowed;
+}
+
+.send-button.disabled {
+  background: #3a3a4a !important;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
