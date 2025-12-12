@@ -4,7 +4,7 @@ Complete guide to all graph endpoints with real examples, expected outputs, and 
 
 ---
 
-## 📋 Table of Contents
+##  Table of Contents
 
 1. [Overview](#overview)
 2. [Data Structures](#data-structures)

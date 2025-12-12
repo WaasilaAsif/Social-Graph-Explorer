@@ -50,8 +50,7 @@
                 "Coffee and code, the perfect combo",
                 "Just deployed my first C++ server!",
                 "Learning graph algorithms is fascinating",
-                "Coffee and code, the perfect combo",
-                "hello world I am sickof it\n"
+                "Coffee and code, the perfect combo"
             ],
             "username": "alice_smith"
         },
@@ -326,59 +325,10 @@
             "username": "frank_miller"
         },
         {
-            "id": 7,
-            "password": "pass123",
-            "posts": [
-                "Graph traversal algorithms rock",
-                "Working on friend suggestions feature",
-                "Code review time!",
-                "Graph traversal algorithms rock",
-                "Working on friend suggestions feature",
-                "Code review time!",
-                "Graph traversal algorithms rock",
-                "Working on friend suggestions feature",
-                "Code review time!",
-                "Graph traversal algorithms rock",
-                "Working on friend suggestions feature",
-                "Code review time!",
-                "Graph traversal algorithms rock",
-                "Working on friend suggestions feature",
-                "Code review time!",
-                "Graph traversal algorithms rock",
-                "Working on friend suggestions feature",
-                "Code review time!",
-                "Graph traversal algorithms rock",
-                "Working on friend suggestions feature",
-                "Code review time!",
-                "Graph traversal algorithms rock",
-                "Working on friend suggestions feature",
-                "Code review time!",
-                "Graph traversal algorithms rock",
-                "Working on friend suggestions feature",
-                "Code review time!",
-                "Graph traversal algorithms rock",
-                "Working on friend suggestions feature",
-                "Code review time!",
-                "Graph traversal algorithms rock",
-                "Working on friend suggestions feature",
-                "Code review time!",
-                "Graph traversal algorithms rock",
-                "Working on friend suggestions feature",
-                "Code review time!",
-                "Graph traversal algorithms rock",
-                "Working on friend suggestions feature",
-                "Code review time!",
-                "Graph traversal algorithms rock",
-                "Working on friend suggestions feature",
-                "Code review time!",
-                "Graph traversal algorithms rock",
-                "Working on friend suggestions feature",
-                "Code review time!",
-                "Graph traversal algorithms rock",
-                "Working on friend suggestions feature",
-                "Code review time!"
-            ],
-            "username": "grace_lee"
+            "id": 322,
+            "password": "ChocolateChipCookies",
+            "posts": [],
+            "username": "Hania"
         },
         {
             "id": 8,
@@ -2866,46 +2816,10 @@
             "username": "sam_lopez"
         },
         {
-            "id": 320,
+            "id": 321,
             "password": "messi",
             "posts": [],
             "username": "ronaldo"
-        },
-        {
-            "id": 321,
-            "password": "ChocolateChipCookies",
-            "posts": [],
-            "username": "Hania"
-        },
-        {
-            "id": 322,
-            "password": "123456",
-            "posts": [],
-            "username": "hello"
-        },
-        {
-            "id": 323,
-            "password": "123456",
-            "posts": [],
-            "username": "helloWorld"
-        },
-        {
-            "id": 324,
-            "password": "123456",
-            "posts": [],
-            "username": "abcdefg"
-        },
-        {
-            "id": 325,
-            "password": "123456",
-            "posts": [],
-            "username": "waasila"
-        },
-        {
-            "id": 326,
-            "password": "orange",
-            "posts": [],
-            "username": "peace"
         }
     ]
 }

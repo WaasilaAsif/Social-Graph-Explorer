@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { userAPI, graphAPI, algoAPI, messagingAPI } from '../services/api';
 import { 
   Users, TrendingUp, MessageSquare, Target, 
-  UserPlus, Activity, Award, Network 
+  UserPlus, Activity, Award, Network, MoreVertical, UserMinus 
 } from 'lucide-react';
 import '../styles/Dashboard.css';
 
@@ -19,10 +19,13 @@ interface UserProfile {
 }
 
 interface GraphStats {
-  totalNodes: number;
-  totalEdges: number;
-  avgDegree: number;
+  nodeCount: number;
+  edgeCount: number;
+  averageDegree: number;
   components: number;
+  density: number;
+  connected: boolean;
+  diameter: number;
 }
 
 export default function Dashboard({ userId, username, onOpenTab }: DashboardProps) {
@@ -39,6 +42,28 @@ export default function Dashboard({ userId, username, onOpenTab }: DashboardProp
   const [newPost, setNewPost] = useState('');
   const [topConversations, setTopConversations] = useState<any[]>([]);
   const [messagingSuggestions, setMessagingSuggestions] = useState<any[]>([]);
+  const [openMenuId, setOpenMenuId] = useState<number | null>(null);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setOpenMenuId(null);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Auto-hide toast after 3 seconds
+  useEffect(() => {
+    if (toast) {
+      const timer = setTimeout(() => setToast(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [toast]);
 
   useEffect(() => {
     loadDashboardData();
@@ -75,12 +100,77 @@ export default function Dashboard({ userId, username, onOpenTab }: DashboardProp
       ]);
 
       if (profileData.status === 'fulfilled') setProfile(profileData.value);
-      if (friendsData.status === 'fulfilled') setFriends(friendsData.value.friends || []);
+      
+      // Handle friends - fetch usernames for each friend
+      if (friendsData.status === 'fulfilled' && friendsData.value.friends) {
+        const friendsWithDetails = await Promise.all(
+          friendsData.value.friends.map(async (friend: any) => {
+            try {
+              const userDetails = await userAPI.getUser(friend.id);
+              return {
+                id: friend.id,
+                username: userDetails.user?.username || userDetails.username || `User ${friend.id}`
+              };
+            } catch (error) {
+              return {
+                id: friend.id,
+                username: `User ${friend.id}`
+              };
+            }
+          })
+        );
+        setFriends(friendsWithDetails);
+      }
+      
       if (degreeData.status === 'fulfilled') setFriendCount(degreeData.value.degree || 0);
       if (rankData.status === 'fulfilled') setUserRank(rankData.value.rank);
       if (statsData.status === 'fulfilled') setGraphStats(statsData.value);
-      if (popularData.status === 'fulfilled') setTopPopular(popularData.value.users || []);
-      if (suggestionsData.status === 'fulfilled') setFriendSuggestions(suggestionsData.value.suggestions || []);
+      
+      // Handle top popular users - fetch usernames for each user
+      if (popularData.status === 'fulfilled' && popularData.value.topUsers) {
+        const topUsersWithDetails = await Promise.all(
+          popularData.value.topUsers.map(async (user: any) => {
+            try {
+              const userDetails = await userAPI.getUser(user.userId);
+              return {
+                userId: user.userId,
+                username: userDetails.user?.username || userDetails.username || `User ${user.userId}`,
+                score: user.score
+              };
+            } catch (error) {
+              return {
+                userId: user.userId,
+                username: `User ${user.userId}`,
+                score: user.score
+              };
+            }
+          })
+        );
+        setTopPopular(topUsersWithDetails);
+      }
+      
+      // Handle friend suggestions - fetch usernames for each suggestion
+      if (suggestionsData.status === 'fulfilled' && suggestionsData.value.suggestions) {
+        const suggestionsWithDetails = await Promise.all(
+          suggestionsData.value.suggestions.map(async (suggestion: any) => {
+            try {
+              const userDetails = await userAPI.getUser(suggestion.userId);
+              return {
+                userId: suggestion.userId,
+                username: userDetails.user?.username || userDetails.username || `User ${suggestion.userId}`,
+                mutualFriends: suggestion.mutualFriends || 0
+              };
+            } catch (error) {
+              return {
+                userId: suggestion.userId,
+                username: `User ${suggestion.userId}`,
+                mutualFriends: suggestion.mutualFriends || 0
+              };
+            }
+          })
+        );
+        setFriendSuggestions(suggestionsWithDetails);
+      }
       if (twoHopData.status === 'fulfilled') setTwoHopFriends(twoHopData.value.twoHopFriends || []);
       if (postsData.status === 'fulfilled') setPosts(postsData.value.posts || []);
       if (topKData.status === 'fulfilled') setTopConversations(topKData.value.conversations || []);
@@ -129,6 +219,27 @@ export default function Dashboard({ userId, username, onOpenTab }: DashboardProp
       console.error('Error adding friend:', error);
       alert('Failed to add friend');
     }
+  };
+
+  const handleRemoveFriend = async (friendId: number, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent opening user profile
+    setOpenMenuId(null);
+    
+    try {
+      await graphAPI.removeFriend(userId, friendId);
+      // Visually remove the friend from the list immediately
+      setFriends(prev => prev.filter(f => f.id !== friendId));
+      setFriendCount(prev => Math.max(0, prev - 1));
+      setToast({ message: 'Friend removed successfully.', type: 'success' });
+    } catch (error) {
+      console.error('Error removing friend:', error);
+      setToast({ message: 'Unable to remove friend. Please try again.', type: 'error' });
+    }
+  };
+
+  const toggleMenu = (friendId: number, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent opening user profile
+    setOpenMenuId(openMenuId === friendId ? null : friendId);
   };
 
   if (loading) {
@@ -185,7 +296,7 @@ export default function Dashboard({ userId, username, onOpenTab }: DashboardProp
           </div>
         </div>
 
-        <div className="stat-card">
+        {/* <div className="stat-card">
           <div className="stat-icon">
             <Network size={24} />
           </div>
@@ -194,7 +305,7 @@ export default function Dashboard({ userId, username, onOpenTab }: DashboardProp
             <p className="stat-value">{graphStats?.totalNodes || 0}</p>
             <span className="stat-label">Total users</span>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Main Content Grid */}
@@ -209,11 +320,29 @@ export default function Dashboard({ userId, username, onOpenTab }: DashboardProp
             {friends.length === 0 ? (
               <p className="empty-state">No friends yet. Start connecting!</p>
             ) : (
-              <div className="friends-list">
+              <div className="friends-list" ref={menuRef}>
                 {friends.slice(0, 8).map((friend) => (
                   <div key={friend.id} className="friend-item" onClick={() => onOpenTab?.('user', { user: { id: friend.id, name: friend.username || `User ${friend.id}` } })}>
                     <div className="friend-avatar">{friend.username?.charAt(0).toUpperCase() || 'U'}</div>
                     <span className="friend-name">{friend.username || `User ${friend.id}`}</span>
+                    <button 
+                      className="friend-menu-btn"
+                      onClick={(e) => toggleMenu(friend.id, e)}
+                      aria-label="Friend options"
+                    >
+                      <MoreVertical size={16} />
+                    </button>
+                    {openMenuId === friend.id && (
+                      <div className="friend-dropdown">
+                        <button 
+                          className="dropdown-item remove"
+                          onClick={(e) => handleRemoveFriend(friend.id, e)}
+                        >
+                          <UserMinus size={14} />
+                          Remove Friend
+                        </button>
+                      </div>
+                    )}
                   </div>
                 ))}
                 {friends.length > 8 && (
@@ -320,7 +449,7 @@ export default function Dashboard({ userId, username, onOpenTab }: DashboardProp
                     <span className="rank">#{index + 1}</span>
                     <div className="friend-avatar">{user.username?.charAt(0).toUpperCase() || 'U'}</div>
                     <span className="leaderboard-name">{user.username || `User ${user.userId}`}</span>
-                    <span className="leaderboard-score">{user.degree || 0} friends</span>
+                    <span className="leaderboard-score">{user.score || 0} friends</span>
                   </div>
                 ))}
               </div>
@@ -338,15 +467,15 @@ export default function Dashboard({ userId, username, onOpenTab }: DashboardProp
             <div className="insights-grid">
               <div className="insight-item">
                 <span className="insight-label">Total Users</span>
-                <span className="insight-value">{graphStats?.totalNodes || 0}</span>
+                <span className="insight-value">{graphStats?.nodeCount || 0}</span>
               </div>
               <div className="insight-item">
                 <span className="insight-label">Total Connections</span>
-                <span className="insight-value">{graphStats?.totalEdges || 0}</span>
+                <span className="insight-value">{graphStats?.edgeCount || 0}</span>
               </div>
               <div className="insight-item">
                 <span className="insight-label">Avg. Connections</span>
-                <span className="insight-value">{graphStats?.avgDegree?.toFixed(1) || 0}</span>
+                <span className="insight-value">{graphStats?.averageDegree?.toFixed(1) || 0}</span>
               </div>
               <div className="insight-item">
                 <span className="insight-label">Network Components</span>
@@ -361,43 +490,14 @@ export default function Dashboard({ userId, username, onOpenTab }: DashboardProp
           </div>
         </div>
 
-        {/* Messaging Activity */}
-        <div className="dashboard-card">
-          <div className="card-header">
-            <Target size={20} />
-            <h2>Messaging Activity</h2>
-          </div>
-          <div className="card-content">
-            {topConversations.length === 0 ? (
-              <p className="empty-state">No messaging activity yet</p>
-            ) : (
-              <div className="messaging-list">
-                <h4>Top Conversations</h4>
-                {topConversations.map((conv, index) => (
-                  <div key={index} className="messaging-item">
-                    <div className="friend-avatar">{conv.username?.charAt(0).toUpperCase() || 'U'}</div>
-                    <div className="messaging-info">
-                      <span className="messaging-name">{conv.username || `User ${conv.userId}`}</span>
-                      <span className="messaging-count">{conv.count || 0} messages</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-            {messagingSuggestions.length > 0 && (
-              <div className="messaging-suggestions">
-                <h4>Suggested Contacts</h4>
-                {messagingSuggestions.slice(0, 3).map((suggestion, index) => (
-                  <div key={index} className="messaging-item">
-                    <div className="friend-avatar">{suggestion.username?.charAt(0).toUpperCase() || 'U'}</div>
-                    <span className="messaging-name">{suggestion.username || `User ${suggestion.userId}`}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
       </div>
+
+      {/* Toast Notification */}
+      {toast && (
+        <div className={`dashboard-toast ${toast.type}`}>
+          {toast.message}
+        </div>
+      )}
     </div>
   );
 }

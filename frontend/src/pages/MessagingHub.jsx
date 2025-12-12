@@ -1,10 +1,22 @@
 import { useState, useEffect } from 'react';
-import { messagingAPI, userAPI } from '../services/api';
+import { messagingAPI, userAPI, algoAPI } from '../services/api';
 import { MessageSquare, Send, Search, Users, Clock, TrendingUp, Users2, Route } from 'lucide-react';
 import '../styles/MessagingHub.css';
 
 export default function MessagingHub() {
-  const [currentUserId, setCurrentUserId] = useState(1); // Default logged-in user
+  // Get logged-in user from localStorage
+  const [currentUserId, setCurrentUserId] = useState(() => {
+    try {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        const parsed = JSON.parse(storedUser);
+        return parsed.userId || 1;
+      }
+    } catch (err) {
+      console.error('Error reading user from localStorage:', err);
+    }
+    return 1; // Fallback to user 1
+  });
   const [selectedContact, setSelectedContact] = useState(null);
   const [contacts, setContacts] = useState([]);
   const [allMessages, setAllMessages] = useState([]);
@@ -20,6 +32,8 @@ export default function MessagingHub() {
   const [popularUsers, setPopularUsers] = useState([]);
   const [mutualInteractions, setMutualInteractions] = useState([]);
   const [searchMessagesDetails, setSearchMessagesDetails] = useState([]);
+  const [pathResult, setPathResult] = useState(null);
+  const [pathDestId, setPathDestId] = useState('');
 
   // Load analytics data on mount and when user changes
   useEffect(() => {
@@ -27,20 +41,38 @@ export default function MessagingHub() {
     loadMessages();
   }, [currentUserId]);
 
+  // Cache for deleted user status
+  const [deletedUsers, setDeletedUsers] = useState(new Set());
+
   const getUserDetails = async (userId) => {
     if (userCache.has(userId)) {
       return userCache.get(userId);
     }
     try {
-      const response = await userAPI.getUserById(userId);
-      const username = response.username || `User ${userId}`;
+      const response = await userAPI.getUser(userId);
+      
+      // Check if user is deleted
+      if (response.deleted) {
+        const deletedName = 'Deleted User';
+        setUserCache(prev => new Map(prev).set(userId, deletedName));
+        setDeletedUsers(prev => new Set(prev).add(userId));
+        return deletedName;
+      }
+      
+      const username = response.user?.username || response.username || `User ${userId}`;
       setUserCache(prev => new Map(prev).set(userId, username));
       return username;
     } catch (err) {
       console.error(`Failed to fetch user ${userId}:`, err);
-      return `User ${userId}`;
+      const fallback = `User ${userId}`;
+      setUserCache(prev => new Map(prev).set(userId, fallback));
+      return fallback;
     }
   };
+
+  // Check if selected contact is a deleted user
+  const isSelectedContactDeleted = selectedContact && deletedUsers.has(selectedContact.userId);
+  
 
   const loadMessages = async () => {
     try {
@@ -86,15 +118,22 @@ export default function MessagingHub() {
       );
       setSuggestions(suggestionsList);
 
-      // Load popular users
-      const popularData = await messagingAPI.getPopularityRank(10);
-      const popularList = await Promise.all(
-        (popularData.rank || []).map(async (user) => ({
-          ...user,
-          username: await getUserDetails(user.userId)
-        }))
-      );
-      setPopularUsers(popularList);
+      // Load popular users - use messaging rank API
+      const popularResponse = await fetch(`http://localhost:8082/msg/rank/10`);
+      if (popularResponse.ok) {
+        const popularData = await popularResponse.json();
+        const popularList = await Promise.all(
+          (popularData.rank || []).map(async (user) => {
+            const username = await getUserDetails(user.userId);
+            return {
+              userId: user.userId,
+              username: username,
+              popularity: user.popularity
+            };
+          })
+        );
+        setPopularUsers(popularList);
+      }
 
       // Load mutual interactions
       const mutualData = await messagingAPI.getMutualInteractions(currentUserId);
@@ -220,23 +259,34 @@ export default function MessagingHub() {
   };
 
   const findShortestPath = async (destUserId) => {
+    if (!destUserId || destUserId === currentUserId) {
+      setPathResult(null);
+      return null;
+    }
+    
     setLoading(true);
     setError(null);
     
     try {
       const data = await messagingAPI.getShortestPath(currentUserId, destUserId);
       
-      const pathWithNames = await Promise.all(
-        (data.path || []).map(async (userId) => ({
-          id: userId,
-          username: await getUserDetails(userId)
-        }))
-      );
-      
-      return pathWithNames;
+      if (data.path && data.path.length > 0) {
+        const pathWithNames = await Promise.all(
+          data.path.map(async (userId) => ({
+            id: userId,
+            username: await getUserDetails(userId)
+          }))
+        );
+        setPathResult(pathWithNames);
+        return pathWithNames;
+      } else {
+        setPathResult([]);
+        return [];
+      }
     } catch (err) {
       setError('Failed to find path: ' + err.message);
       console.error(err);
+      setPathResult(null);
       return null;
     } finally {
       setLoading(false);
@@ -326,15 +376,17 @@ export default function MessagingHub() {
                 contacts.map((contact) => (
                   <div
                     key={contact.userId}
-                    className={`contact-item ${selectedContact?.userId === contact.userId ? 'active' : ''}`}
+                    className={`contact-item ${selectedContact?.userId === contact.userId ? 'active' : ''} ${deletedUsers.has(contact.userId) ? 'deleted-user' : ''}`}
                     onClick={() => setSelectedContact(contact)}
                   >
-                    <div className="contact-avatar">
-                      {contact.username.charAt(0).toUpperCase()}
+                    <div className={`contact-avatar ${deletedUsers.has(contact.userId) ? 'deleted-avatar' : ''}`}>
+                      {deletedUsers.has(contact.userId) ? '?' : contact.username.charAt(0).toUpperCase()}
                     </div>
                     <div className="contact-info">
                       <div className="contact-header">
-                        <span className="contact-name">{contact.username}</span>
+                        <span className={`contact-name ${deletedUsers.has(contact.userId) ? 'deleted-name' : ''}`}>
+                          {contact.username}
+                        </span>
                         <span className="contact-weight">({contact.weight} msgs)</span>
                       </div>
                     </div>
@@ -349,12 +401,18 @@ export default function MessagingHub() {
               <>
                 <div className="chat-header">
                   <div className="chat-header-info">
-                    <div className="chat-avatar">
-                      {selectedContact.username.charAt(0).toUpperCase()}
+                    <div className={`chat-avatar ${isSelectedContactDeleted ? 'deleted-avatar' : ''}`}>
+                      {isSelectedContactDeleted ? '?' : selectedContact.username.charAt(0).toUpperCase()}
                     </div>
                     <div>
-                      <h3>{selectedContact.username}</h3>
-                      <span className="status-indicator">{selectedContact.weight} messages exchanged</span>
+                      <h3 className={isSelectedContactDeleted ? 'deleted-name' : ''}>
+                        {selectedContact.username}
+                      </h3>
+                      <span className="status-indicator">
+                        {isSelectedContactDeleted 
+                          ? 'This user no longer exists' 
+                          : `${selectedContact.weight} messages exchanged`}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -374,10 +432,10 @@ export default function MessagingHub() {
                       >
                         <div className="message-bubble">
                           <p>{msg.text}</p>
-                          <span className="message-time">
+                          {/* <span className="message-time">
                             <Clock size={12} />
                             {formatTime(msg.timestamp)}
-                          </span>
+                          </span> */}
                         </div>
                       </div>
                     ))
@@ -385,22 +443,27 @@ export default function MessagingHub() {
                 </div>
 
                 <div className="chat-input-container">
+                  {isSelectedContactDeleted && (
+                    <div className="deleted-user-banner">
+                      <span> You can no longer send messages because this user no longer exists.</span>
+                    </div>
+                  )}
                   {error && (
                     <div className="error-banner">{error}</div>
                   )}
-                  <div className="chat-input">
+                  <div className={`chat-input ${isSelectedContactDeleted ? 'disabled' : ''}`}>
                     <textarea
                       value={messageText}
                       onChange={(e) => setMessageText(e.target.value)}
                       onKeyPress={handleKeyPress}
-                      placeholder="Type a message..."
+                      placeholder={isSelectedContactDeleted ? 'Cannot send messages to deleted user' : 'Type a message...'}
                       rows={1}
-                      disabled={loading}
+                      disabled={loading || isSelectedContactDeleted}
                     />
                     <button
-                      className="send-button"
+                      className={`send-button ${isSelectedContactDeleted ? 'disabled' : ''}`}
                       onClick={handleSendMessage}
-                      disabled={loading || !messageText.trim()}
+                      disabled={loading || !messageText.trim() || isSelectedContactDeleted}
                     >
                       <Send size={20} />
                     </button>
@@ -487,13 +550,17 @@ export default function MessagingHub() {
                 Most Popular Users
               </h3>
               <div className="user-list">
-                {popularUsers.map((user, idx) => (
-                  <div key={user.userId} className="user-item">
-                    <span className="rank">#{idx + 1}</span>
-                    <span className="user-name">{user.username}</span>
-                    <span className="popularity-score">{user.popularity} interactions</span>
-                  </div>
-                ))}
+                {popularUsers.length === 0 ? (
+                  <p className="no-data">No popular users found</p>
+                ) : (
+                  popularUsers.map((user, idx) => (
+                    <div key={user.userId} className="user-item">
+                      <span className="rank">#{idx + 1}</span>
+                      <span className="user-name">{user.username}</span>
+                      <span className="popularity-score">{user.popularity} interactions</span>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
 
@@ -569,14 +636,39 @@ export default function MessagingHub() {
                   type="number"
                   placeholder="Enter User ID"
                   min="1"
+                  value={pathDestId}
                   onChange={(e) => {
+                    setPathDestId(e.target.value);
                     const destId = parseInt(e.target.value);
                     if (destId && destId !== currentUserId) {
                       findShortestPath(destId);
+                    } else {
+                      setPathResult(null);
                     }
                   }}
                 />
               </div>
+              
+              {/* Display path result */}
+              {pathResult !== null && (
+                <div className="path-result">
+                  {pathResult.length > 0 ? (
+                    <>
+                      <p className="path-label">Shortest messaging path ({pathResult.length} hops):</p>
+                      <div className="path-chain">
+                        {pathResult.map((node, idx) => (
+                          <span key={node.id} className="path-node">
+                            <span className="path-user">{node.username}</span>
+                            {idx < pathResult.length - 1 && <span className="path-arrow">→</span>}
+                          </span>
+                        ))}
+                      </div>
+                    </>
+                  ) : (
+                    <p className="no-path">No messaging path found to this user</p>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -4,7 +4,7 @@ Comprehensive testing workflows for all 35+ endpoints in the SocialGraphExplorer
 
 ---
 
-## 📋 Quick Links
+##  Quick Links
 
 - **Graph API**: [GRAPH_API_GUIDE.md](GRAPH_API_GUIDE.md) - 9 endpoints
 - **User API**: [USER_API_GUIDE.md](USER_API_GUIDE.md) - 8 endpoints  
@@ -273,12 +273,14 @@ function Test-Endpoint {
         }
         
         $response = Invoke-RestMethod @params
-        Write-Host "✅ PASS: $Name" -ForegroundColor Green
+        Write-Host "[x]
+ PASS: $Name" -ForegroundColor Green
         $testResults.Passed++
         return $response
     }
     catch {
-        Write-Host "❌ FAIL: $Name" -ForegroundColor Red
+        Write-Host "X
+ FAIL: $Name" -ForegroundColor Red
         Write-Host "   Error: $($_.Exception.Message)" -ForegroundColor Red
         $testResults.Failed++
         $testResults.Errors += $Name
@@ -321,8 +323,10 @@ Test-Endpoint -Name "Network Stats" -Method Get -Endpoint "/api/algo/graph-stats
 Write-Host "`n" + "="*50 -ForegroundColor Cyan
 Write-Host "📊 TEST SUMMARY" -ForegroundColor Cyan
 Write-Host "="*50 -ForegroundColor Cyan
-Write-Host "✅ Passed: $($testResults.Passed)" -ForegroundColor Green
-Write-Host "❌ Failed: $($testResults.Failed)" -ForegroundColor Red
+Write-Host "[x]
+ Passed: $($testResults.Passed)" -ForegroundColor Green
+Write-Host "X
+ Failed: $($testResults.Failed)" -ForegroundColor Red
 Write-Host "📈 Success Rate: $([math]::Round(($testResults.Passed / ($testResults.Passed + $testResults.Failed)) * 100, 2))%" -ForegroundColor Cyan
 
 if ($testResults.Failed -gt 0) {
@@ -373,10 +377,12 @@ test_endpoint() {
     http_code=$(echo "$response" | tail -n1)
     
     if [ "$http_code" = "200" ]; then
-        echo "✅ PASS: $name"
+        echo "[x]
+ PASS: $name"
         ((PASS++))
     else
-        echo "❌ FAIL: $name (HTTP $http_code)"
+        echo "X
+ FAIL: $name (HTTP $http_code)"
         ((FAIL++))
     fi
 }
@@ -409,8 +415,10 @@ echo ""
 echo "=================================================="
 echo "📊 TEST SUMMARY"
 echo "=================================================="
-echo "✅ Passed: $PASS"
-echo "❌ Failed: $FAIL"
+echo "[x]
+ Passed: $PASS"
+echo "X
+ Failed: $FAIL"
 echo "📈 Success Rate: ${SUCCESS_RATE}%"
 echo ""
 echo "🎉 Test suite complete!"

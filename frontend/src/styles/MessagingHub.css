@@ -181,8 +181,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-} white-space: nowrap;
-}
+} 
+
 
 .unread-badge {
   background: #9d4edd;
@@ -376,6 +376,10 @@
   cursor: pointer;
   transition: all 0.2s;
   flex-shrink: 0;
+}
+.textarea{
+  width: 90%;
+  padding: 0.5rem;
 }
 
 .send-button:hover:not(:disabled) {
@@ -892,10 +896,12 @@
 
 .path-input {
   margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
 }
 
 .path-input input {
-  width: 100%;
+  flex: 1;
   padding: 0.875rem 1rem;
   background: #14141a;
   border: 1px solid rgba(157, 78, 221, 0.2);
@@ -907,6 +913,53 @@
 .path-input input:focus {
   outline: none;
   border-color: #9d4edd;
+}
+
+.path-result {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: rgba(157, 78, 221, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(157, 78, 221, 0.2);
+}
+
+.path-chain {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.path-node {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.path-user {
+  padding: 0.35rem 0.75rem;
+  background: linear-gradient(135deg, #9d4edd 0%, #7b2cbf 100%);
+  border-radius: 16px;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.path-arrow {
+  color: #9d4edd;
+  font-size: 1rem;
+  margin: 0 0.25rem;
+}
+
+.path-label {
+  color: #a0a0a0;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.no-path {
+  color: #ff6b6b;
+  font-style: italic;
 }
 
 .contact-weight {
@@ -931,4 +984,48 @@
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1rem;
   margin-bottom: 1.5rem;
+}
+
+/* Deleted User Styles */
+.deleted-avatar {
+  background: #3a3a4a !important;
+  color: #888 !important;
+}
+
+.deleted-name {
+  color: #888 !important;
+  font-style: italic;
+}
+
+.deleted-user {
+  opacity: 0.7;
+}
+
+.deleted-user-banner {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+  color: #f87171;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.chat-input.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.chat-input.disabled textarea {
+  background: #1a1a24;
+  cursor: not-allowed;
+}
+
+.send-button.disabled {
+  background: #3a3a4a !important;
+  cursor: not-allowed;
+  opacity: 0.5;
 }

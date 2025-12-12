@@ -1,7 +1,39 @@
+import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
+import { userAPI } from '../services/api';
 import '../styles/RightInfoPane.css';
 
 export default function RightInfoPane({ selectedNode, onClose, onUserClick }) {
+  const [connectionNames, setConnectionNames] = useState(new Map());
+  const [loadingNames, setLoadingNames] = useState(false);
+
+  useEffect(() => {
+    const fetchConnectionNames = async () => {
+      if (!selectedNode || !selectedNode.connections || selectedNode.connections.length === 0) {
+        return;
+      }
+
+      setLoadingNames(true);
+      const namesMap = new Map();
+      
+      const promises = selectedNode.connections.slice(0, 10).map(async (connId) => {
+        try {
+          const response = await userAPI.getUser(connId);
+          const username = response.user?.username || response.username || `User ${connId}`;
+          namesMap.set(connId, username);
+        } catch (error) {
+          namesMap.set(connId, `User ${connId}`);
+        }
+      });
+
+      await Promise.all(promises);
+      setConnectionNames(namesMap);
+      setLoadingNames(false);
+    };
+
+    fetchConnectionNames();
+  }, [selectedNode?.connections?.join(',')]);
+
   if (!selectedNode) {
     return (
       <div className="right-info-pane" style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -69,31 +101,34 @@ export default function RightInfoPane({ selectedNode, onClose, onUserClick }) {
           <div className="info-section">
             <div className="info-section-title">Connected Nodes</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              {connections.slice(0, 10).map((connId) => (
-                <button
-                  key={connId}
-                  onClick={() => onUserClick && onUserClick({ id: connId, name: `User ${connId}` })}
-                  className="quick-action-button"
-                >
-                  <div style={{
-                    width: '24px',
-                    height: '24px',
-                    borderRadius: '50%',
-                    background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '0.75rem',
-                    fontWeight: '600',
-                    color: 'white'
-                  }}>
-                    {String(connId).charAt(0)}
-                  </div>
-                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    User {connId}
-                  </span>
-                </button>
-              ))}
+              {connections.slice(0, 10).map((connId) => {
+                const connName = connectionNames.get(connId) || (loadingNames ? 'Loading...' : `User ${connId}`);
+                return (
+                  <button
+                    key={connId}
+                    onClick={() => onUserClick && onUserClick({ id: connId, name: connName })}
+                    className="quick-action-button"
+                  >
+                    <div style={{
+                      width: '24px',
+                      height: '24px',
+                      borderRadius: '50%',
+                      background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '0.75rem',
+                      fontWeight: '600',
+                      color: 'white'
+                    }}>
+                      {connName.charAt(0).toUpperCase()}
+                    </div>
+                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {connName}
+                    </span>
+                  </button>
+                );
+              })}
               {connections.length > 10 && (
                 <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textAlign: 'center', marginTop: '0.5rem' }}>
                   + {connections.length - 10} more connections

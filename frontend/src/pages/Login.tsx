@@ -16,11 +16,13 @@ function Login({ onLogin }: LoginProps) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
+    setSuccessMessage('');
     setLoading(true);
 
     try {
@@ -34,16 +36,23 @@ function Login({ onLogin }: LoginProps) {
       const data = await response.json();
 
       if (data.success) {
-        // Store user info and call parent's onLogin
-        // Backend returns: { success: true, user: { id: 1, username: "alice_smith" } }
-        const userData: UserData = {
-          userId: data.user?.id || data.userId,
-          username: data.user?.username || data.username || username
-        };
-        localStorage.setItem('user', JSON.stringify(userData));
-        onLogin(userData);
+        if (isRegister) {
+          // Registration successful - redirect to login page with success message
+          setSuccessMessage('Account created successfully. Please log in to continue.');
+          setIsRegister(false); // Switch to login mode
+          setPassword(''); // Clear password for security
+          // Keep username so user doesn't have to retype it
+        } else {
+          // Login successful - store user info and redirect to app
+          const userData: UserData = {
+            userId: data.user?.id || data.userId,
+            username: data.user?.username || data.username || username
+          };
+          localStorage.setItem('user', JSON.stringify(userData));
+          onLogin(userData);
+        }
       } else {
-        setError(data.error || data.message || 'Authentication failed');
+        setError(data.error || data.message || (isRegister ? 'Registration failed' : 'Authentication failed'));
       }
     } catch {
       setError('Server connection failed. Please ensure backend is running on port 8081.');
@@ -90,6 +99,7 @@ function Login({ onLogin }: LoginProps) {
             />
           </div>
 
+          {successMessage && <div className="success-message">{successMessage}</div>}
           {error && <div className="error-message">{error}</div>}
 
           <button type="submit" className="login-button" disabled={loading}>

@@ -296,7 +296,6 @@ export default function NetworkOverview() {
           </div>
 
           <div className="overview-stat-card">
-            <div className="stat-icon">{stats.isConnected ? '✅' : '❌'}</div>
             <div className="stat-content">
               <div className="stat-number">{stats.isConnected ? 'Yes' : 'No'}</div>
               <div className="stat-label">Fully Connected</div>

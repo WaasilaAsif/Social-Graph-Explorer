@@ -1,11 +1,55 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronRight, Network, Home, MessageSquare, Activity, LogOut, BarChart3, Trophy, Navigation, Globe } from 'lucide-react';
+import { ChevronDown, ChevronRight, Network, Home, MessageSquare, Activity, LogOut, BarChart3, Trophy, Navigation, Trash2 } from 'lucide-react';
+import { userAPI } from '../services/api';
 import '../styles/Sidebar.css';
 
 export default function Sidebar({ onUserClick, onNavigate, user, onLogout }) {
   const [graphsExpanded, setGraphsExpanded] = useState(true);
   const [apiExpanded, setApiExpanded] = useState(true);
   const [analyticsExpanded, setAnalyticsExpanded] = useState(true);
+  const [deleteError, setDeleteError] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDeleteAccount = async () => {
+    // Show confirmation dialog
+    const confirmed = window.confirm(
+      'Are you sure you want to delete your account? This action cannot be undone.'
+    );
+    
+    if (!confirmed) return;
+    
+    setIsDeleting(true);
+    setDeleteError(null);
+    
+    try {
+      // Get user ID from localStorage
+      const storedUser = localStorage.getItem('user');
+      if (!storedUser) {
+        throw new Error('No user found');
+      }
+      
+      const userData = JSON.parse(storedUser);
+      const userId = userData.userId;
+      
+      if (!userId) {
+        throw new Error('Invalid user ID');
+      }
+      
+      // Call DELETE API
+      await userAPI.deleteUser(userId);
+      
+      // Clear localStorage and logout
+      localStorage.removeItem('user');
+      onLogout();
+      
+    } catch (err) {
+      console.error('Failed to delete account:', err);
+      setDeleteError('Failed to delete account. Please try again.');
+      setTimeout(() => setDeleteError(null), 5000); // Clear error after 5 seconds
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   return (
     <div className="sidebar">
@@ -19,27 +63,64 @@ export default function Sidebar({ onUserClick, onNavigate, user, onLogout }) {
             <div style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>
               {user.username}
             </div>
-            <button
-              onClick={onLogout}
-              style={{
+            {deleteError && (
+              <div style={{
                 marginTop: '8px',
-                width: '100%',
-                padding: '6px',
-                background: '#ef4444',
-                color: 'white',
-                border: 'none',
+                padding: '6px 8px',
+                background: 'rgba(239, 68, 68, 0.15)',
+                border: '1px solid rgba(239, 68, 68, 0.3)',
                 borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '12px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '6px'
-              }}
-            >
-              <LogOut size={14} />
-              Logout
-            </button>
+                color: '#f87171',
+                fontSize: '11px'
+              }}>
+                {deleteError}
+              </div>
+            )}
+            <div style={{ display: 'flex', gap: '6px', marginTop: '8px' }}>
+              <button
+                onClick={onLogout}
+                style={{
+                  flex: 1,
+                  padding: '6px',
+                  background: '#ef4444',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontSize: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '4px'
+                }}
+              >
+                <LogOut size={14} />
+                Logout
+              </button>
+              <button
+                onClick={handleDeleteAccount}
+                disabled={isDeleting}
+                style={{
+                  flex: 1,
+                  padding: '6px',
+                  background: isDeleting ? '#6b7280' : '#7f1d1d',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: isDeleting ? 'not-allowed' : 'pointer',
+                  fontSize: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '4px',
+                  opacity: isDeleting ? 0.7 : 1
+                }}
+                title="Delete your account permanently"
+              >
+                <Trash2 size={14} />
+                {isDeleting ? '...' : 'Delete'}
+              </button>
+            </div>
           </div>
         )}
       </div>
@@ -71,15 +152,6 @@ export default function Sidebar({ onUserClick, onNavigate, user, onLogout }) {
 
           {analyticsExpanded && (
             <div>
-              <div
-                onClick={() => onNavigate('graph-stats')}
-                className="sidebar-item"
-              >
-                <div className="item-left">
-                  <BarChart3 size={14} />
-                  <span>Network Stats</span>
-                </div>
-              </div>
               <div
                 onClick={() => onNavigate('leaderboard')}
                 className="sidebar-item"
@@ -116,25 +188,6 @@ export default function Sidebar({ onUserClick, onNavigate, user, onLogout }) {
 
           {graphsExpanded && (
             <div>
-              <div
-                onClick={() => onNavigate('network-overview', {})}
-                className="sidebar-item"
-                style={{ background: 'rgba(157, 78, 221, 0.1)', borderLeft: '3px solid #9d4edd' }}
-              >
-                <div className="item-left">
-                  <Globe size={14} />
-                  <span>Complete Overview</span>
-                </div>
-              </div>
-              <div
-                onClick={() => onNavigate('graph', { graphId: 'main' })}
-                className="sidebar-item"
-              >
-                <div className="item-left">
-                  <Network size={14} />
-                  <span>Main Network</span>
-                </div>
-              </div>
               <div
                 onClick={() => onNavigate('graph', { graphId: 'communities' })}
                 className="sidebar-item"
