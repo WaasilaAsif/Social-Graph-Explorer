@@ -533,7 +533,7 @@ curl "http://localhost:8081/api/algo/friend-suggestions?userId=1&limit=5"
 
 ---
 
-## 🖥 Frontend Features
+## Frontend Features
 
 ### Pages & Components
 
