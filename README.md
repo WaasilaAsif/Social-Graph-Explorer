@@ -267,7 +267,7 @@ g++ -std=c++17 \
 ```
 Loaded 25 users from database.
 Loading data from JSON files...
- Loaded 80 friendships from storage/local_db/friendships.json
+Loaded 80 friendships from storage/local_db/friendships.json
 Loaded 64 messages from storage/local_db/messages.json
 Data loaded successfully!
 
@@ -294,7 +294,7 @@ cd backend; node cors-proxy.js
 # Open new terminal
 cd frontend
 
-# Install dependencies
+# Install dependencies, only needed once
 npm install
 
 # Start development server
