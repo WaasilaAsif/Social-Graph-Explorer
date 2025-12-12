@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Users, FileText } from 'lucide-react';
+import { Users, FileText, UserPlus, UserCheck, Loader2 } from 'lucide-react';
 import { userAPI, graphAPI } from '../services/api';
 import '../styles/UserProfileView.css';
 
@@ -7,10 +7,47 @@ export default function UserProfileView({ user, onPostClick, onUserClick }) {
   const [posts, setPosts] = useState([]);
   const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isAlreadyFriend, setIsAlreadyFriend] = useState(false);
+  const [connectLoading, setConnectLoading] = useState(false);
+  const [connectStatus, setConnectStatus] = useState('idle'); // 'idle' | 'success' | 'error'
+
+  // Get current user from localStorage
+  const getCurrentUserId = () => {
+    try {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        const parsed = JSON.parse(storedUser);
+        return parsed.userId || 0;
+      }
+    } catch (err) {
+      console.error('Error reading user from localStorage:', err);
+    }
+    return 0;
+  };
+
+  const currentUserId = getCurrentUserId();
 
   useEffect(() => {
     loadUserData();
   }, [user?.id]);
+
+  // Check if the profile user is already a friend of the current user
+  useEffect(() => {
+    const checkFriendship = async () => {
+      if (!currentUserId || !user?.id || currentUserId === user.id) return;
+      
+      try {
+        const myFriendsData = await graphAPI.getFriends(currentUserId);
+        const myFriends = myFriendsData.friends || [];
+        const isFriend = myFriends.some((f) => f.id === user.id || f === user.id);
+        setIsAlreadyFriend(isFriend);
+      } catch (err) {
+        console.error('Error checking friendship:', err);
+      }
+    };
+    
+    checkFriendship();
+  }, [currentUserId, user?.id]);
 
   const loadUserData = async () => {
     if (!user?.id) return;
@@ -48,6 +85,28 @@ export default function UserProfileView({ user, onPostClick, onUserClick }) {
     }
   };
 
+  const handleConnect = async () => {
+    if (!user?.id || !currentUserId || isAlreadyFriend) return;
+    
+    setConnectLoading(true);
+    setConnectStatus('idle');
+    
+    try {
+      await graphAPI.addFriend(currentUserId, user.id);
+      setIsAlreadyFriend(true);
+      setConnectStatus('success');
+      // Reload to update friend count
+      loadUserData();
+    } catch (err) {
+      console.error('Failed to connect:', err);
+      setConnectStatus('error');
+      // Reset error status after 3 seconds
+      setTimeout(() => setConnectStatus('idle'), 3000);
+    } finally {
+      setConnectLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="user-profile">
@@ -78,6 +137,46 @@ export default function UserProfileView({ user, onPostClick, onUserClick }) {
             <div className="stat-label">Posts</div>
           </div>
         </div>
+        
+        {/* Connect Button - only show if viewing another user's profile */}
+        {currentUserId && user?.id && currentUserId !== user.id && (
+          <div className="profile-actions">
+            {isAlreadyFriend ? (
+              <button className="btn-connected" disabled>
+                <UserCheck size={18} />
+                Connected
+              </button>
+            ) : (
+              <button 
+                className={`btn-connect ${connectStatus === 'error' ? 'error' : ''}`}
+                onClick={handleConnect}
+                disabled={connectLoading}
+              >
+                {connectLoading ? (
+                  <>
+                    <Loader2 size={18} className="spinner-icon" />
+                    Connecting...
+                  </>
+                ) : connectStatus === 'success' ? (
+                  <>
+                    <UserCheck size={18} />
+                    Connected!
+                  </>
+                ) : connectStatus === 'error' ? (
+                  <>
+                    <UserPlus size={18} />
+                    Failed - Retry
+                  </>
+                ) : (
+                  <>
+                    <UserPlus size={18} />
+                    Connect
+                  </>
+                )}
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="profile-content">
