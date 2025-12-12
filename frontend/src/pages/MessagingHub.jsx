@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { messagingAPI, userAPI, algoAPI } from '../services/api';
-import { MessageSquare, Send, Search, Users, Clock, TrendingUp, Users2, Route } from 'lucide-react';
+import { messagingAPI, userAPI, algoAPI, graphAPI } from '../services/api';
+import { MessageSquare, Send, Search, Users, Clock, TrendingUp, Users2, Route, UserPlus } from 'lucide-react';
 import '../styles/MessagingHub.css';
 
 export default function MessagingHub() {
@@ -34,6 +34,7 @@ export default function MessagingHub() {
   const [searchMessagesDetails, setSearchMessagesDetails] = useState([]);
   const [pathResult, setPathResult] = useState(null);
   const [pathDestId, setPathDestId] = useState('');
+  const [myFriends, setMyFriends] = useState([]);
 
   // Load analytics data on mount and when user changes
   useEffect(() => {
@@ -118,8 +119,27 @@ export default function MessagingHub() {
       );
       setSuggestions(suggestionsList);
 
+      // Load user's friends for chat suggestions
+      try {
+        const friendsData = await graphAPI.getFriends(currentUserId);
+        const friendsList = friendsData.friends || [];
+        const friendsWithDetails = await Promise.all(
+          friendsList.map(async (friend) => {
+            const friendId = typeof friend === 'object' ? friend.id : friend;
+            const username = await getUserDetails(friendId);
+            return {
+              id: friendId,
+              username: username
+            };
+          })
+        );
+        setMyFriends(friendsWithDetails);
+      } catch (err) {
+        console.error('Failed to load friends:', err);
+      }
+
       // Load popular users - use messaging rank API
-      const popularResponse = await fetch(`http://localhost:8082/msg/rank/10`);
+      const popularResponse = await fetch(`http://localhost:8081/msg/rank/10`);
       if (popularResponse.ok) {
         const popularData = await popularResponse.json();
         const popularList = await Promise.all(
@@ -592,9 +612,58 @@ export default function MessagingHub() {
           <h2>Network Insights</h2>
           
           <div className="suggestions-grid">
+            {/* My Connections - Chat with Friends */}
+            <div className="suggestions-card connections-card">
+              <h3>
+                <Users2 size={20} />
+                My Connections
+              </h3>
+              <p className="card-description">Start or continue a chat with your friends</p>
+              <div className="suggestions-list">
+                {myFriends.length > 0 ? (
+                  myFriends.map((friend) => {
+                    // Check if there's an existing conversation
+                    const existingConvo = contacts.find(c => c.userId === friend.id);
+                    return (
+                      <div key={friend.id} className="suggestion-item friend-item">
+                        <div className="suggestion-avatar friend-avatar">
+                          {friend.username?.charAt(0).toUpperCase() || 'U'}
+                        </div>
+                        <div className="suggestion-info">
+                          <span className="suggestion-name">{friend.username}</span>
+                          <span className="suggestion-meta">
+                            {existingConvo ? `${existingConvo.weight} messages` : 'No messages yet'}
+                          </span>
+                        </div>
+                        <button 
+                          className="start-chat-btn"
+                          onClick={() => {
+                            if (existingConvo) {
+                              // Navigate to existing conversation
+                              setSelectedContact(existingConvo);
+                            } else {
+                              // Start new conversation
+                              setSelectedContact({ userId: friend.id, username: friend.username, weight: 0 });
+                            }
+                            setActiveTab('chat');
+                          }}
+                        >
+                          <MessageSquare size={14} />
+                          {existingConvo ? 'Open Chat' : 'Start Chat'}
+                        </button>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <p className="no-data">No connections yet. Add friends to start chatting!</p>
+                )}
+              </div>
+            </div>
+
+            {/* Friend Suggestions */}
             <div className="suggestions-card">
               <h3>
-                <Users size={20} />
+                <UserPlus size={20} />
                 Friend Suggestions
               </h3>
               <p className="card-description">People you might want to connect with</p>
@@ -603,7 +672,7 @@ export default function MessagingHub() {
                   suggestions.map((user) => (
                     <div key={user.id} className="suggestion-item">
                       <div className="suggestion-avatar">
-                        {user.username.charAt(0).toUpperCase()}
+                        {user.username?.charAt(0).toUpperCase() || 'U'}
                       </div>
                       <div className="suggestion-info">
                         <span className="suggestion-name">{user.username}</span>

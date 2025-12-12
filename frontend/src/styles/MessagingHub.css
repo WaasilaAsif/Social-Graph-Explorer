@@ -850,6 +850,20 @@
   background: #14141a;
   border: 1px solid rgba(157, 78, 221, 0.1);
   border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.suggestion-item:hover {
+  border-color: rgba(157, 78, 221, 0.3);
+  background: #1a1a24;
+}
+
+.suggestion-item.friend-item {
+  border-color: rgba(74, 222, 128, 0.2);
+}
+
+.suggestion-item.friend-item:hover {
+  border-color: rgba(74, 222, 128, 0.4);
 }
 
 .suggestion-avatar {
@@ -863,13 +877,18 @@
   color: #fff;
   font-weight: 700;
   font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.suggestion-avatar.friend-avatar {
+  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
 }
 
 .suggestion-info {
   flex: 1;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
 .suggestion-name {
@@ -877,7 +896,15 @@
   font-weight: 500;
 }
 
+.suggestion-meta {
+  color: #888;
+  font-size: 0.8rem;
+}
+
 .start-chat-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
   padding: 0.5rem 1rem;
   background: linear-gradient(135deg, #9d4edd 0%, #7b2cbf 100%);
   border: none;
@@ -887,11 +914,25 @@
   font-size: 0.875rem;
   cursor: pointer;
   transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.friend-item .start-chat-btn {
+  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
 }
 
 .start-chat-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(157, 78, 221, 0.4);
+}
+
+.friend-item .start-chat-btn:hover {
+  box-shadow: 0 4px 12px rgba(74, 222, 128, 0.4);
+}
+
+/* Connections card styling */
+.connections-card h3 svg {
+  color: #4ade80;
 }
 
 .path-input {
