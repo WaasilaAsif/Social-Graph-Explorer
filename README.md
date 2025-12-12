@@ -2,8 +2,11 @@
 
 A comprehensive **Social Network Backend & Frontend** application demonstrating advanced **Data Structures and Algorithms (DSA)** concepts. This project implements a mini Instagram-like social network with real-time graph operations, messaging systems, and analytics.
 
-![Main Page](image.png)
-
+![Sign in Page](image-4.png)
+![Dashboard](image.png)
+![LeaderBoard](image-1.png)
+![Social Graph](image-2.png)
+![Messaging interface](image-3.png)
 ---
 
 ##  Table of Contents
@@ -390,7 +393,7 @@ curl -X POST http://localhost:8081/graph/addFriend \
 }
 ```
 
-#### Example: Graph Statistics
+
 ```bash
 curl http://localhost:8081/graph/stats
 ```
@@ -398,7 +401,7 @@ curl http://localhost:8081/graph/stats
 **Response:**
 ```json
 {
-  "nodeCount": 320,
+  "nodeCount": 25,
   "edgeCount": 61,
   "averageDegree": 2.1,
   "density": 0.0012,
@@ -606,9 +609,9 @@ curl "http://localhost:8081/api/algo/friend-suggestions?userId=1&limit=5"
 
 | Entity | Count |
 |--------|-------|
-| Users | 320 |
-| Friendships | 61 |
-| Messages | 51 |
+| Users | 25 |
+| Friendships | 80 |
+| Messages | 64 |
 
 ---
 
