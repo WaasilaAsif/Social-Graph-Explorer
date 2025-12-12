@@ -113,4 +113,11 @@ public:
         if (length > 0)
             length--;
     }
+    void clear() {
+    length = 0;  // That's it! No need to delete/reallocate
+}
+
+bool isEmpty() const {
+    return length == 0;
+}
 };
