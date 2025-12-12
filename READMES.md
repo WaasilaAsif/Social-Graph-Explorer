@@ -835,6 +835,21 @@ A rigorous testing framework ensures **functionality, correctness, and performan
    - Implement a **unit and integration test suite** that can be run via **C++ testing frameworks** (e.g., Google Test).  
    - Ensure **continuous validation** after every code change.  
 
+---
+
+##  Performance Metrics
+
+| Operation | Time Complexity | Space Complexity |
+|-----------|-----------------|------------------|
+| User Search (Trie) | O(L) | O(N×L) |
+| Add/Remove Friend | O(1) | O(V+E) |
+| BFS/DFS Traversal | O(V+E) | O(V) |
+| Shortest Path | O(V+E) | O(V) |
+| Message Search | O(L) | O(N×L) |
+| Top-K Users | O(N log K) | O(K) |
+| Mutual Friends | O(min(F1, F2)) | O(min(F1, F2)) |
+
+---
 ## **UI Baseline**
 
 **Main page**
@@ -850,4 +865,69 @@ A rigorous testing framework ensures **functionality, correctness, and performan
 ---
 ![graph interface](image-2.png)
 ---
- 
+ ---
+
+##  Additional Documentation
+
+- [API_QUICK_REFERENCE.md](API_QUICK_REFERENCE.md) - API cheatsheet
+- [DEPENDENCIES.md](DEPENDENCIES.md) - Full dependency list
+- [TESTING_GUIDE.md](TESTING_GUIDE.md) - Testing documentation
+- [POSTMAN_API_GUIDE.md](POSTMAN_API_GUIDE.md) - Postman collection guide
+- [backend/GRAPH_API_GUIDE.md](backend/GRAPH_API_GUIDE.md) - Graph API details
+- [backend/USER_API_GUIDE.md](backend/USER_API_GUIDE.md) - User API details
+- [backend/MESSAGING_API_GUIDE.md](backend/MESSAGING_API_GUIDE.md) - Messaging API details
+- [backend/ALGORITHM_API_GUIDE.md](backend/ALGORITHM_API_GUIDE.md) - Algorithm API details
+
+---
+| Data Structure | File | Purpose | Complexity |
+|----------------|------|---------|------------|
+| **Trie** | `MsgTrie.cpp` | Message word search, username autocomplete | O(L) search |
+| **Max Heap** | `MsgHeap.cpp` | Priority scheduling, Top-K queries | O(log n) |
+| **Stack** | `MsgStack.cpp` | Undo functionality | O(1) |
+| **HashMap** | `HashMap.h` | User caching, fast lookups | O(1) avg |
+| **AVL Tree** | `AVLTree.h` | Balanced storage | O(log n) |
+| **Graph** | `Graph.h` | Social network representation | O(V+E) |
+| **Dynamic Array** | `DynamicArray.h` | Posts, message storage | O(1) amortized |
+| **Linked List** | `LinkedList.h` | Feed management | O(1) insert |
+
+### Graph Algorithms
+
+| Algorithm | Purpose | Complexity | Endpoint |
+|-----------|---------|------------|----------|
+| **BFS** | Traversal, shortest path | O(V+E) | `/graph/bfs/:start` |
+| **DFS** | Traversal, connectivity | O(V+E) | `/graph/dfs/:start` |
+| **Dijkstra** | Weighted shortest path | O(E log V) | `/api/algo/shortest-path` |
+| **2-Hop BFS** | Friend suggestions | O(V+E) | `/api/algo/friend-suggestions` |
+| **Connected Components** | Network analysis | O(V+E) | `/graph/components` |
+
+### Analytics Algorithms
+
+| Algorithm | Purpose | Implementation |
+|-----------|---------|----------------|
+| **Mutual Friends** | Hash-set intersection | O(min(F1, F2)) |
+| **Popularity Rank** | Max-heap extraction | O(n log k) |
+| **Network Density** | Edge/vertex ratio | O(1) |
+| **Clustering Coefficient** | Triangle counting | O(V × D²) |
+
+### Test Coverage
+
+| Test Suite | Tests | Status |
+|------------|-------|--------|
+| Messaging Integration | 9/9 |  PASS |
+| Msg Algorithms | 21/21 |  PASS |
+| Messaging DS | 28/28 |  PASS |
+| Messaging System | 21/21 | PASS |
+| **TOTAL** | **79+** | ** ALL PASS** |
+
+### Running Tests
+
+```powershell
+# Run all messaging tests
+.\backend\tests\run_all_messaging_tests.ps1
+
+# Run algorithm tests
+.\backend\tests\run_all_msg_algorithm_tests.ps1
+
+# Run via API
+curl http://localhost:8081/api/algo/unit-tests
+```

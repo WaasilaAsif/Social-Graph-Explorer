@@ -50,29 +50,29 @@ Modern social networks require efficient handling of:
 ##  Key Features
 
 ### User Management
-- [ x ] User registration and authentication
-- [ x ] Profile management with posts
-- [ x ] Trie-based username autocomplete search
-- [ x ] Account deletion with cascade cleanup
+-  User registration and authentication
+-  Profile management with posts
+-  Trie-based username autocomplete search
+-  Account deletion with cascade cleanup
 
 ### Social Graph
-- [ x ] Add/Remove friendships (bidirectional)
-- [ x ] BFS/DFS graph traversals
-- [ x ] Shortest path between users
-- [ x ] Network statistics and analytics
+-  Add/Remove friendships (bidirectional)
+-  BFS/DFS graph traversals
+-  Shortest path between users
+-  Network statistics and analytics
 
 ### Messaging System
-- [ x ] Send/receive messages
-- [ x ] Trie-based word and prefix search
-- [ x ] Top-K conversation partners
-- [ x ] Messaging-based friend suggestions
-- [ x ] Shortest messaging path
+-  Send/receive messages
+-  Trie-based word and prefix search
+-  Top-K conversation partners
+-  Messaging-based friend suggestions
+-  Shortest messaging path
 
 ### Analytics & Recommendations
-- [ x ] Mutual friends calculation
-- [ x ] Friend suggestions (2-hop algorithm)
-- [ x ] Popularity ranking (PageRank-style)
-- [ x ] Network metrics (density, diameter, clustering)
+-  Mutual friends calculation
+-  Friend suggestions (2-hop algorithm)
+-  Popularity ranking (PageRank-style)
+-  Network metrics (density, diameter, clustering)
 
 ---
 
@@ -155,7 +155,7 @@ Modern social networks require efficient handling of:
     │         JSON Database Files           │
     │  ┌─────────┐ ┌───────────┐ ┌────────┐│
     │  │users.json│ │friendships│ │messages││
-    │  │(320 users)│ │(61 edges) │ │(51 msgs)││
+    │  │(25 users)│ │(80 edges) │ │(64 msgs)││
     │  └─────────┘ └───────────┘ └────────┘│
     └───────────────────────────────────────┘
 ```
@@ -166,35 +166,35 @@ Modern social networks require efficient handling of:
 
 ### Custom Implementations (No STL)
 
-| Data Structure | File | Purpose | Complexity |
-|----------------|------|---------|------------|
-| **Trie** | `MsgTrie.cpp` | Message word search, username autocomplete | O(L) search |
-| **Max Heap** | `MsgHeap.cpp` | Priority scheduling, Top-K queries | O(log n) |
-| **Stack** | `MsgStack.cpp` | Undo functionality | O(1) |
-| **HashMap** | `HashMap.h` | User caching, fast lookups | O(1) avg |
-| **AVL Tree** | `AVLTree.h` | Balanced storage | O(log n) |
-| **Graph** | `ConversationGraph.cpp` | Social network representation | O(V+E) |
-| **Dynamic Array** | `DynamicArray.h` | Posts, message storage | O(1) amortized |
-| **Linked List** | `LinkedList.h` | Feed management | O(1) insert |
+| Data Structure | File | Purpose |
+|----------------|------|---------|
+| **Trie** | `MsgTrie.cpp` | Message word search, username autocomplete |
+| **Max Heap** | `MsgHeap.cpp` | Priority scheduling, Top-K queries |
+| **Stack** | `MsgStack.cpp` | Undo functionality |
+| **HashMap** | `HashMap.h` | User caching, fast lookups |
+| **AVL Tree** | `AVLTree.h` | Balanced storage |
+| **Graph** | `Graph.h` | Social network representation |
+| **Dynamic Array** | `DynamicArray.h` | Posts, message storage |
+| **Linked List** | `LinkedList.h` | Feed management |
 
 ### Graph Algorithms
 
-| Algorithm | Purpose | Complexity | Endpoint |
-|-----------|---------|------------|----------|
-| **BFS** | Traversal, shortest path | O(V+E) | `/graph/bfs/:start` |
-| **DFS** | Traversal, connectivity | O(V+E) | `/graph/dfs/:start` |
-| **Dijkstra** | Weighted shortest path | O(E log V) | `/api/algo/shortest-path` |
-| **2-Hop BFS** | Friend suggestions | O(V+E) | `/api/algo/friend-suggestions` |
-| **Connected Components** | Network analysis | O(V+E) | `/graph/components` |
+| Algorithm | Purpose | Endpoint |
+|-----------|---------|----------|
+| **BFS** | Traversal, shortest path | `/graph/bfs/:start` |
+| **DFS** | Traversal, connectivity | `/graph/dfs/:start` |
+| **Dijkstra** | Weighted shortest path | `/api/algo/shortest-path` |
+| **2-Hop BFS** | Friend suggestions | `/api/algo/friend-suggestions` |
+| **Connected Components** | Network analysis | `/graph/components` |
 
 ### Analytics Algorithms
 
-| Algorithm | Purpose | Implementation |
-|-----------|---------|----------------|
-| **Mutual Friends** | Hash-set intersection | O(min(F1, F2)) |
-| **Popularity Rank** | Max-heap extraction | O(n log k) |
-| **Network Density** | Edge/vertex ratio | O(1) |
-| **Clustering Coefficient** | Triangle counting | O(V × D²) |
+| Algorithm | Purpose |
+|-----------|---------|
+| **Mutual Friends** | Hash-set intersection |
+| **Popularity Rank** | Max-heap extraction |
+| **Network Density** | Edge/vertex ratio |
+| **Clustering Coefficient** | Triangle counting |
 
 ---
 
@@ -268,7 +268,7 @@ g++ -std=c++17 \
 Loaded 25 users from database.
 Loading data from JSON files...
  Loaded 80 friendships from storage/local_db/friendships.json
-Loaded all messages from storage/local_db/messages.json
+Loaded 64 messages from storage/local_db/messages.json
 Data loaded successfully!
 
 ========================================
@@ -469,7 +469,6 @@ curl http://localhost:8081/msg/prefix/proj
 | GET | `/api/algo/top-popular?n=X` | Top N popular users | Max-heap |
 | GET | `/api/algo/two-hop-friends?userId=X` | Friends of friends | 2-hop BFS |
 | GET | `/api/algo/friend-suggestions?userId=X&limit=N` | AI friend suggestions | Mutual friends + frequency |
-| GET | `/api/algo/unit-tests` | Run algorithm tests | Testing |
 
 #### Example: Mutual Friends
 ```bash
@@ -573,7 +572,7 @@ curl "http://localhost:8081/api/algo/friend-suggestions?userId=1&limit=5"
     {
       "id": 1,
       "username": "alice_smith",
-      "password": "hashed_password",
+      "password": "pass123",
       "posts": ["First post!", "Hello world!"]
     }
   ]
@@ -596,10 +595,10 @@ curl "http://localhost:8081/api/algo/friend-suggestions?userId=1&limit=5"
   "messages": [
     {
       "id": 1,
-      "senderId": 1,
       "receiverId": 2,
-      "text": "Hey, how's the project going?",
-      "timestamp": 1702389600
+      "senderId": 1,
+      "text": "Hey Bob! How's the graph project going?",
+      "timestamp": 1
     }
   ]
 }
@@ -617,28 +616,7 @@ curl "http://localhost:8081/api/algo/friend-suggestions?userId=1&limit=5"
 
 ##  Testing & Validation
 
-### Test Coverage
-
-| Test Suite | Tests | Status |
-|------------|-------|--------|
-| Messaging Integration | 9/9 |  PASS |
-| Msg Algorithms | 21/21 |  PASS |
-| Messaging DS | 28/28 |  PASS |
-| Messaging System | 21/21 | PASS |
-| **TOTAL** | **79+** | ** ALL PASS** |
-
-### Running Tests
-
-```powershell
-# Run all messaging tests
-.\backend\tests\run_all_messaging_tests.ps1
-
-# Run algorithm tests
-.\backend\tests\run_all_msg_algorithm_tests.ps1
-
-# Run via API
-curl http://localhost:8081/api/algo/unit-tests
-```
+Units tests were done for each module and program being made side by side.
 
 ### API Testing with Postman
 
@@ -656,13 +634,9 @@ SocialGraphExplorer/
 ├── backend/
 │   ├── api/
 │   │   ├── server.cpp              # Main Crow server (port 8081)
-│   │   └── routes/
-│   │       ├── algoRoutes.cpp      # Algorithm endpoints
-│   │       ├── graphRoutes.cpp     # Graph endpoints
-│   │       ├── MsgRoutes.cpp       # Messaging endpoints
-│   │       └── MsgAPI.cpp          # Messaging handlers
+│   │   └── routes/                 # Messaging, Algorithm, User and Graph Endpoints
 │   ├── dsa/
-│   │   ├── containers/             # LinkedList, Stack, Queue, HashMap
+│   │   ├── containers/             # LinkedList, Stack, Queue, HashMap, Trie
 │   │   ├── graph/                  # Graph, Node, Edge
 │   │   ├── messaging_ds/           # MsgTrie, MsgHeap, MsgStack
 │   │   ├── user/                   # User, UserManager
@@ -683,9 +657,7 @@ SocialGraphExplorer/
 │   ├── package.json
 │   └── vite.config.ts
 ├── README.md                       # This file
-├── API_QUICK_REFERENCE.md
-├── DEPENDENCIES.md
-└── TESTING_GUIDE.md
+
 ```
 
 ---
@@ -695,25 +667,10 @@ SocialGraphExplorer/
 | Member | Responsibilities |
 |--------|-----------------|
 | **Anum** | Hashmaps, DynamicArray, Trie, Id Generator, User specific details and apis |
-| **Aman** | LinkedList , Stack Queue, BFS DFS, Graph related details handling and apis |
+| **Aman** | LinkedList , Stack, Queue, BFS, DFS, Graph related details handling and apis |
 | **Fatima** | Priority Queues , Algorithms: Shortest Path, Popularity Ranker, Mutual Friends, and their routes |
 | **Waasila** | Messaging DSA: Undo Stack , AVL trees , Msg Heap, Msg Trie Messaging Algorithms : Message Related Algorithms (Sorting, Searching Ranking) |
 
----
-
-##  Performance Metrics
-
-| Operation | Time Complexity | Space Complexity |
-|-----------|-----------------|------------------|
-| User Search (Trie) | O(L) | O(N×L) |
-| Add/Remove Friend | O(1) | O(V+E) |
-| BFS/DFS Traversal | O(V+E) | O(V) |
-| Shortest Path | O(V+E) | O(V) |
-| Message Search | O(L) | O(N×L) |
-| Top-K Users | O(N log K) | O(K) |
-| Mutual Friends | O(min(F1, F2)) | O(min(F1, F2)) |
-
----
 
 ##  Troubleshooting
 
@@ -737,21 +694,6 @@ taskkill /F /IM server.exe
 # Verify backend is running
 curl http://localhost:8081/health
 ```
-
----
-
-##  Additional Documentation
-
-- [API_QUICK_REFERENCE.md](API_QUICK_REFERENCE.md) - API cheatsheet
-- [DEPENDENCIES.md](DEPENDENCIES.md) - Full dependency list
-- [TESTING_GUIDE.md](TESTING_GUIDE.md) - Testing documentation
-- [POSTMAN_API_GUIDE.md](POSTMAN_API_GUIDE.md) - Postman collection guide
-- [backend/GRAPH_API_GUIDE.md](backend/GRAPH_API_GUIDE.md) - Graph API details
-- [backend/USER_API_GUIDE.md](backend/USER_API_GUIDE.md) - User API details
-- [backend/MESSAGING_API_GUIDE.md](backend/MESSAGING_API_GUIDE.md) - Messaging API details
-- [backend/ALGORITHM_API_GUIDE.md](backend/ALGORITHM_API_GUIDE.md) - Algorithm API details
-
----
 
 ##  License
 
