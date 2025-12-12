@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 ///import { getUserById } from '../data/dummyUsers';
-import { graphAPI, userAPI } from '../services/api';
+import { graphAPI, userAPI, algoAPI } from '../services/api';
 import '../styles/GraphView.css';
 
 export default function GraphView({ graphId, onNodeClick }) {
@@ -65,7 +65,7 @@ export default function GraphView({ graphId, onNodeClick }) {
     const fetchGraphData = async () => {
       try {
         setLoading(true);
-        // Fetch friendships for users 1-20
+        // Fetch all users by trying consecutive IDs until we hit failures
         const nodes = [];
         const edges = [];
         const edgeSet = new Set();
@@ -86,7 +86,18 @@ export default function GraphView({ graphId, onNodeClick }) {
           }
         };
 
-        for (let userId = 1; userId <= 20; userId++) {
+        // First, determine the max user ID by fetching graph stats
+        let maxUserId = 500; // Default high limit
+        try {
+          const stats = await algoAPI.getGraphStats();
+          if (stats.totalUsers) {
+            maxUserId = stats.totalUsers;
+          }
+        } catch (error) {
+          console.log('Could not get stats, using default max user ID');
+        }
+
+        for (let userId = 1; userId <= maxUserId; userId++) {
           try {
             const response = await graphAPI.getFriends(userId);
             if (response.success) {

@@ -850,6 +850,20 @@
   background: #14141a;
   border: 1px solid rgba(157, 78, 221, 0.1);
   border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.suggestion-item:hover {
+  border-color: rgba(157, 78, 221, 0.3);
+  background: #1a1a24;
+}
+
+.suggestion-item.friend-item {
+  border-color: rgba(74, 222, 128, 0.2);
+}
+
+.suggestion-item.friend-item:hover {
+  border-color: rgba(74, 222, 128, 0.4);
 }
 
 .suggestion-avatar {
@@ -863,13 +877,18 @@
   color: #fff;
   font-weight: 700;
   font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.suggestion-avatar.friend-avatar {
+  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
 }
 
 .suggestion-info {
   flex: 1;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
 .suggestion-name {
@@ -877,7 +896,15 @@
   font-weight: 500;
 }
 
+.suggestion-meta {
+  color: #888;
+  font-size: 0.8rem;
+}
+
 .start-chat-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
   padding: 0.5rem 1rem;
   background: linear-gradient(135deg, #9d4edd 0%, #7b2cbf 100%);
   border: none;
@@ -887,11 +914,25 @@
   font-size: 0.875rem;
   cursor: pointer;
   transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.friend-item .start-chat-btn {
+  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
 }
 
 .start-chat-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(157, 78, 221, 0.4);
+}
+
+.friend-item .start-chat-btn:hover {
+  box-shadow: 0 4px 12px rgba(74, 222, 128, 0.4);
+}
+
+/* Connections card styling */
+.connections-card h3 svg {
+  color: #4ade80;
 }
 
 .path-input {
@@ -951,6 +992,17 @@
   margin: 0 0.25rem;
 }
 
+.path-label {
+  color: #a0a0a0;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.no-path {
+  color: #ff6b6b;
+  font-style: italic;
+}
+
 .contact-weight {
   color: rgba(255, 255, 255, 0.4);
   font-size: 0.875rem;
@@ -973,4 +1025,48 @@
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1rem;
   margin-bottom: 1.5rem;
+}
+
+/* Deleted User Styles */
+.deleted-avatar {
+  background: #3a3a4a !important;
+  color: #888 !important;
+}
+
+.deleted-name {
+  color: #888 !important;
+  font-style: italic;
+}
+
+.deleted-user {
+  opacity: 0.7;
+}
+
+.deleted-user-banner {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+  color: #f87171;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.chat-input.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.chat-input.disabled textarea {
+  background: #1a1a24;
+  cursor: not-allowed;
+}
+
+.send-button.disabled {
+  background: #3a3a4a !important;
+  cursor: not-allowed;
+  opacity: 0.5;
 }

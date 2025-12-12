@@ -352,59 +352,101 @@
         },
         {
             "id": 51,
-            "receiverId": 2,
-            "senderId": 1,
-            "text": "Hello World 🤡🤡🤡🤡🤡",
+            "receiverId": 22,
+            "senderId": 21,
+            "text": "Victor, network analysis is complete!",
             "timestamp": 51
         },
         {
             "id": 52,
-            "receiverId": 3,
-            "senderId": 1,
-            "text": "Wazzup",
+            "receiverId": 21,
+            "senderId": 22,
+            "text": "Excellent! The clustering looks good.",
             "timestamp": 52
         },
         {
             "id": 53,
-            "receiverId": 3,
-            "senderId": 1,
-            "text": "Hello How are you",
+            "receiverId": 24,
+            "senderId": 23,
+            "text": "Xavier, UI design is finalized!",
             "timestamp": 53
         },
         {
             "id": 54,
-            "receiverId": 3,
-            "senderId": 1,
-            "text": "Hello Charlie",
+            "receiverId": 23,
+            "senderId": 24,
+            "text": "Looks beautiful! Users will love it.",
             "timestamp": 54
         },
         {
             "id": 55,
-            "receiverId": 3,
-            "senderId": 1,
-            "text": "how are you",
+            "receiverId": 1,
+            "senderId": 25,
+            "text": "Alice, thanks for leading this project!",
             "timestamp": 55
         },
         {
             "id": 56,
-            "receiverId": 3,
+            "receiverId": 25,
             "senderId": 1,
-            "text": "Hello",
+            "text": "Team effort all the way! Great work everyone!",
             "timestamp": 56
         },
         {
             "id": 57,
             "receiverId": 12,
-            "senderId": 1,
-            "text": "Hello",
+            "senderId": 4,
+            "text": "Leo, algorithm optimization is key.",
             "timestamp": 57
         },
         {
             "id": 58,
-            "receiverId": 12,
-            "senderId": 1,
-            "text": "c,",
+            "receiverId": 4,
+            "senderId": 12,
+            "text": "Agreed! Performance is critical.",
             "timestamp": 58
+        },
+        {
+            "id": 59,
+            "receiverId": 14,
+            "senderId": 6,
+            "text": "Noah, backend is solid now.",
+            "timestamp": 59
+        },
+        {
+            "id": 60,
+            "receiverId": 6,
+            "senderId": 14,
+            "text": "Perfect! Frontend integration smooth.",
+            "timestamp": 60
+        },
+        {
+            "id": 61,
+            "receiverId": 12,
+            "senderId": 10,
+            "text": "i am in ai lab!",
+            "timestamp": 61
+        },
+        {
+            "id": 62,
+            "receiverId": 10,
+            "senderId": 12,
+            "text": "waazzzup",
+            "timestamp": 62
+        },
+        {
+            "id": 63,
+            "receiverId": 25,
+            "senderId": 10,
+            "text": "yaraaaaaaa",
+            "timestamp": 63
+        },
+        {
+            "id": 64,
+            "receiverId": 10,
+            "senderId": 26,
+            "text": "HIIIIII",
+            "timestamp": 64
         }
     ]
 }

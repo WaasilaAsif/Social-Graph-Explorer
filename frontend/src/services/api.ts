@@ -45,6 +45,17 @@ export const userAPI = {
   // Get user profile
   getUser: async (userId: number) => {
     const response = await fetch(`${API_BASE_URL}/api/users/${userId}`);
+    if (response.status === 404) {
+      // Return placeholder for deleted/missing users
+      return {
+        user: {
+          id: userId,
+          username: 'Deleted User',
+          deleted: true
+        },
+        deleted: true
+      };
+    }
     if (!response.ok) throw new Error('Failed to get user');
     return response.json();
   },

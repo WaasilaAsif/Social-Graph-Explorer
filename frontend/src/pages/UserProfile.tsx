@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { userAPI, graphAPI, algoAPI } from '../services/api';
-import { User, Users, MessageSquare, TrendingUp, UserPlus, MapPin, Award } from 'lucide-react';
+import { User, Users, MessageSquare, TrendingUp, UserPlus, UserCheck, MapPin, Award, Loader2 } from 'lucide-react';
 import '../styles/UserProfile.css';
 
 interface UserData {
@@ -22,14 +22,49 @@ const UserProfile = () => {
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isAlreadyFriend, setIsAlreadyFriend] = useState(false);
+  const [connectLoading, setConnectLoading] = useState(false);
+  const [connectStatus, setConnectStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
-  const currentUserId = parseInt(localStorage.getItem('userId') || '0');
+  // Get current user from localStorage
+  const getCurrentUserId = (): number => {
+    try {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        const parsed = JSON.parse(storedUser);
+        return parsed.userId || 0;
+      }
+    } catch (err) {
+      console.error('Error reading user from localStorage:', err);
+    }
+    return 0;
+  };
+
+  const currentUserId = getCurrentUserId();
 
   useEffect(() => {
     if (userId) {
       loadUserProfile();
     }
   }, [userId]);
+
+  // Check if the profile user is already a friend of the current user
+  useEffect(() => {
+    const checkFriendship = async () => {
+      if (!currentUserId || !userId || currentUserId === userId) return;
+      
+      try {
+        const myFriendsData = await graphAPI.getFriends(currentUserId);
+        const myFriends = myFriendsData.friends || [];
+        const isFriend = myFriends.some((f: any) => f.id === userId);
+        setIsAlreadyFriend(isFriend);
+      } catch (err) {
+        console.error('Error checking friendship:', err);
+      }
+    };
+    
+    checkFriendship();
+  }, [currentUserId, userId]);
 
   const loadUserProfile = async () => {
     if (!userId) return;
@@ -56,6 +91,28 @@ const UserProfile = () => {
       setError(err.message || 'Failed to load user profile');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleConnect = async () => {
+    if (!userId || !currentUserId || isAlreadyFriend) return;
+    
+    setConnectLoading(true);
+    setConnectStatus('idle');
+    
+    try {
+      await graphAPI.addFriend(currentUserId, userId);
+      setIsAlreadyFriend(true);
+      setConnectStatus('success');
+      // Reload to update friend count
+      loadUserProfile();
+    } catch (err: any) {
+      console.error('Failed to connect:', err);
+      setConnectStatus('error');
+      // Reset error status after 3 seconds
+      setTimeout(() => setConnectStatus('idle'), 3000);
+    } finally {
+      setConnectLoading(false);
     }
   };
 
@@ -113,6 +170,46 @@ const UserProfile = () => {
             </div>
           </div>
         </div>
+        
+        {/* Connect Button - only show if viewing another user's profile */}
+        {currentUserId && userId && currentUserId !== userId && (
+          <div className="profile-actions">
+            {isAlreadyFriend ? (
+              <button className="btn-connected" disabled>
+                <UserCheck size={18} />
+                Connected
+              </button>
+            ) : (
+              <button 
+                className={`btn-connect ${connectStatus === 'error' ? 'error' : ''}`}
+                onClick={handleConnect}
+                disabled={connectLoading}
+              >
+                {connectLoading ? (
+                  <>
+                    <Loader2 size={18} className="spinner-icon" />
+                    Connecting...
+                  </>
+                ) : connectStatus === 'success' ? (
+                  <>
+                    <UserCheck size={18} />
+                    Connected!
+                  </>
+                ) : connectStatus === 'error' ? (
+                  <>
+                    <UserPlus size={18} />
+                    Failed - Retry
+                  </>
+                ) : (
+                  <>
+                    <UserPlus size={18} />
+                    Connect
+                  </>
+                )}
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="profile-grid">
