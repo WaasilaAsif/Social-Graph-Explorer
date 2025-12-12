@@ -618,11 +618,11 @@ curl "http://localhost:8081/api/algo/friend-suggestions?userId=1&limit=5"
 
 | Test Suite | Tests | Status |
 |------------|-------|--------|
-| Messaging Integration | 9/9 | [ x ] PASS |
-| Msg Algorithms | 21/21 | [ x ] PASS |
-| Messaging DS | 28/28 | [ x ] PASS |
-| Messaging System | 21/21 | [ x ] PASS |
-| **TOTAL** | **79+** | **[ x ] ALL PASS** |
+| Messaging Integration | 9/9 |  PASS |
+| Msg Algorithms | 21/21 |  PASS |
+| Messaging DS | 28/28 |  PASS |
+| Messaging System | 21/21 | PASS |
+| **TOTAL** | **79+** | ** ALL PASS** |
 
 ### Running Tests
 
