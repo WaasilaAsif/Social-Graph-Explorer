@@ -1,853 +1,765 @@
-# SocialGraphExplorer
-```
-cd d:\SocialGraphExplorer\backend\api; C:\msys64\ucrt64\bin\g++.exe -std=c++17 -I D:/Repos_Libs/VCPKG/vcpkg-master/installed/x64-windows/include -I D:/Repos_Libs/asio-1.30.2/include -I ../include -I ../libs -I .. server.cpp routes/algoRoutes.cpp routes/graphRoutes.cpp routes/MsgAPI.cpp routes/MsgRoutes.cpp ../dsa/user/User.cpp ../dsa/user/UserManager.cpp ../dsa/utils/idGenerator.cpp ../dsa/messaging_ds/MsgTrie.cpp ../dsa/messaging_ds/MsgStack.cpp ../dsa/messaging_ds/MsgHeap.cpp ../dsa/messaging_ds/ConversationGraph.cpp ../storage/JSONLoader.cpp ../storage/JSONWriter.cpp ../algorithms/ShortestPath.cpp ../algorithms/MutualFriends.cpp ../algorithms/FriendSuggestion.cpp ../analytics/PopularityRanker.cpp ../messaging/MessageStore.cpp ../messaging/MessageQueue.cpp ../messaging/MessagingSystem.cpp ../messaging/UndoStack.cpp ../messaging/ScheduledMessages.cpp ../messaging/MessageAnalytics.cpp ../messaging/TopKConversations.cpp ../algorithms/MsgShortestPatch.cpp ../algorithms/MsgMutualInteractions.cpp ../algorithms/MsgPopularityRanker.cpp ../algorithms/MsgFriendSuggestion.cpp ../algorithms/MsgTopKMessage.cpp -o server.exe -lws2_32 -lwsock32 -DASIO_STANDALONE
+#  SocialGraphExplorer
 
-AMAN
-C:\msys64\ucrt64\bin\g++.exe -std=c++17 -I D:/Repos_Libs/VCPKG/vcpkg-master/installed/x64-windows/include -I ../include -I ../libs -I ../libs/asio -I .. server.cpp routes/algoRoutes.cpp routes/graphRoutes.cpp routes/MsgAPI.cpp routes/MsgRoutes.cpp ../dsa/user/User.cpp ../dsa/user/UserManager.cpp ../dsa/utils/idGenerator.cpp ../dsa/messaging_ds/MsgTrie.cpp ../dsa/messaging_ds/MsgStack.cpp ../dsa/messaging_ds/MsgHeap.cpp ../dsa/messaging_ds/ConversationGraph.cpp ../storage/JSONLoader.cpp ../storage/JSONWriter.cpp ../algorithms/ShortestPath.cpp ../algorithms/MutualFriends.cpp ../algorithms/FriendSuggestion.cpp ../analytics/PopularityRanker.cpp ../messaging/MessageStore.cpp ../messaging/MessageQueue.cpp ../messaging/MessagingSystem.cpp ../messaging/UndoStack.cpp ../messaging/ScheduledMessages.cpp ../messaging/MessageAnalytics.cpp ../messaging/TopKConversations.cpp ../algorithms/MsgShortestPatch.cpp ../algorithms/MsgMutualInteractions.cpp ../algorithms/MsgPopularityRanker.cpp ../algorithms/MsgFriendSuggestion.cpp ../algorithms/MsgTopKMessage.cpp -o server.exe -lws2_32 -lwsock32 -DASIO_STANDALONE
+A comprehensive **Social Network Backend & Frontend** application demonstrating advanced **Data Structures and Algorithms (DSA)** concepts. This project implements a mini Instagram-like social network with real-time graph operations, messaging systems, and analytics.
+
+![Main Page](image.png)
+
+---
+
+##  Table of Contents
+
+1. [Project Overview](#project-overview)
+2. [Key Features](#key-features)
+3. [Technology Stack](#technology-stack)
+4. [System Architecture](#system-architecture)
+5. [Data Structures & Algorithms](#data-structures--algorithms)
+6. [Quick Start Guide](#quick-start-guide)
+7. [Complete API Reference](#complete-api-reference)
+8. [Frontend Features](#frontend-features)
+9. [Database Schema](#database-schema)
+10. [Testing & Validation](#testing--validation)
+11. [Project Structure](#project-structure)
+12. [Team Contributions](#team-contributions)
+
+---
+
+##  Project Overview
+
+### Problem Statement
+
+Modern social networks require efficient handling of:
+- **Dynamic social graphs** with users and friendships
+- **Fast search** for users and friend suggestions
+- **Real-time messaging** with search and analytics
+- **Graph algorithms** for relationship analysis
+
+### Objectives
+
+| Objective | Description |
+|-----------|-------------|
+| **Educational** | Demonstrate mastery of advanced DSA concepts |
+| **Functional** | Provide a working social network prototype |
+| **Performance** | Implement efficient traversal, search, and ranking algorithms |
+| **Modular** | Ensure each component is testable and reusable |
+
+---
+
+##  Key Features
+
+### User Management
+- [ x ] User registration and authentication
+- [ x ] Profile management with posts
+- [ x ] Trie-based username autocomplete search
+- [ x ] Account deletion with cascade cleanup
+
+### Social Graph
+- [ x ] Add/Remove friendships (bidirectional)
+- [ x ] BFS/DFS graph traversals
+- [ x ] Shortest path between users
+- [ x ] Network statistics and analytics
+
+### Messaging System
+- [ x ] Send/receive messages
+- [ x ] Trie-based word and prefix search
+- [ x ] Top-K conversation partners
+- [ x ] Messaging-based friend suggestions
+- [ x ] Shortest messaging path
+
+### Analytics & Recommendations
+- [ x ] Mutual friends calculation
+- [ x ] Friend suggestions (2-hop algorithm)
+- [ x ] Popularity ranking (PageRank-style)
+- [ x ] Network metrics (density, diameter, clustering)
+
+---
+
+##  Technology Stack
+
+### Backend
+| Component | Technology | Version |
+|-----------|------------|---------|
+| Language | C++ | C++17 |
+| Web Framework | Crow | Latest |
+| Async I/O | ASIO | 1.30.2 |
+| JSON | nlohmann/json | 3.11+ |
+| Database | JSON Files | - |
+
+### Frontend
+| Component | Technology | Version |
+|-----------|------------|---------|
+| Framework | React | 19.2.0 |
+| Language | TypeScript | 5.9.3 |
+| Build Tool | Vite (Rolldown) | 7.2.5 |
+| Routing | React Router | 7.9.6 |
+| State Management | Zustand | 5.0.8 |
+| Icons | Lucide React | 0.554.0 |
+| Styling | Custom CSS | Obsidian Theme |
+
+---
+
+##  System Architecture
+
 ```
-```
-cd d:\SocialGraphExplorer\backend\api; .\server.exe
-```
-## Proxy server
-```pwsh
-cd d:\SocialGraphExplorer\backend; node cors-proxy.js
+┌─────────────────────────────────────────────────────────────────┐
+│                        FRONTEND (React)                          │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────────────────┐│
+│  │ Dashboard│ │ GraphView│ │ Messaging│ │ UserProfile          ││
+│  └────┬─────┘ └────┬─────┘ └────┬─────┘ └──────────┬───────────┘│
+│       │            │            │                   │            │
+│       └────────────┴────────────┴───────────────────┘            │
+│                              │                                    │
+│                    ┌─────────▼─────────┐                         │
+│                    │   API Service     │                         │
+│                    │  (api.ts)         │                         │
+│                    └─────────┬─────────┘                         │
+└──────────────────────────────┼───────────────────────────────────┘
+                               │ HTTP REST
+                               ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    BACKEND (C++ Crow Server)                     │
+│                         Port 8081                                │
+│  ┌────────────────────────────────────────────────────────────┐ │
+│  │                     API Routes Layer                        │ │
+│  │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐      │ │
+│  │  │ userAPI  │ │ graphAPI │ │ msgAPI   │ │ algoAPI  │      │ │
+│  │  └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘      │ │
+│  └───────┼────────────┼────────────┼────────────┼─────────────┘ │
+│          │            │            │            │               │
+│  ┌───────▼────────────▼────────────▼────────────▼─────────────┐ │
+│  │                  Business Logic Layer                       │ │
+│  │  ┌───────────┐ ┌─────────┐ ┌────────────┐ ┌─────────────┐  │ │
+│  │  │UserManager│ │  Graph  │ │MessageStore│ │ Algorithms  │  │ │
+│  │  └─────┬─────┘ └────┬────┘ └─────┬──────┘ └──────┬──────┘  │ │
+│  └────────┼────────────┼────────────┼───────────────┼──────────┘ │
+│           │            │            │               │            │
+│  ┌────────▼────────────▼────────────▼───────────────▼──────────┐ │
+│  │               Data Structures Layer (Custom DSA)            │ │
+│  │  ┌────────┐ ┌──────┐ ┌──────┐ ┌───────┐ ┌──────┐ ┌───────┐ │ │
+│  │  │  Trie  │ │ Heap │ │Stack │ │HashMap│ │ AVL  │ │ Graph │ │ │
+│  │  └────────┘ └──────┘ └──────┘ └───────┘ └──────┘ └───────┘ │ │
+│  └─────────────────────────────────────────────────────────────┘ │
+│                               │                                  │
+│  ┌────────────────────────────▼────────────────────────────────┐ │
+│  │                   Persistence Layer                          │ │
+│  │  ┌───────────┐          ┌────────────┐                      │ │
+│  │  │JSONLoader │ ◄──────► │ JSONWriter │                      │ │
+│  │  └─────┬─────┘          └──────┬─────┘                      │ │
+│  └────────┼───────────────────────┼─────────────────────────────┘ │
+└───────────┼───────────────────────┼─────────────────────────────┘
+            │                       │
+            ▼                       ▼
+    ┌───────────────────────────────────────┐
+    │         JSON Database Files           │
+    │  ┌─────────┐ ┌───────────┐ ┌────────┐│
+    │  │users.json│ │friendships│ │messages││
+    │  │(320 users)│ │(61 edges) │ │(51 msgs)││
+    │  └─────────┘ └───────────┘ └────────┘│
+    └───────────────────────────────────────┘
 ```
 
-// Fatimaaa:
-Using msys ucrt 64 terminal (not powershell)
+---
 
-cd backend\api
-# Compile the project
+##  Data Structures & Algorithms
+
+### Custom Implementations (No STL)
+
+| Data Structure | File | Purpose | Complexity |
+|----------------|------|---------|------------|
+| **Trie** | `MsgTrie.cpp` | Message word search, username autocomplete | O(L) search |
+| **Max Heap** | `MsgHeap.cpp` | Priority scheduling, Top-K queries | O(log n) |
+| **Stack** | `MsgStack.cpp` | Undo functionality | O(1) |
+| **HashMap** | `HashMap.h` | User caching, fast lookups | O(1) avg |
+| **AVL Tree** | `AVLTree.h` | Balanced storage | O(log n) |
+| **Graph** | `ConversationGraph.cpp` | Social network representation | O(V+E) |
+| **Dynamic Array** | `DynamicArray.h` | Posts, message storage | O(1) amortized |
+| **Linked List** | `LinkedList.h` | Feed management | O(1) insert |
+
+### Graph Algorithms
+
+| Algorithm | Purpose | Complexity | Endpoint |
+|-----------|---------|------------|----------|
+| **BFS** | Traversal, shortest path | O(V+E) | `/graph/bfs/:start` |
+| **DFS** | Traversal, connectivity | O(V+E) | `/graph/dfs/:start` |
+| **Dijkstra** | Weighted shortest path | O(E log V) | `/api/algo/shortest-path` |
+| **2-Hop BFS** | Friend suggestions | O(V+E) | `/api/algo/friend-suggestions` |
+| **Connected Components** | Network analysis | O(V+E) | `/graph/components` |
+
+### Analytics Algorithms
+
+| Algorithm | Purpose | Implementation |
+|-----------|---------|----------------|
+| **Mutual Friends** | Hash-set intersection | O(min(F1, F2)) |
+| **Popularity Rank** | Max-heap extraction | O(n log k) |
+| **Network Density** | Edge/vertex ratio | O(1) |
+| **Clustering Coefficient** | Triangle counting | O(V × D²) |
+
+---
+
+##  Quick Start Guide
+
+### Prerequisites
+
+| Requirement | Version | Purpose |
+|-------------|---------|---------|
+| C++ Compiler | GCC 9.0+ / MSVC 2019+ | Backend compilation |
+| Node.js | v18.0.0+ | Frontend runtime |
+| npm | v9.0.0+ | Package management |
+| Git | Latest | Version control |
+
+### Step 1: Clone Repository
+
+```bash
+git clone https://github.com/your-repo/SocialGraphExplorer.git
+cd SocialGraphExplorer
+```
+
+### Step 2: Backend Setup
+
+#### Windows (PowerShell) - Recommended
+
+```powershell
+# Navigate to backend API folder
+cd backend/api
+
+# Compile the server (adjust paths to your VCPKG/ASIO installation)
+C:\msys64\ucrt64\bin\g++.exe -std=c++17 `
+  -I D:/Repos_Libs/VCPKG/vcpkg-master/installed/x64-windows/include `
+  -I D:/Repos_Libs/asio-1.30.2/include `
+  -I ../include -I ../libs -I .. `
+  server.cpp routes/algoRoutes.cpp routes/graphRoutes.cpp routes/MsgAPI.cpp routes/MsgRoutes.cpp `
+  ../dsa/user/User.cpp ../dsa/user/UserManager.cpp ../dsa/utils/idGenerator.cpp `
+  ../dsa/messaging_ds/MsgTrie.cpp ../dsa/messaging_ds/MsgStack.cpp ../dsa/messaging_ds/MsgHeap.cpp `
+  ../dsa/messaging_ds/ConversationGraph.cpp ../storage/JSONLoader.cpp ../storage/JSONWriter.cpp `
+  ../algorithms/ShortestPath.cpp ../algorithms/MutualFriends.cpp ../algorithms/FriendSuggestion.cpp `
+  ../analytics/PopularityRanker.cpp ../messaging/MessageStore.cpp ../messaging/MessageQueue.cpp `
+  ../messaging/MessagingSystem.cpp ../messaging/UndoStack.cpp ../messaging/ScheduledMessages.cpp `
+  ../messaging/MessageAnalytics.cpp ../messaging/TopKConversations.cpp `
+  ../algorithms/MsgShortestPatch.cpp ../algorithms/MsgMutualInteractions.cpp `
+  ../algorithms/MsgPopularityRanker.cpp ../algorithms/MsgFriendSuggestion.cpp `
+  ../algorithms/MsgTopKMessage.cpp `
+  -o server.exe -lws2_32 -lwsock32 -DASIO_STANDALONE
+
+# Run the server
+.\server.exe
+```
+
+#### MSYS2 UCRT64 Terminal (Alternative)
+
+```bash
+cd backend/api
+
 g++ -std=c++17 \
   -I /d/VS_Crow/Crow/vcpkg/installed/x64-windows/include \
   -I ../include -I ../libs -I .. \
-  server.cpp routes/algoRoutes.cpp routes/graphRoutes.cpp routes/MsgAPI.cpp routes/MsgRoutes.cpp \
-  ../dsa/user/User.cpp ../dsa/user/UserManager.cpp ../dsa/utils/idGenerator.cpp \
-  ../dsa/messaging_ds/MsgTrie.cpp ../dsa/messaging_ds/MsgStack.cpp ../dsa/messaging_ds/MsgHeap.cpp ../dsa/messaging_ds/ConversationGraph.cpp \
-  ../storage/JSONLoader.cpp ../storage/JSONWriter.cpp \
-  ../algorithms/ShortestPath.cpp ../algorithms/MutualFriends.cpp ../algorithms/FriendSuggestion.cpp \
-  ../analytics/PopularityRanker.cpp \
-  ../messaging/MessageStore.cpp ../messaging/MessageQueue.cpp ../messaging/MessagingSystem.cpp ../messaging/UndoStack.cpp ../messaging/ScheduledMessages.cpp ../messaging/MessageAnalytics.cpp ../messaging/TopKConversations.cpp \
-  ../algorithms/MsgShortestPatch.cpp ../algorithms/MsgMutualInteractions.cpp ../algorithms/MsgPopularityRanker.cpp ../algorithms/MsgFriendSuggestion.cpp ../algorithms/MsgTopKMessage.cpp \
+  server.cpp routes/*.cpp ../dsa/user/*.cpp ../dsa/utils/*.cpp \
+  ../dsa/messaging_ds/*.cpp ../storage/*.cpp ../algorithms/*.cpp \
+  ../analytics/*.cpp ../messaging/*.cpp \
   -o server.exe -lws2_32 -lwsock32 -DASIO_STANDALONE
 
-  ./server.exe
-
-  then in powershell terminal
-  cd backend
-  node cors-proxy.js
-
-  
-**SocialGraphExplorer** is a modular backend framework for exploring and interacting with a social graph, designed as a **mini Instagram-like social network**. The system emphasizes **Data Structures and Algorithms (DSA)** while providing a fully functional prototype for managing users, friendships, posts, and analytics.
-
-This project is both a **learning-focused DSA implementation** and a **practical social network backend prototype**.
-
----
-
-## Table of Contents
-
-1. [Problem Statement](#problem-statement)  
-2. [Objectives](#objectives)  
-3. [Quick Start](#quick-start)
-4. [System Requirements](#system-requirements)  
-5. [Design Considerations](#design-considerations)  
-6. [Key Features & Abstract Implementation](#key-features--abstract-implementation)  
-7. [Data Structures & Algorithm Mapping](#data-structures--algorithm-mapping)  
-8. [Module Interaction & Flow](#module-interaction--flow)  
-9. [Project Structure](#project-structure)  
-10. [Team Responsibilities](#team-responsibilities)  
-11. [Future Work / Extensions](#future-work--extensions)  
-12. [Testing & Validation](#testing--validation)
-13. [Basic UI & Design](#ui-baseline)
-
----
-
-## Problem Statement
-
-Modern social networks are complex systems with users, posts, friendships, and interactions. Navigating and analyzing such networks efficiently requires robust **graph representations and supporting data structures**.  
-
-**Challenges addressed by SocialGraphExplorer:**
-- Efficient representation of a **dynamic social graph** with users and friendships.
-- Fast search for users and friend suggestions.
-- Efficient storage and retrieval of posts.
-- Analysis of relationships: mutual friends, shortest paths, recommendation ranking.
-- Implementing all functionality using **custom DSA implementations** (no STL or built-ins).
-
----
-
-## Objectives
-
-1. **Educational Objective**: Demonstrate mastery of advanced **DSA concepts** in a practical project.  
-2. **Functional Objective**: Provide a working prototype backend for social graph exploration.  
-3. **Performance Objective**: Implement efficient algorithms for traversal, search, and ranking.  
-4. **Modular Objective**: Ensure each component is modular, testable, and reusable.
-
----
-
-## Quick Start
-
-### Recent Updates (December 2024)
-
-[x]
- **Complete Data Persistence System**
-- All user operations (registration, posts, deletion) now persist to JSON database
-- Messaging APIs read/write from local JSON database
-- Graph operations (add/remove friends) persist automatically
-- Server loads 320 users, 61 friendships, and 51 messages at startup
-- Optimized startup: eliminated duplicate loading for instant server start
-- All data structures (MessageStore, MsgTrie, ConversationGraph, UserManager) initialized from JSON
-- **8 Messaging APIs + 8 User APIs + 6 Graph APIs + 10 Algorithm APIs = 32 Total Endpoints** fully operational
-- See [backend/MESSAGING_API_GUIDE.md](backend/MESSAGING_API_GUIDE.md) and [backend/ALGORITHM_API_GUIDE.md](backend/ALGORITHM_API_GUIDE.md) for complete documentation
-
-[x]
- **Backend Enhancements**
-- Added `UserRouter` with complete user management endpoints
-- Fixed path inconsistencies in file loading
-- Added `getAllUsers()` and `constructGraph()` methods to UserManager
-- Implemented automatic `saveToFile()` after all data modifications
-- Resolved merge conflicts and integrated graph algorithm endpoints (BFS, DFS, shortest-path)
-- **NEW**: Integrated 10 advanced algorithm APIs (mutual friends, friend suggestions, popularity ranking, network statistics)
-- CORS headers properly configured for all endpoints
-
-### Prerequisites
-- C++17 or higher compiler (GCC 9.0+, Clang 10.0+, MSVC 2019+)
-- Node.js v18.0.0 or higher
-- npm v9.0.0 or higher
-
-### Backend Setup & Compilation
-
-#### Initial Setup
-```bash
-cd backend
+./server.exe
 ```
 
-#### Setup Dependencies (First Time Only)
+#### Expected Output
 
-1. **Create libs folder structure:**
-```powershell
-New-Item -ItemType Directory -Path "libs/crow", "libs/asio", "libs/project_headers" -Force
 ```
-
-2. **Download ASIO library:**
-```powershell
-Invoke-WebRequest -Uri "https://github.com/chriskohlhoff/asio/archive/refs/tags/asio-1-30-2.zip" -OutFile "asio.zip"
-Expand-Archive -Path "asio.zip" -DestinationPath "." -Force
-Copy-Item -Path "asio-asio-1-30-2/asio/include/*" -Destination "libs/asio/" -Recurse -Force
-Remove-Item "asio.zip", "asio-asio-1-30-2" -Recurse -Force
-```
-
-3. **Copy Crow framework headers:**
-```powershell
-# Assuming you have Crow headers in an include/ directory
-Copy-Item -Path "include/crow_all.h" -Destination "libs/crow/" -Force
-Copy-Item -Path "include/nlohmann" -Destination "libs/crow/" -Recurse -Force
-```
-
-4. **Copy project algorithm headers:**
-```powershell
-Copy-Item -Path "algorithms/*.h" -Destination "libs/project_headers/" -Force
-```
-
-#### Compile the Server
-Whenever you make changes to any C++ files, recompile using:
-
-```bash
-g++ api/server.cpp api/routes/graphRoutes.cpp api/routes/MsgRoutes.cpp api/routes/MsgAPI.cpp dsa/user/UserManager.cpp dsa/user/user.cpp dsa/utils/idGenerator.cpp messaging/MessageStore.cpp dsa/messaging_ds/MsgTrie.cpp dsa/messaging_ds/ConversationGraph.cpp algorithms/MsgTopKMessage.cpp algorithms/MsgFriendSuggestion.cpp algorithms/MsgMutualInteractions.cpp algorithms/MsgPopularityRanker.cpp algorithms/MsgShortestPatch.cpp storage/JSONLoader.cpp storage/JSONWriter.cpp -I. -Ilibs -Ilibs/asio -std=c++17 -DASIO_STANDALONE -lws2_32 -lwsock32 -o server.exe
-```
----
-*Just in case that does not work*
-```bash
-cd d:\SocialGraphExplorer\backend; taskkill /F /IM server.exe 2>$null; g++ api/server.cpp api/routes/graphRoutes.cpp api/routes/MsgRoutes.cpp api/routes/MsgAPI.cpp dsa/user/UserManager.cpp dsa/user/user.cpp dsa/utils/idGenerator.cpp messaging/MessageStore.cpp dsa/messaging_ds/MsgTrie.cpp dsa/messaging_ds/ConversationGraph.cpp algorithms/MsgTopKMessage.cpp algorithms/MsgFriendSuggestion.cpp algorithms/MsgMutualInteractions.cpp algorithms/MsgPopularityRanker.cpp algorithms/MsgShortestPatch.cpp storage/JSONLoader.cpp storage/JSONWriter.cpp -I. -Ilibs -Ilibs/asio -std=c++17 -DASIO_STANDALONE -lws2_32 -lwsock32 -o server.exe
-```
-*And then to run*
-```bash
-Set-Location d:\SocialGraphExplorer\backend; .\server.exe
-```
----
-*Note: These commands should work regardless of the folder position but they have been tested and ran from the root folder of the project. i.e. SocialGraphExplorer/*
----
-**Note**: This includes all messaging system files, database loaders/writers, and algorithm implementations.
-
-#### Run the Server
-After compilation, start the server:
-
-```bash
-# Run in current terminal
-.\server.exe
-
-# OR run in new window to see logs
-Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd $pwd; .\server.exe"
-```
-
-The API server will be available at `http://localhost:8081`
-
-**Expected Startup Output:**
-```
-Loaded 320 users from database.
+Loaded 25 users from database.
 Loading data from JSON files...
-✓ Loaded 61 friendships from storage/local_db/friendships.json
-✓ Loaded 51 messages from storage/local_db/messages.json
+ Loaded 80 friendships from storage/local_db/friendships.json
+Loaded all messages from storage/local_db/messages.json
 Data loaded successfully!
 
 ========================================
  Social Network Graph API Server
-Listening on: http://localhost:8081
-Graph routes registered
-Messaging routes registered
-User routes registered
-Server ready!
+ Listening on: http://localhost:8081
+ Graph routes registered
+ Messaging routes registered
+ User routes registered
+ Server ready!
 ========================================
 ```
+### Step 3: Run the proxy server
+As the CORS was not being implemented up to the mark we applied the strategy of implementing the proxy server in js that acts as the the middle man between the frontend and the backend
 
-**Note:** Users are loaded automatically by UserManager constructor, ensuring fast startup without duplication.
-
-#### Verify Server is Running
-
-```bash
-# Test health endpoint
-curl http://localhost:8081/
-
-# Test messaging search (should return message IDs)
-curl http://localhost:8081/msg/search/project
-
-# Test graph endpoint
-curl http://localhost:8081/graph/friends/1
+*From the root directory*
+```
+cd backend; node cors-proxy.js
 ```
 
-#### Quick Commands
+### Step 4: Frontend Setup
+
 ```powershell
-# Navigate to backend
-cd backend
-
-# Compile (with all algorithm modules)
-g++ api/server.cpp api/routes/graphRoutes.cpp api/routes/MsgRoutes.cpp api/routes/MsgAPI.cpp dsa/user/UserManager.cpp dsa/user/user.cpp dsa/utils/idGenerator.cpp messaging/MessageStore.cpp dsa/messaging_ds/MsgTrie.cpp dsa/messaging_ds/ConversationGraph.cpp algorithms/MsgTopKMessage.cpp algorithms/MsgFriendSuggestion.cpp algorithms/MsgMutualInteractions.cpp algorithms/MsgPopularityRanker.cpp algorithms/MsgShortestPatch.cpp algorithms/MutualFriends.cpp algorithms/ShortestPath.cpp algorithms/FriendSuggestion.cpp analytics/PopularityRanker.cpp storage/JSONLoader.cpp storage/JSONWriter.cpp -I. -Ilibs -Ilibs/asio -std=c++17 -DASIO_STANDALONE -lws2_32 -lwsock32 -o server.exe
-
-# Run
-.\server.exe
-```
-## Latest compilation commands
-### Main Server
-```powershell
-C:\msys64\ucrt64\bin\g++.exe -std=c++17 -I D:/Repos_Libs/VCPKG/vcpkg-master/installed/x64-windows/include -I D:/Repos_Libs/asio-1.30.2/include -I ../include -I ../libs -I .. server.cpp routes/algoRoutes.cpp routes/graphRoutes.cpp routes/MsgAPI.cpp routes/MsgRoutes.cpp ../dsa/user/User.cpp ../dsa/user/UserManager.cpp ../dsa/utils/idGenerator.cpp ../dsa/messaging_ds/MsgTrie.cpp ../dsa/messaging_ds/MsgStack.cpp ../dsa/messaging_ds/MsgHeap.cpp ../dsa/messaging_ds/ConversationGraph.cpp ../storage/JSONLoader.cpp ../storage/JSONWriter.cpp ../algorithms/ShortestPath.cpp ../algorithms/MutualFriends.cpp ../algorithms/FriendSuggestion.cpp ../analytics/PopularityRanker.cpp ../messaging/MessageStore.cpp ../messaging/MessageQueue.cpp ../messaging/MessagingSystem.cpp ../messaging/UndoStack.cpp ../messaging/ScheduledMessages.cpp ../messaging/MessageAnalytics.cpp ../messaging/TopKConversations.cpp ../algorithms/MsgShortestPatch.cpp ../algorithms/MsgMutualInteractions.cpp ../algorithms/MsgPopularityRanker.cpp ../algorithms/MsgFriendSuggestion.cpp ../algorithms/MsgTopKMessage.cpp -o server.exe -lws2_32 -lwsock32 -DASIO_STANDALONE
-```
-## Proxy server
-```pwsh
-cd d:\SocialGraphExplorer\backend; node cors-proxy.js
-```
-## Frontend
-
-```pwsh
-cd d:\SocialGraphExplorer\frontend; npm run dev
-```
-
-### Troubleshooting Backend Setup
-
-#### Compilation Errors
-
-**Missing ASIO headers:**
-```
-fatal error: asio.hpp: No such file or directory
-```
-Solution: Re-run the ASIO download and setup commands from "Setup Dependencies" section.
-
-**Multiple definition errors:**
-```
-multiple definition of `saveMessagesToJSON'
-```
-Solution: Ensure you're not including `.cpp` files in headers. Check that `#include "../../storage/JSONWriter.h"` (not `.cpp`) in all files.
-
-**Linker errors (Windows):**
-```
-undefined reference to `WSAStartup'
-```
-Solution: Ensure `-lws2_32 -lwsock32` flags are included in the compile command.
-
-#### Runtime Errors
-
-**Port already in use:**
-```
-Failed to bind to port 8081
-```
-Solution: Stop any existing server instances or change the port in `api/server.cpp`.
-
-**JSON file not found:**
-```
-Cannot open file: storage/local_db/users.json
-```
-Solution: Ensure you're running `server.exe` from the `backend/` directory, not the repository root.
-
-**Missing database files:**
-If `storage/local_db/` doesn't exist or is empty:
-```powershell
-New-Item -ItemType Directory -Path "storage/local_db" -Force
-```
-The initial JSON files should be committed in the repository. Check git status.
-
-**Server timeout on startup:**
-If the server takes too long to start or times out:
-- This was fixed by removing duplicate user loading
-- UserManager now loads users only once in its constructor
-- Ensure you're running the latest compiled `server.exe`
-
-**Data not persisting:**
-If user posts or friendships don't persist:
-- This has been fixed - all operations now call `saveToFile()` or `saveFriendshipsToJSON()`
-- Verify you're using the latest code with persistence fixes
-- Check file permissions on `storage/local_db/` directory
-
-### Frontend Setup
-```bash
+# Open new terminal
 cd frontend
+
+# Install dependencies
 npm install
+
+# Start development server
 npm run dev
 ```
 
-Frontend will be available at `http://localhost:5173`
+Frontend will be available at: **http://localhost:5173**
 
-For detailed dependency information, see [DEPENDENCIES.md](DEPENDENCIES.md)
-
----
-
-## System Requirements
-
-**Hardware Requirements:**
-- 8 GB RAM minimum
-- 50 GB free storage for dataset and posts
-- CPU supporting multi-threading (optional for future scaling)
-
-**Software Requirements:**
-
-**Backend:**
-- C++ compiler supporting C++17 or higher (GCC 9.0+, Clang 10.0+, MSVC 2019+)
-- CMake 3.15+ (optional, for build automation)
-- No external libraries required for core functionality
-
-**Frontend:**
-- Node.js v18.0.0 or higher
-- npm v9.0.0 or higher
-- Modern web browser (Chrome 90+, Firefox 88+, Safari 14+)
-
-**Key Dependencies:**
-- React 19.2.0 with TypeScript 5.9.3
-- Vite 7.2.5 (Rolldown) for fast builds
-- Lucide React for icons
-- React Router 7.9.6 for navigation
-- Zustand 5.0.8 for state management
-- Custom CSS (no CSS frameworks)
-
-For complete dependency list, see [DEPENDENCIES.md](DEPENDENCIES.md)
-
----
-
-## Design Considerations
-
-1. **Modular Design:** Each DSA concept has its own module (Graph, Containers, Algorithms, Users, Utilities).  
-2. **Custom Implementations:** All structures (linked lists, stacks, queues, graphs, hash maps) are implemented manually.  
-3. **Data Persistence:** JSON files store users and friendships; loader/writer modules abstract file I/O.  
-4. **Scalability:** Graph traversal and ranking algorithms are optimized for **time and space complexity**.  
-5. **Extensibility:** New algorithms, post types, and analytics features can be integrated easily.
-
----
-
-## Key Features & Abstract Implementation
-
-### 1. User Management
-- **Description:** Create, update, delete users; store profiles and posts.  
-- **Implementation:**
-  - `User.h`: Stores ID, name, bio, posts, friends list.
-  - `UserManager.cpp`: In-memory user storage + Trie for username search.
-- **DSA Concepts:** Trees, Trie, recursive search.
-
-### 2. Social Graph
-- **Description:** Manage user friendships as a graph.  
-- **Implementation:**
-  - `Graph.h/.cpp`: Adjacency list + matrix for friendships.
-  - `Node.h`, `Edge.h`: Store user and edge metadata.
-- **Algorithms:**
-  - BFS / DFS for traversal and connected component detection.
-  - Dijkstra / Bellman-Ford for shortest paths.
-- **DSA Concepts:** Graph representation, traversal, shortest path.
-
-### 3. Friend Analysis
-- **Description:** Compute mutual friends and suggest new connections.  
-- **Implementation:**
-  - `MutualFriends.cpp`: Hash-set based mutual friends calculation.
-  - `FriendSuggestion.cpp`: BFS + priority queue ranking for suggestions.
-- **DSA Concepts:** Graph traversal, hash sets, priority queues.
-
-### 4. Posts & Feeds
-- **Description:** Manage user posts and feed generation.  
-- **Implementation:**
-  - `DynamicArray.h/.cpp` and `LinkedList.h/.cpp` store posts.
-  - Queues manage feed ordering; priority queues rank trending posts.
-- **DSA Concepts:** Linked lists, dynamic arrays, queues, heaps.
-
-### 5. Utilities
-- **Description:** Provide helper structures and error handling.  
-- **Implementation:**
-  - `Pair.h`: Generic pair for returning two values.
-  - `Vector2.h`: Coordinates for graph layout visualization.
-  - `Errors.h`: Custom exception classes.
-- **DSA Concepts:** Utility structures for graphs and algorithms.
-
-### 6. Messaging System
-- **Description:** Complete messaging infrastructure with search, analytics, scheduling, and undo.
-- **Implementation:**
-  - `MessagingSystem`: Main coordinator integrating MsgTrie, MsgStack, MsgHeap.
-  - `MessageQueue`: FIFO message queue using DynamicArray.
-  - `MessageAnalytics`: User interaction tracking with ConversationGraph.
-  - `ScheduledMessages`: Priority-based scheduling with MsgHeap.
-  - `TopKConversations`: Extract top-K users by interaction count.
-  - `UndoStack`: Undo functionality wrapper around MsgStack.
-- **DSA Concepts:** Tries for search, heaps for priority, stacks for undo, graphs for analytics.
-
-### 7. Data Persistence
-- **Description:** Save/load users and friendships to/from JSON.  
-- **Implementation:** `JSONLoader.cpp` and `JSONWriter.cpp`.
-
----
-
-## Data Structures & Algorithm Mapping
-
-| Module                  | Files                                           | DSA Concepts                                        |
-|------------------------|------------------------------------------------|---------------------------------------------------|
-| Graph                  | Graph.h/.cpp, Node.h, Edge.h                   | Graphs, adjacency list/matrix, node/edge metadata |
-| Traversal              | BFS.h/.cpp, DFS.h/.cpp                         | BFS, DFS, connected components, path finding      |
-| Shortest Paths         | ShortestPath.cpp                               | Dijkstra, Bellman-Ford                            |
-| User Management        | User.h, UserManager.cpp                        | Trees, Trie, recursive search, CRUD               |
-| Containers             | LinkedList, Stack, Queue, HashMap, DynamicArray, PriorityQueue, Trie | Linked lists, stacks, queues, heaps, hash tables |
-| Messaging DS           | MsgHeap, MsgTrie, MsgStack, ConversationGraph, AVLTree | Priority heaps, tries, weighted graphs, balanced trees |
-| Messaging System       | MessagingSystem, MessageQueue, MessageAnalytics, ScheduledMessages, TopKConversations, UndoStack | System integration, FIFO queues, analytics, scheduling |
-| Msg Algorithms         | MsgFriendSuggestion, MsgMutualInteraction, MsgShortestPath, MsgTopKMessages | Friends-of-friends, mutual connections, BFS, top-K extraction |
-| Graph Algorithms       | MutualFriends.cpp, FriendSuggestion.cpp        | Graph-based analytics, hash sets, priority queues |
-| Utilities              | Pair.h, Vector2.h, Errors.h, IDGenerator       | Custom structures, graph layout, error handling   |
-
----
-
-## Module Interaction & Flow
-
-```text
-[ UserManager ] <----> [ Graph ] <----> [ BFS/DFS/ShortestPath ]
-       |                          |
-       v                          v
- [ Containers: LinkedList/Stack/Queue/DynamicArray/HashMap/PriorityQueue/Trie ]
-       |                          |
-       v                          v
- [ Messaging DS: MsgHeap/MsgTrie/MsgStack/ConversationGraph/AVLTree ]
-       |                          |
-       v                          v
- [ MessagingSystem ] <----> [ MessageQueue/Analytics/Scheduling/TopK ]
-       |                          |
-       v                          v
- [ MutualFriends / FriendSuggestion / Msg Algorithms ] <- consume graph + containers
-       |
-       v
- [ main.cpp ] <----> [ JSONLoader / JSONWriter ] <- persistent storage
-```
----
->Integration occurs in main.cpp which coordinates all modules.
-
-Containers serve as shared structures for storing nodes, posts, feeds, and rankings.
-
-Messaging system provides complete infrastructure for user interactions and analytics.
-
-Algorithms consume graph and container data for social network analysis and recommendations.
----
-
-## **Project Structure**
-```
-SocialGraphExplorer/
-├── backend/
-│   ├── libs/                   # External dependencies (ASIO, Crow, headers)
-│   │   ├── asio/               # ASIO 1.30.2 standalone headers
-│   │   ├── crow/               # Crow framework (crow_all.h, nlohmann/json)
-│   │   └── project_headers/    # Project algorithm headers
-│   ├── dsa/
-│   │   ├── graph/              # Graph, Node, Edge
-│   │   ├── containers/         # LinkedList, Stack, Queue, HashMap, DynamicArray, Pair, PriorityQueue, Trie
-│   │   ├── messaging_ds/       # MsgHeap, MsgTrie, MsgStack, ConversationGraph, AVLTree
-│   │   ├── user/               # User, UserManager
-│   │   └── utils/              # Vector2, Errors, IDGenerator, Pair
-│   ├── algorithms/             # BFS, DFS, ShortestPath, MutualFriends, FriendSuggestion
-│   │   └── Msg*/               # Message-based algorithms (MsgFriendSuggestion, MsgShortestPath, etc.)
-│   ├── messaging/              # Complete messaging system
-│   │   ├── Message.h           # Message data structure
-│   │   ├── MessageStore        # Message storage and retrieval
-│   ├── api/                    # REST API routes and server (Crow framework)
-│   │   ├── server.cpp          # Main server (port 8081)
-│   │   └── routes/
-│   │       ├── graphRoutes.h   # GraphRoutes class definition
-│   │       ├── graphRoutes.cpp # 9 graph endpoints with persistence
-│   │       ├── MsgRoutes.cpp   # 8 messaging endpoints
-│   │       ├── MsgAPI.cpp      # Messaging API handlers
-│   ├── storage/                # JSONLoader, JSONWriter with persistence
-│   │   └── local_db/           # JSON database (auto-updated)
-│   │       ├── users.json      # 320 users with posts (persistent)
-│   │       ├── friendships.json # 61 friendship connections (persistent)
-│   │       └── messages.json   # 51 messages with full text (persistent)
-│   │       ├── friendships.json # 62 friendship connections
-│   │       └── messages.json   # 50+ messages with full text
-│   ├── api/                    # REST API routes and server (Crow framework)
-│   │   ├── server.cpp          # Main server (port 8081)
-│   │   └── routes/
-│   │       ├── graphRoutes.cpp # 6 graph endpoints
-│   │       ├── MsgRoutes.cpp   # 8 messaging endpoints
-│   │       ├── MsgAPI.cpp      # Messaging API handlers
-│   │       └── userRoutes.cpp  # User management endpoints
-│   ├── tests/                  # Comprehensive test suite
-│   │   ├── unit-tests/         # 28+ unit test files
-│   │   │   ├── README_MESSAGING_TESTS.md
-│   │   │   ├── README_MESSAGING_SYSTEM_TESTS.md
-│   │   │   └── README_MSG_ALGORITHMS_TESTS.md
-│   │   ├── integration/        # Integration tests
-│   │   ├── run_all_messaging_tests.ps1
-│   │   └── run_all_msg_algorithm_tests.ps1
-│   ├── GRAPH_API_GUIDE.md      # Complete graph/friendship API documentation (NEW)
-│   ├── USER_API_GUIDE.md       # Complete user management API documentation (NEW)
-│   ├── MESSAGING_API_GUIDE.md  # Complete messaging API documentation
-│   ├── ALGORITHM_API_GUIDE.md  # Complete algorithm API documentation
-│   ├── main.cpp
-│   └── server.exe              # Compiled server binary
-├── frontend/
-│   ├── src/
-│   │   ├── components/         # React components (Sidebar, GraphView, etc.)
-│   │   ├── pages/              # Page components (MainUI)
-│   │   ├── layouts/            # Layout components (AppLayout)
-│   │   ├── data/               # Dummy data for development
-│   │   └── styles/             # 12 custom CSS files (Obsidian theme)
-│   ├── public/
-│   ├── package.json
-│   └── vite.config.ts
-├── structure.md                # Complete file structure documentation
-├── DEPENDENCIES.md             # Detailed dependency information
-└── README.md                   # This file
-```
-
-## **Team Responsibilities**
-
-| Team Member | Files                                                         | Focus                                                   |
-| ----------- | ------------------------------------------------------------- | ------------------------------------------------------- |
-| 1           | Graph, Node, Edge, BFS, DFS, ShortestPath                     | Graph structures, traversal, shortest paths             |
-| 2           | User, UserManager, Trie                                       | User management, search, hierarchy                      |
-| 3           | LinkedList, Stack, Queue, HashMap, DynamicArray               | Containers for posts, feeds, undo/redo                  |
-| 4           | MutualFriends, FriendSuggestion, utils/*.h, Sorting/Searching | Graph analytics, friend suggestions, utility structures |
-
-
-## Future Work / Extensions
-
-While SocialGraphExplorer currently provides a robust backend framework and demonstrates a wide variety of DSA concepts, several **extensions and enhancements** can be implemented in future versions:
-
-1. **Advanced Post Features**
-   - Support for **images, videos, and multimedia posts**.  
-   - Comments, likes, and shares for posts.  
-   - Ranking of posts using **priority queues** or **timestamp-based sorting**.  
-
-2. **Graph Visualization**
-   - Interactive **frontend visualization** of the social network using **React + D3.js**.  
-   - Dynamic layout with **Vector2 coordinates** to display user nodes and friendships.  
-
-3. **Community Detection & Clustering**
-   - Identify **communities** within the social graph using algorithms like **Louvain** or **modularity maximization**.  
-   - Suggest groups or communities to users for enhanced engagement.  
-
-4. **Recommendation Systems**
-   - Advanced friend suggestion using **machine learning** or **graph embedding techniques** (Node2Vec, GraphSAGE).  
-   - Personalized post recommendations based on user interactions and mutual friends.  
-
-5. **Scalability & Performance**
-   - Transition from **JSON storage to SQL or NoSQL databases** for large-scale social graphs.  
-   - Optimize traversal and ranking algorithms for **high-volume datasets**.  
-
-6. **Security & Access Control**
-   - Implement **authentication and authorization** for users.  
-   - Secure sensitive data with encryption and safe storage practices.  
-
-7. **Analytics & Reporting**
-   - User engagement metrics: top influencers, activity trends.  
-   - Graph analytics: average shortest path, clustering coefficients, centrality measures.  
-
----
-
-## API Documentation
-
-### Available API Endpoints
-
-The backend server exposes **35+ REST API endpoints** across four categories:
-
-#### 1. Graph APIs (9 endpoints)
-- `GET /graph/friends/:id` - Get all friends of a user
-- `POST /graph/addFriend` - Create friendship between two users (with auto-save)
-- `POST /graph/removeFriend` - Remove friendship (with auto-save)
-- `GET /graph/stats` - Get graph statistics (nodes, edges, components, density)
-- `GET /graph/connected/:u/:v` - Check if two users are connected
-- `GET /graph/components` - Get number of connected components
-- `GET /graph/bfs/:start` - Perform BFS traversal from a user
-- `GET /graph/dfs/:start` - Perform DFS traversal from a user
-- `GET /graph/shortest-path/:src/:dest` - Find shortest path between users
-
-#### 2. Messaging APIs (8 endpoints)
-- `POST /msg/send` - Send a new message (auto-saves to DB)
-- `GET /msg/search/:word` - Search messages by exact word
-- `GET /msg/prefix/:prefix` - Search messages by word prefix
-- `GET /msg/topk/:userId/:k` - Get top K conversation partners
-- `GET /msg/suggestions/:userId/:k` - Get friend suggestions based on messages
-- `GET /msg/mutual/:userId` - Find mutual interactions
-#### 3. User Management APIs (8 endpoints)
-- `POST /api/users/register` - Register new user (with auto-save)
-- `POST /api/users/login` - User login with credentials
-- `GET /api/users/search?prefix=...` - Search users by username prefix
-- `GET /api/users/:id` - Get user profile with all posts
-- `DELETE /api/users/:id` - Delete user (with auto-save)
-- `POST /api/users/:id/posts` - Create a new post (with auto-save)
-- `GET /api/users/:id/posts` - Get all posts for a user
-- `DELETE /api/users/:id/posts/:postIndex` - Delete a post (with auto-save)
-
-#### 4. Advanced Algorithm APIs (10 endpoints)
-**Social Network Analysis & Recommendations**
-
-- `GET /api/algo/mutual-friends?user1={id}&user2={id}` - Find common friends between two users
-  - **Use Case**: Display mutual connections, friend comparison
-  - **Algorithm**: Hash-set intersection on adjacency lists
-  
-- `GET /api/algo/shortest-path?start={id}&end={id}` - Find shortest connection path
-  - **Use Case**: "How do you know X?" feature, connection degrees
-  - **Algorithm**: BFS-based shortest path with parent tracking
-  
-- `GET /api/algo/users-within-distance?userId={id}&distance={n}` - Find users N hops away
-  - **Use Case**: "Discover people near your network", expand social circle
-  - **Algorithm**: BFS with distance limiting
-  
-- `GET /api/algo/user-degree?userId={id}` - Get friend count
-  - **Use Case**: User statistics, profile metrics
-### Quick API Test
+### Step 4: Verify Installation
 
 ```bash
-# Get API menu (now includes algorithm endpoints)
-curl http://localhost:8081/
+# Test health endpoint
+curl http://localhost:8081/health
 
-# Test user registration (persists to database)
-curl -X POST http://localhost:8081/api/users/register \
-  -H "Content-Type: application/json" \
-  -d '{"username":"newuser","password":"pass123"}'
-# Expected: {"success":true,"message":"User registered successfully"}
-
-# Get mutual friends between two users
-curl "http://localhost:8081/api/algo/mutual-friends?user1=1&user2=5"
-# Expected: {"user1":1,"user2":5,"mutualFriends":[2,3,7],"count":3}
-
-# Find shortest path between users (degrees of separation)
-curl "http://localhost:8081/api/algo/shortest-path?start=1&end=10"
-# Expected: {"start":1,"end":10,"path":[1,3,7,10],"distance":3,"exists":true}
-
-# Get top 5 most popular users (influencers)
-curl "http://localhost:8081/api/algo/top-popular?n=5"
-# Expected: {"topUsers":[{"userId":5,"score":45},{"userId":2,"score":38}...],"count":5}
-
-# Get AI-powered friend suggestions
-curl "http://localhost:8081/api/algo/friend-suggestions?userId=1&limit=10"
-# Expected: {"userId":1,"suggestions":[{"userId":15,"mutualFriends":5,"frequencyScore":8}...],"count":10}
-
-# Get complete network statistics
-curl http://localhost:8081/api/algo/graph-stats
-# Expected: {"nodeCount":320,"edgeCount":61,"averageDegree":2.1,"density":0.0012,"diameter":8,...}
-
-# Run algorithm unit tests
-curl http://localhost:8081/api/algo/unit-tests
-# Expected: Detailed test results with pass/fail for all algorithms
-
-# Search for word "project" in messages
-curl http://localhost:8081/msg/search/project
-# Expected: {"results":[1,5,12,23,34,42]}
-
-# Get user with posts
+# Test user API
 curl http://localhost:8081/api/users/1
-# Expected: {"success":true,"user":{"id":1,"username":"alice_smith","posts":[...]}}
 
-# BFS traversal from user 1
-curl http://localhost:8081/graph/bfs/1
-# Expected: {"success":true,"start":1,"traversal":[1,2,3,5,7,10,...]}
-```
-
-**Note:** All POST/DELETE operations now persist changes to the JSON database automatically!
-
----
-
-## Complete API Documentation
-
-### 📚 All API Guides
-
-We provide comprehensive documentation for all 32+ endpoints across 4 categories:
-
-#### 1. **Graph API Guide** (9 endpoints)
-📖 **[backend/GRAPH_API_GUIDE.md](backend/GRAPH_API_GUIDE.md)**
-
-Covers friendship management and network analysis:
-- Get/Add/Remove friends with auto-persistence
-- BFS/DFS traversal algorithms
-- Shortest path finding
-- Network statistics (density, components, connectivity)
-- Real-time graph analytics
-
-#### 2. **User API Guide** (8 endpoints)  
-📖 **[backend/USER_API_GUIDE.md](backend/USER_API_GUIDE.md)**
-
-Covers user management and posts:
-- User registration and authentication
-- Trie-based user search/autocomplete
-- Post creation and management
-- Profile management with auto-persistence
-- Complete CRUD operations
-
-#### 3. **Messaging API Guide** (8 endpoints)
-📖 **[backend/MESSAGING_API_GUIDE.md](backend/MESSAGING_API_GUIDE.md)**
-
-Covers message operations and analysis:
-- Send messages with auto-save
-- Word/prefix search using Trie
-- Top-K conversations and rankings
-- Friend suggestions based on messages
-- Shortest messaging path (BFS)
-
-#### 4. **Algorithm API Guide** (10 endpoints)
-📖 **[backend/ALGORITHM_API_GUIDE.md](backend/ALGORITHM_API_GUIDE.md)**
-
-Covers advanced social network algorithms:
-- Mutual friends (hash-set intersection)
-- Friend suggestions (2-hop algorithm)
-- Popularity ranking (max-heap)
-- Network metrics (clustering, diameter)
-- Users within distance (BFS variants)
-
-### 📊 What's in Each Guide
-
-All guides include:
-- [x]
- Real cURL and PowerShell examples
-- [x]
- Expected JSON responses with sample data
-- [x]
- Algorithm explanations with complexity analysis
-- [x]
- Error handling and troubleshooting
-- [x]
- Performance metrics and optimization tips
-- [x]
- Testing workflows and validation suites
-- [x]
- Integration examples (React components)
-- [x]
- Use cases and real-world applications
-
----
-### Quick API Test
-
-```bash
-# Get API menu
-curl http://localhost:8081/
-
-# Test user registration (persists to database)
-curl -X POST http://localhost:8081/api/users/register \
-  -H "Content-Type: application/json" \
-  -d '{"username":"newuser","password":"pass123"}'
-# Expected: {"success":true,"message":"User registered successfully"}
-
-# Create a post (persists to database)
-curl -X POST http://localhost:8081/api/users/1/posts \
-  -H "Content-Type: application/json" \
-  -d '{"content":"My first post!"}'
-# Expected: {"success":true,"message":"Post created successfully"}
-
-# Get user with posts
-curl http://localhost:8081/api/users/1
-# Expected: {"success":true,"user":{"id":1,"username":"alice_smith","posts":[...]}}
-
-# Search for word "project" in messages
-curl http://localhost:8081/msg/search/project
-# Expected: {"results":[1,5,12,23,34,42]}
-
-# Get graph friends
+# Test graph API
 curl http://localhost:8081/graph/friends/1
-# Expected: {"success":true,"userId":1,"friends":[...],"count":5}
 
-# BFS traversal from user 1
-curl http://localhost:8081/graph/bfs/1
-# Expected: {"success":true,"start":1,"traversal":[1,2,3,5,7,10,...]}
-```
-
-**Note:** All POST/DELETE operations now persist changes to the JSON database automatically!d '{"senderId":1,"receiverId":3,"text":"Hello!"}'
-# Expected: {"status":"success","messageId":51}
+# Test messaging API
+curl http://localhost:8081/msg/search/hello
 ```
 
 ---
 
-## Testing & Validation
+##  Complete API Reference
 
-A rigorous testing framework ensures **functionality, correctness, and performance** of SocialGraphExplorer.
+**Base URL:** `http://localhost:8081`
 
-###    Test Status: 79+ Tests Passing
+### Health Check
 
-| Test Suite | Tests | Status | Description |
-|------------|-------|--------|-------------|
-| **Messaging Integration** | 9/9 |    PASS | MessageStore, Trie, Graph, Algorithms |
-| **Msg Algorithms** | 21/21 |    PASS | MutualInteraction, FriendSuggestion, ShortestPath, TopK |
-| **Messaging DS** | 28/28 |    PASS | MsgHeap, MsgTrie, ConversationGraph, AVLTree, Stack |
-| **Messaging System** | 21/21 |    PASS | MessagingSystem, Queue, Analytics, Scheduling |
-| **TOTAL** | **79+** | **   ALL PASS** | Complete test coverage |
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/health` | Server health check |
+
+---
+
+###  User Management APIs (8 Endpoints)
+
+| Method | Endpoint | Body | Description |
+|--------|----------|------|-------------|
+| POST | `/api/users/register` | `{username, password}` | Register new user |
+| POST | `/api/users/login` | `{username, password}` | User login |
+| GET | `/api/users/search?prefix=X` | - | Search users by prefix (Trie) |
+| GET | `/api/users/:id` | - | Get user by ID |
+| DELETE | `/api/users/:id` | - | Delete user account |
+| POST | `/api/users/:id/posts` | `{content}` | Create post |
+| GET | `/api/users/:id/posts` | - | Get user posts |
+| DELETE | `/api/users/:id/posts/:index` | - | Delete post |
+
+#### Example: User Registration
+```bash
+curl -X POST http://localhost:8081/api/users/register \
+  -H "Content-Type: application/json" \
+  -d '{"username":"alice","password":"pass123"}'
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "User registered successfully",
+  "userId": 321
+}
+```
+
+---
+
+###  Graph Operations APIs (9 Endpoints)
+
+| Method | Endpoint | Body | Description |
+|--------|----------|------|-------------|
+| GET | `/graph/friends/:id` | - | Get user's friends |
+| POST | `/graph/addFriend` | `{u, v}` | Add friendship (bidirectional) |
+| POST | `/graph/removeFriend` | `{u, v}` | Remove friendship |
+| GET | `/graph/stats` | - | Get graph statistics |
+| GET | `/graph/connected/:u/:v` | - | Check if users connected |
+| GET | `/graph/components` | - | Get connected components count |
+| GET | `/graph/bfs/:start` | - | BFS traversal from user |
+| GET | `/graph/dfs/:start` | - | DFS traversal from user |
+| GET | `/graph/shortest-path/:src/:dest` | - | Shortest path between users |
+
+#### Example: Add Friendship
+```bash
+curl -X POST http://localhost:8081/graph/addFriend \
+  -H "Content-Type: application/json" \
+  -d '{"u":1,"v":2}'
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Friendship added between 1 and 2"
+}
+```
+
+#### Example: Graph Statistics
+```bash
+curl http://localhost:8081/graph/stats
+```
+
+**Response:**
+```json
+{
+  "nodeCount": 320,
+  "edgeCount": 61,
+  "averageDegree": 2.1,
+  "density": 0.0012,
+  "connected": false,
+  "components": 45,
+  "diameter": 8
+}
+```
+
+---
+
+###  Messaging System APIs (8 Endpoints)
+
+| Method | Endpoint | Body | Description |
+|--------|----------|------|-------------|
+| POST | `/msg/send` | `{senderId, receiverId, text}` | Send message |
+| GET | `/msg/search/:word` | - | Search by exact word (Trie) |
+| GET | `/msg/prefix/:prefix` | - | Search by word prefix (Trie) |
+| GET | `/msg/topk/:userId/:k` | - | Top K conversation partners |
+| GET | `/msg/suggestions/:userId/:k` | - | Friend suggestions from messages |
+| GET | `/msg/mutual/:userId` | - | Mutual interactions |
+| GET | `/msg/rank/:topN` | - | Popularity ranking |
+| GET | `/msg/path/:src/:dest` | - | Shortest messaging path |
+
+#### Example: Send Message
+```bash
+curl -X POST http://localhost:8081/msg/send \
+  -H "Content-Type: application/json" \
+  -d '{"senderId":1,"receiverId":2,"text":"Hello, how are you?"}'
+```
+
+**Response:**
+```json
+{
+  "status": "success",
+  "messageId": 52
+}
+```
+
+#### Example: Search Messages by Prefix
+```bash
+curl http://localhost:8081/msg/prefix/proj
+```
+
+**Response:**
+```json
+{
+  "results": [1, 5, 12, 23, 34, 42],
+  "count": 6
+}
+```
+
+---
+
+###  Algorithm APIs (10 Endpoints)
+
+| Method | Endpoint | Description | Algorithm |
+|--------|----------|-------------|-----------|
+| GET | `/api/algo/mutual-friends?user1=X&user2=Y` | Find common friends | Hash-set intersection |
+| GET | `/api/algo/shortest-path?start=X&end=Y` | Shortest connection path | BFS |
+| GET | `/api/algo/users-within-distance?userId=X&distance=N` | Users N hops away | BFS |
+| GET | `/api/algo/user-degree?userId=X` | Get friend count | Adjacency list |
+| GET | `/api/algo/user-rank?userId=X` | Get popularity rank | Max-heap |
+| GET | `/api/algo/graph-stats` | Network statistics | Graph analysis |
+| GET | `/api/algo/top-popular?n=X` | Top N popular users | Max-heap |
+| GET | `/api/algo/two-hop-friends?userId=X` | Friends of friends | 2-hop BFS |
+| GET | `/api/algo/friend-suggestions?userId=X&limit=N` | AI friend suggestions | Mutual friends + frequency |
+| GET | `/api/algo/unit-tests` | Run algorithm tests | Testing |
+
+#### Example: Mutual Friends
+```bash
+curl "http://localhost:8081/api/algo/mutual-friends?user1=1&user2=5"
+```
+
+**Response:**
+```json
+{
+  "user1": 1,
+  "user2": 5,
+  "mutualFriends": [2, 3, 7],
+  "count": 3
+}
+```
+
+#### Example: Friend Suggestions
+```bash
+curl "http://localhost:8081/api/algo/friend-suggestions?userId=1&limit=5"
+```
+
+**Response:**
+```json
+{
+  "userId": 1,
+  "suggestions": [
+    {"userId": 15, "mutualFriends": 5, "score": 8.5},
+    {"userId": 22, "mutualFriends": 3, "score": 6.2}
+  ],
+  "count": 2
+}
+```
+
+---
+
+### Response Format
+
+**Success Response:**
+```json
+{
+  "success": true,
+  "data": {...}
+}
+```
+
+**Error Response:**
+```json
+{
+  "success": false,
+  "error": "Error message description"
+}
+```
+
+### HTTP Status Codes
+
+| Code | Meaning |
+|------|---------|
+| 200 | OK (successful GET) |
+| 201 | Created (successful POST) |
+| 400 | Bad Request |
+| 401 | Unauthorized |
+| 404 | Not Found |
+| 500 | Internal Server Error |
+
+---
+
+## 🖥 Frontend Features
+
+### Pages & Components
+
+| Page | Description | Key Features |
+|------|-------------|--------------|
+| **Dashboard** | User home page | Stats, friends, posts, suggestions |
+| **Graph View** | Network visualization | BFS/DFS traversal, node selection |
+| **Messaging Hub** | Chat interface | Real-time messaging, search, analytics |
+| **User Profile** | Profile view | Connect button, posts, friends list |
+| **Login/Register** | Authentication | Form validation, localStorage |
+
+### UI Features
+
+-  **Dark Obsidian Theme** - Professional dark mode design
+-  **Responsive Layout** - Works on all screen sizes
+-  **Toast Notifications** - Success/error feedback
+-  **Loading States** - Smooth UX with spinners
+-  **Real-time Search** - Trie-based autocomplete
+
+### State Management
+
+- **localStorage** - User session persistence
+- **Zustand** - Global state management
+- **React Context** - Theme and auth context
+
+---
+
+##  Database Schema
+
+### users.json
+```json
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "alice_smith",
+      "password": "hashed_password",
+      "posts": ["First post!", "Hello world!"]
+    }
+  ]
+}
+```
+
+### friendships.json
+```json
+{
+  "friendships": [
+    {"u": 1, "v": 2},
+    {"u": 1, "v": 3}
+  ]
+}
+```
+
+### messages.json
+```json
+{
+  "messages": [
+    {
+      "id": 1,
+      "senderId": 1,
+      "receiverId": 2,
+      "text": "Hey, how's the project going?",
+      "timestamp": 1702389600
+    }
+  ]
+}
+```
+
+### Current Database Stats
+
+| Entity | Count |
+|--------|-------|
+| Users | 320 |
+| Friendships | 61 |
+| Messages | 51 |
+
+---
+
+##  Testing & Validation
+
+### Test Coverage
+
+| Test Suite | Tests | Status |
+|------------|-------|--------|
+| Messaging Integration | 9/9 | [ x ] PASS |
+| Msg Algorithms | 21/21 | [ x ] PASS |
+| Messaging DS | 28/28 | [ x ] PASS |
+| Messaging System | 21/21 | [ x ] PASS |
+| **TOTAL** | **79+** | **[ x ] ALL PASS** |
 
 ### Running Tests
 
 ```powershell
-# From D:\SocialGraphExplorer
-.\backend\tests\MsgAPI.exe
+# Run all messaging tests
+.\backend\tests\run_all_messaging_tests.ps1
+
+# Run algorithm tests
+.\backend\tests\run_all_msg_algorithm_tests.ps1
+
+# Run via API
+curl http://localhost:8081/api/algo/unit-tests
 ```
 
-**Detailed Documentation:** See [TESTING_GUIDE.md](TESTING_GUIDE.md)
+### API Testing with Postman
 
-### Original Testing Strategy
+Import the included Postman collection:
+```
+SocialGraphExplorer.postman_collection.json
+```
 
-1. **Unit Testing**
-   - Test each module independently.  
-   - Examples:
-     - **Graph module:** verify adding/removing nodes and edges, BFS/DFS correctness.  
-     - **UserManager:** test CRUD operations and Trie-based search.  
-     - **Containers:** check push/pop, enqueue/dequeue, insert/remove correctness.  
-
-2. **Integration Testing**
-   - Verify **interactions between modules**.  
-   - Examples:
-     - Ensure `UserManager` correctly interacts with `Graph` for friendship operations.  
-     - Friend suggestion algorithm correctly uses BFS traversal and containers.  
-     - JSONLoader/Writer properly saves and loads all modules’ data.  
-
-3. **Performance Testing**
-   - Measure time and memory complexity for:
-     - Graph traversals on large networks.  
-     - Mutual friends and friend suggestion algorithms.  
-     - Feed generation and post ranking.  
-
-4. **Validation**
-   - Check correctness of DSA implementations:
-     - BFS/DFS visit orders match expected results.  
-     - Shortest paths are optimal (Dijkstra/Bellman-Ford).  
-     - Containers (LinkedList, Stack, Queue, HashMap, DynamicArray) maintain correct states.  
-
-5. **Automated Testing Framework**
-   - Implement a **unit and integration test suite** that can be run via **C++ testing frameworks** (e.g., Google Test).  
-   - Ensure **continuous validation** after every code change.  
-
-## **UI Baseline**
-
-**Main page**
----
-![Main Page](image.png)
 ---
 
-**Posts Page**
+##  Project Structure
+
+```
+SocialGraphExplorer/
+├── backend/
+│   ├── api/
+│   │   ├── server.cpp              # Main Crow server (port 8081)
+│   │   └── routes/
+│   │       ├── algoRoutes.cpp      # Algorithm endpoints
+│   │       ├── graphRoutes.cpp     # Graph endpoints
+│   │       ├── MsgRoutes.cpp       # Messaging endpoints
+│   │       └── MsgAPI.cpp          # Messaging handlers
+│   ├── dsa/
+│   │   ├── containers/             # LinkedList, Stack, Queue, HashMap
+│   │   ├── graph/                  # Graph, Node, Edge
+│   │   ├── messaging_ds/           # MsgTrie, MsgHeap, MsgStack
+│   │   ├── user/                   # User, UserManager
+│   │   └── utils/                  # IDGenerator, Errors
+│   ├── algorithms/                 # BFS, DFS, ShortestPath, etc.
+│   ├── messaging/                  # MessagingSystem, MessageStore
+│   ├── storage/
+│   │   ├── JSONLoader.cpp
+│   │   ├── JSONWriter.cpp
+│   │   └── local_db/               # JSON database files
+│   └── tests/                      # 79+ unit tests
+├── frontend/
+│   ├── src/
+│   │   ├── components/             # React components
+│   │   ├── pages/                  # Page components
+│   │   ├── services/               # API service (api.ts)
+│   │   └── styles/                 # CSS files
+│   ├── package.json
+│   └── vite.config.ts
+├── README.md                       # This file
+├── API_QUICK_REFERENCE.md
+├── DEPENDENCIES.md
+└── TESTING_GUIDE.md
+```
+
 ---
-![Posts Page](image-1.png)
+
+##  Team Contributions
+
+| Member | Responsibilities |
+|--------|-----------------|
+| **Anum** | Hashmaps, DynamicArray, Trie, Id Generator, User specific details and apis |
+| **Aman** | LinkedList , Stack Queue, BFS DFS, Graph related details handling and apis |
+| **Fatima** | Priority Queues , Algorithms: Shortest Path, Popularity Ranker, Mutual Friends, and their routes |
+| **Waasila** | Messaging DSA: Undo Stack , AVL trees , Msg Heap, Msg Trie Messaging Algorithms : Message Related Algorithms (Sorting, Searching Ranking) |
+
 ---
- **Basic Graph Interface (Under work)**
+
+##  Performance Metrics
+
+| Operation | Time Complexity | Space Complexity |
+|-----------|-----------------|------------------|
+| User Search (Trie) | O(L) | O(N×L) |
+| Add/Remove Friend | O(1) | O(V+E) |
+| BFS/DFS Traversal | O(V+E) | O(V) |
+| Shortest Path | O(V+E) | O(V) |
+| Message Search | O(L) | O(N×L) |
+| Top-K Users | O(N log K) | O(K) |
+| Mutual Friends | O(min(F1, F2)) | O(min(F1, F2)) |
+
 ---
-![graph interface](image-2.png)
+
+##  Troubleshooting
+
+### Common Issues
+
+**Port already in use:**
+```powershell
+taskkill /F /IM server.exe
+```
+
+**CORS errors:**
+- Ensure backend CORS headers are configured
+- Check frontend API_BASE_URL is correct (port 8081)
+
+**Compilation errors:**
+- Verify ASIO and Crow paths are correct
+- Ensure C++17 flag is set
+
+**Frontend not connecting:**
+```bash
+# Verify backend is running
+curl http://localhost:8081/health
+```
+
 ---
- 
+
+##  Additional Documentation
+
+- [API_QUICK_REFERENCE.md](API_QUICK_REFERENCE.md) - API cheatsheet
+- [DEPENDENCIES.md](DEPENDENCIES.md) - Full dependency list
+- [TESTING_GUIDE.md](TESTING_GUIDE.md) - Testing documentation
+- [POSTMAN_API_GUIDE.md](POSTMAN_API_GUIDE.md) - Postman collection guide
+- [backend/GRAPH_API_GUIDE.md](backend/GRAPH_API_GUIDE.md) - Graph API details
+- [backend/USER_API_GUIDE.md](backend/USER_API_GUIDE.md) - User API details
+- [backend/MESSAGING_API_GUIDE.md](backend/MESSAGING_API_GUIDE.md) - Messaging API details
+- [backend/ALGORITHM_API_GUIDE.md](backend/ALGORITHM_API_GUIDE.md) - Algorithm API details
+
+---
+
+##  License
+
+This project is developed for educational purposes as part of a Data Structures & Algorithms course. For CS 14 B Nust 
+
+---
+
+<div align="center">
+
+**Built with ❤️ using C++, React, and Custom DSA Implementations**
+
+*SocialGraphExplorer - Demonstrating DSA in Real-World Applications*
+
+</div>

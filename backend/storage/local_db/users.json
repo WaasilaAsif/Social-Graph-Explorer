@@ -192,7 +192,7 @@
             "password": "pass123",
             "posts": [
                 "Testing suite comprehensive",
-                "Unit tests passing ✅",
+                "Unit tests passing [ x ]",
                 "Integration tests done",
                 "Code coverage at 95%"
             ],
