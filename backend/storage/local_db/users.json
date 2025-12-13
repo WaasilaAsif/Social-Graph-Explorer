@@ -1,0 +1,279 @@
+{
+    "users": [
+        {
+            "id": 1,
+            "password": "pass123",
+            "posts": [
+                "Just deployed my first C++ server!",
+                "Coffee and code, the perfect combo ☕",
+                "Learning graph algorithms is fascinating",
+                "Anyone up for a coding session?"
+            ],
+            "username": "alice_smith"
+        },
+        {
+            "id": 2,
+            "password": "pass123",
+            "posts": [
+                "Implemented BFS today! 🎉",
+                "Data structures are life",
+                "Working on the API endpoints",
+                "Debugging is my superpower 🐛"
+            ],
+            "username": "bob_jones"
+        },
+        {
+            "id": 3,
+            "password": "pass123",
+            "posts": [
+                "React components looking good!",
+                "Frontend dev is so much fun",
+                "Just pushed a major update",
+                "CSS Grid is amazing"
+            ],
+            "username": "charlie_brown"
+        },
+        {
+            "id": 4,
+            "password": "pass123",
+            "posts": [
+                "Algorithm optimization complete ⚡",
+                "Performance testing passed!",
+                "Love working with graphs",
+                "Code review time 👀"
+            ],
+            "username": "diana_wilson"
+        },
+        {
+            "id": 5,
+            "password": "pass123",
+            "posts": [
+                "New feature deployed successfully",
+                "TypeScript makes everything better",
+                "Refactoring old code today",
+                "Clean code matters 🧹"
+            ],
+            "username": "eve_davis"
+        },
+        {
+            "id": 6,
+            "password": "pass123",
+            "posts": [
+                "Backend architecture is solid",
+                "REST API design principles",
+                "Working on authentication",
+                "Security first! 🔒"
+            ],
+            "username": "frank_miller"
+        },
+        {
+            "id": 7,
+            "password": "pass123",
+            "posts": [
+                "DFS implementation complete!",
+                "Graph traversal is fascinating",
+                "Shortest path algorithms rock",
+                "Teaching algorithms to others"
+            ],
+            "username": "grace_lee"
+        },
+        {
+            "id": 8,
+            "password": "pass123",
+            "posts": [
+                "Crow framework is awesome!",
+                "Building RESTful services",
+                "API testing complete",
+                "Documentation updated 📝"
+            ],
+            "username": "henry_taylor"
+        },
+        {
+            "id": 9,
+            "password": "pass123",
+            "posts": [
+                "Frontend integration done!",
+                "Responsive design matters",
+                "User experience is key",
+                "Animations looking smooth ✨"
+            ],
+            "username": "iris_anderson"
+        },
+        {
+            "id": 10,
+            "password": "pass123",
+            "posts": [
+                "Graph visualization complete!",
+                "D3.js is powerful",
+                "Interactive UI elements",
+                "Users will love this feature"
+            ],
+            "username": "jack_thomas"
+        },
+        {
+            "id": 11,
+            "password": "pass123",
+            "posts": [
+                "Message system working perfectly",
+                "Real-time features are cool",
+                "WebSocket implementation",
+                "Chat functionality live 💬"
+            ],
+            "username": "kate_moore"
+        },
+        {
+            "id": 12,
+            "password": "pass123",
+            "posts": [
+                "Priority queue optimized",
+                "Big O analysis complete",
+                "Algorithm efficiency improved",
+                "Performance benchmarks passed ⚡"
+            ],
+            "username": "leo_jackson"
+        },
+        {
+            "id": 13,
+            "password": "pass123",
+            "posts": [
+                "Authentication system ready!",
+                "JWT tokens implemented",
+                "Secure password hashing",
+                "User sessions working 🔐"
+            ],
+            "username": "mia_white"
+        },
+        {
+            "id": 14,
+            "password": "pass123",
+            "posts": [
+                "Frontend components reusable",
+                "Component library growing",
+                "Props and state management",
+                "React hooks are great 🎣"
+            ],
+            "username": "noah_harris"
+        },
+        {
+            "id": 15,
+            "password": "pass123",
+            "posts": [
+                "Friend suggestions working!",
+                "Machine learning integration",
+                "Recommendation algorithm live",
+                "Users finding new connections 🤝"
+            ],
+            "username": "olivia_martin"
+        },
+        {
+            "id": 16,
+            "password": "pass123",
+            "posts": [
+                "Database queries optimized",
+                "JSON storage efficient",
+                "Data persistence working",
+                "File I/O operations fast 💾"
+            ],
+            "username": "paul_garcia"
+        },
+        {
+            "id": 17,
+            "password": "pass123",
+            "posts": [
+                "Graph stats looking good!",
+                "Analytics dashboard ready",
+                "Metrics tracking active",
+                "Data visualization complete 📊"
+            ],
+            "username": "quinn_martinez"
+        },
+        {
+            "id": 18,
+            "password": "pass123",
+            "posts": [
+                "Testing suite comprehensive",
+                "Unit tests passing [ x ]",
+                "Integration tests done",
+                "Code coverage at 95%"
+            ],
+            "username": "rachel_rodriguez"
+        },
+        {
+            "id": 19,
+            "password": "pass123",
+            "posts": [
+                "Deployment pipeline ready",
+                "CI/CD configured",
+                "Automated testing setup",
+                "Production environment live 🚀"
+            ],
+            "username": "sam_lopez"
+        },
+        {
+            "id": 20,
+            "password": "pass123",
+            "posts": [
+                "Project documentation complete!",
+                "API reference updated",
+                "User guide written",
+                "README looks professional 📚"
+            ],
+            "username": "tina_gonzalez"
+        },
+        {
+            "id": 21,
+            "password": "pass123",
+            "posts": [
+                "Network analysis complete",
+                "Graph density calculated",
+                "Community detection working",
+                "Clustering algorithms active 🔍"
+            ],
+            "username": "uma_patel"
+        },
+        {
+            "id": 22,
+            "password": "pass123",
+            "posts": [
+                "Error handling improved",
+                "Exception management solid",
+                "Logging system active",
+                "Debugging tools ready 🛠️"
+            ],
+            "username": "victor_chen"
+        },
+        {
+            "id": 23,
+            "password": "pass123",
+            "posts": [
+                "UI/UX design finalized",
+                "Color scheme perfect",
+                "Typography on point",
+                "User feedback positive 🎨"
+            ],
+            "username": "wendy_kim"
+        },
+        {
+            "id": 24,
+            "password": "pass123",
+            "posts": [
+                "Search functionality live!",
+                "Trie implementation fast",
+                "Autocomplete working",
+                "Prefix search optimized 🔎"
+            ],
+            "username": "xavier_brown"
+        },
+        {
+            "id": 25,
+            "password": "pass123",
+            "posts": [
+                "Final touches complete!",
+                "Ready for production",
+                "Team collaboration amazing",
+                "Celebrating our success! 🎉"
+            ],
+            "username": "yara_shah"
+        }
+    ]
+}

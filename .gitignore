@@ -6,11 +6,7 @@
 *.log
 # Ignore build output
 /dist/*
-/build/*
-# Ignore environment variable files
-.env
-.exe
-.bat
+
 # Ignore OS generated files
 .DS_Store
 
@@ -27,7 +23,7 @@ backend/.vscode/*
 backend/build/*
 # Ignore environment variable files
 .env
-.exe
+
 .bat
 # Ignore OS generated files
 .DS_Store
@@ -35,8 +31,5 @@ backend/build/*
 #ignore all .exe files in unit tests folder
 backend/tests/*.exe
 backend/libs/*
-
-backend/storage/local_db/*.json
-backend/storage/local_db/*.txt
 backend/api/*.exe
 *md
