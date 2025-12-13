@@ -39,3 +39,4 @@ backend/libs/*
 backend/storage/local_db/*.json
 backend/storage/local_db/*.txt
 backend/api/*.exe
+*md
