@@ -1,0 +1,228 @@
+/* Graph Stats Page Styling */
+.graph-stats-container {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  background: var(--bg-primary, #1a1a2e);
+  min-height: 100vh;
+  color: var(--text-primary, #e0e0e0);
+}
+
+.stats-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.stats-header h1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--accent-purple, #9d4edd);
+  margin-bottom: 0.5rem;
+}
+
+.stats-header p {
+  color: var(--text-secondary, #a0a0a0);
+  font-size: 1rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: var(--bg-secondary, #16213e);
+  border: 1px solid var(--border-color, #2d3548);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(157, 78, 221, 0.2);
+  border-color: var(--accent-purple, #9d4edd);
+}
+
+.stat-card.wide {
+  grid-column: span 2;
+}
+
+.stat-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stat-icon.users {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.stat-icon.connections {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.stat-icon.avg {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.stat-icon.max {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.stat-icon.density {
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+
+.stat-icon.components {
+  background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+}
+
+.stat-content {
+  flex: 1;
+}
+
+.stat-content h3 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary, #a0a0a0);
+  margin-bottom: 0.5rem;
+}
+
+.stat-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--accent-purple, #9d4edd);
+  margin-bottom: 0.25rem;
+  line-height: 1;
+}
+
+.stat-content p {
+  font-size: 0.875rem;
+  color: var(--text-secondary, #a0a0a0);
+}
+
+.density-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--bg-tertiary, #0f1419);
+  border-radius: 4px;
+  margin-top: 1rem;
+  overflow: hidden;
+}
+
+.density-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-purple, #9d4edd), var(--accent-blue, #4facfe));
+  border-radius: 4px;
+  transition: width 0.6s ease;
+}
+
+.component-details {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color, #2d3548);
+}
+
+.component-info {
+  font-size: 0.875rem;
+  color: var(--text-secondary, #a0a0a0);
+  margin: 0.25rem 0;
+}
+
+.stats-footer {
+  text-align: center;
+  padding-top: 1rem;
+}
+
+.refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--accent-purple, #9d4edd);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.refresh-btn:hover {
+  background: var(--accent-purple-dark, #7b2cbf);
+  transform: scale(1.05);
+}
+
+.graph-stats-loading,
+.graph-stats-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  color: var(--text-primary, #e0e0e0);
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid var(--border-color, #2d3548);
+  border-top-color: var(--accent-purple, #9d4edd);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.graph-stats-error button {
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--accent-purple, #9d4edd);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.graph-stats-error button:hover {
+  background: var(--accent-purple-dark, #7b2cbf);
+}
+
+@media (max-width: 768px) {
+  .stat-card.wide {
+    grid-column: span 1;
+  }
+
+  .stats-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .stat-value {
+    font-size: 2rem;
+  }
+}
