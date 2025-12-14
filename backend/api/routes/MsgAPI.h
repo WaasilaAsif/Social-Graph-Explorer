@@ -4,11 +4,11 @@
 #include "../../messaging/MessageStore.h"
 #include "../../dsa/messaging_ds/MsgTrie.h"
 #include "../../dsa/messaging_ds/ConversationGraph.h"
-#include "../../libs/project_headers/MsgTopKMessages.h"
-#include "../../libs/project_headers/MsgFriendSuggestion.h"
-#include "../../libs/project_headers/MsgMutualInteraction.h"
-#include "../../libs/project_headers/MsgPopularityRanker.h"
-#include "../../libs/project_headers/MsgShortestPath.h"
+#include "../../algorithms/MsgTopKMessages.h"
+#include "../../algorithms/MsgFriendSuggestion.h"
+#include "../../algorithms/MsgMutualInteraction.h"
+#include "../../algorithms/MsgPopularityRanker.h"
+#include "../../algorithms/MsgShortestPath.h"
 
 #include <string>
 #include <unordered_map>
