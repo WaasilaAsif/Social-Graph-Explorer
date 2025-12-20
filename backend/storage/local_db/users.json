@@ -7,7 +7,8 @@
                 "Just deployed my first C++ server!",
                 "Coffee and code, the perfect combo ☕",
                 "Learning graph algorithms is fascinating",
-                "Anyone up for a coding session?"
+                "Anyone up for a coding session?",
+                "jyui"
             ],
             "username": "alice_smith"
         },
@@ -274,6 +275,89 @@
                 "Celebrating our success! 🎉"
             ],
             "username": "yara_shah"
+        },
+        {
+            "id": 26,
+            "password": "pass123",
+            "posts": [
+                "Optimized graph traversal algorithms 🔄",
+                "Implemented BFS and DFS for friend recommendations",
+                "Working on adjacency list improvements",
+                "Visualizing social graphs with D3.js",
+                "Debugging memory leaks in C++ backend",
+                "Exploring shortest path analytics for social connections"
+            ],
+            "username": "waasila_asif"
+        },
+        {
+            "id": 27,
+            "password": "pass123",
+            "posts": [
+                "Messaging module now supports real-time updates 💬",
+                "Trie-based search implemented for messages",
+                "Undo functionality integrated",
+                "API endpoints tested successfully",
+                "Helping users find their top conversation partners",
+                "Optimized scheduled message handling"
+            ],
+            "username": "anum_fatima"
+        },
+        {
+            "id": 28,
+            "password": "pass123",
+            "posts": [
+                "Backend services optimized for low latency ⚡",
+                "Implemented conversation graphs for analytics",
+                "Top-K messaging leaderboard running smoothly",
+                "REST API endpoints stable",
+                "Monitoring message throughput in real-time",
+                "Analyzing mutual interactions for friend suggestions"
+            ],
+            "username": "aman_ajmal"
+        },
+        {
+            "id": 29,
+            "password": "pass123",
+            "posts": [
+                "Designing intuitive chat UI 🎨",
+                "Frontend components reusable and responsive",
+                "Friend suggestion animations implemented",
+                "Testing user flows for messaging",
+                "UX improvements based on user feedback",
+                "Creating analytics dashboards for messaging trends"
+            ],
+            "username": "fatima_sajjad"
+        },
+        {
+            "id": 30,
+            "password": "pass123",
+            "posts": [
+                "Exploring social graph patterns",
+                "Connected users analytics",
+                "Friend suggestion experiments",
+                "Messaging frequency visualization",
+                "Leaderboard testing",
+                "Experimenting with interaction weights"
+            ],
+            "username": "zara_khan"
+        },
+        {
+            "id": 32,
+            "password": "1234567",
+            "posts": [],
+            "username": "aNUMKLL"
+        },
+        {
+            "id": 33,
+            "password": "1234567",
+            "posts": [],
+            "username": "Anum123456"
+        },
+        {
+            "id": 34,
+            "password": "1234567",
+            "posts": [],
+            "username": "waasila12345"
         }
     ]
 }

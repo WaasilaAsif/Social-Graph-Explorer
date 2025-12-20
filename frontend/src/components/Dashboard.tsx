@@ -418,7 +418,7 @@ export default function Dashboard({ userId, username, onOpenTab }: DashboardProp
                   <div key={index} className="post-item">
                     <p className="post-content">{typeof post === 'string' ? post : post.content || post}</p>
                     <div className="post-actions">
-                      <span className="post-time">Just now</span>
+                      {/* <span className="post-time">posted</span> */}
                       <button 
                         className="btn-delete-post"
                         onClick={() => handleDeletePost(index)}
