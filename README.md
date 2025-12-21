@@ -7,6 +7,9 @@ A comprehensive **Social Network Backend & Frontend** application demonstrating 
 ![LeaderBoard](image-1.png)
 ![Social Graph](image-2.png)
 ![Messaging interface](image-3.png)
+![Messaging Trie Search](image-5.png)
+![Messaging Recommendations](image-6.png)
+![Messaging Analytics](image-7.png)
 ---
 
 ##  Table of Contents
@@ -668,8 +671,8 @@ SocialGraphExplorer/
 |--------|-----------------|
 | **Anum** | Hashmaps, DynamicArray, Trie, Id Generator, User specific details and apis |
 | **Aman** | LinkedList , Stack, Queue, BFS, DFS, Graph related details handling and apis |
-| **Fatima** | Priority Queues , Algorithms: Shortest Path, Popularity Ranker, Mutual Friends, and their routes |
-| **Waasila** | Messaging DSA: Undo Stack , AVL trees , Msg Heap, Msg Trie Messaging Algorithms : Message Related Algorithms (Sorting, Searching Ranking) |
+| **Fatima** | Priority Queues , Algorithms: Shortest Path, Popularity Ranker, Mutual Friends, and their routes, Frontend polish |
+| **Waasila** | Messaging System (Utilizes Queue & Stack) Msg Trie for fast prefix-based search, Msg Heap (Top-K conversation ranking) with implemented algorithms for message insertion, search, ranking, ordering, and mutual-friend chat suggestions. Server INtegration and frontend |
 
 
 ##  Troubleshooting
